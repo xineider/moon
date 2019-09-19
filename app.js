@@ -79,9 +79,9 @@ app.use(cookieParser());
 
 
 
-var srcPath = __dirname + '/assets';
+var srcPath = __dirname;
 console.log('srcPath: '+srcPath);
-var destPath = __dirname + '/assets';
+var destPath = __dirname;
 console.log('destPath: '+destPath);
 console.log('path.join(__dirname, /assets/public)');
 console.log(path.join(__dirname, 'assets'));
