@@ -79,17 +79,8 @@ app.use(cookieParser());
 
 
 
-var srcPath = __dirname;
-console.log('srcPath: '+srcPath);
-var destPath = __dirname;
-console.log('destPath: '+destPath);
-console.log('path.join(__dirname, /assets/public)');
-console.log(path.join(__dirname, 'assets'));
-
-
 app.use(sassMiddleware({
-    src: srcPath,
-    dest: destPath,
+    src: __dirname,
     debug: true,
     outputStyle: 'compressed'
 }));
@@ -97,7 +88,7 @@ app.use(sassMiddleware({
 
 
 
-app.use("/assets", express.static(__dirname + '/assets'));
+app.use("/public", express.static(__dirname + '/public'));
 
 
 
