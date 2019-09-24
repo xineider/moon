@@ -138,10 +138,13 @@ function GoTo(link, state) {
 		url: link,
 		beforeSend: function(request) {
 			console.log('setando');
-			request.setRequestHeader("Authority-Optima-hash", $('input[name="hash_usuario_sessao"]').val());
-			request.setRequestHeader("Authority-Optima-id", $('input[name="id_usuario_sessao"]').val());
-			request.setRequestHeader("Authority-Optima-id", $('input[name="id_usuario_sessao"]').val());
+			request.setRequestHeader("Authority-Moon-hash", $('input[name="hash_usuario_sessao"]').val());
+			request.setRequestHeader("Authority-Moon-id", $('input[name="id_usuario_sessao"]').val());
+			request.setRequestHeader("Authority-Moon-nivel", $('input[name="nivel_usuario_sessao"]').val());
 			adicionarLoader();
+			console.log('requestHeader');
+			console.log(request);
+			console.log('D:D:D:D:D:D:')
 		},
 		success: function(data) {
 			$('main').html(data);
@@ -166,9 +169,9 @@ function LoadTo(link, to) {
 		async: true,
 		url: link,
 		beforeSend: function(request) {
-			request.setRequestHeader("Authority-Optima-hash", $('input[name="hash_usuario_sessao"]').val());
-			request.setRequestHeader("Authority-Optima-id", $('input[name="id_usuario_sessao"]').val());
-			request.setRequestHeader("Authority-Optima-id", $('input[name="id_usuario_sessao"]').val());
+			request.setRequestHeader("Authority-Moon-hash", $('input[name="hash_usuario_sessao"]').val());
+			request.setRequestHeader("Authority-Moon-id", $('input[name="id_usuario_sessao"]').val());
+			request.setRequestHeader("Authority-Moon-nivel", $('input[name="nivel_usuario_sessao"]').val());
 			adicionarLoader();
 		},
 		success: function(data) {
@@ -238,9 +241,9 @@ function SubmitAjax(post, link, back, method) {
 		data: post,
 		url: link,
 		beforeSend: function(request) {
-			request.setRequestHeader("Authority-Optima-hash", $('input[name="hash_usuario_sessao"]').val());
-			request.setRequestHeader("Authority-Optima-id", $('input[name="id_usuario_sessao"]').val());
-			request.setRequestHeader("Authority-Optima-id", $('input[name="id_usuario_sessao"]').val());
+			request.setRequestHeader("Authority-Moon-hash", $('input[name="hash_usuario_sessao"]').val());
+			request.setRequestHeader("Authority-Moon-id", $('input[name="id_usuario_sessao"]').val());
+			request.setRequestHeader("Authority-Moon-nivel", $('input[name="nivel_usuario_sessao"]').val());
 			adicionarLoader();
 		},
 		success: function(data) {
@@ -289,9 +292,9 @@ function MountModal(modal, link) {
 		async: true,
 		url: '/sistema'+link,
 		beforeSend: function(request) {
-			request.setRequestHeader("Authority-Optima-hash", $('input[name="hash_usuario_sessao"]').val());
-			request.setRequestHeader("Authority-Optima-id", $('input[name="id_usuario_sessao"]').val());
-			request.setRequestHeader("Authority-Optima-id", $('input[name="id_usuario_sessao"]').val());
+			request.setRequestHeader("Authority-Moon-hash", $('input[name="hash_usuario_sessao"]').val());
+			request.setRequestHeader("Authority-Moon-id", $('input[name="id_usuario_sessao"]').val());
+			request.setRequestHeader("Authority-Moon-nivel", $('input[name="nivel_usuario_sessao"]').val());
 			adicionarLoader();
 		},
 		success: function(data) {
@@ -361,9 +364,9 @@ function UploadFile(isso) {
 		processData: false,
 		contentType: false,
 		beforeSend: function(request) {
-			request.setRequestHeader("Authority-Optima-hash", $('input[name="hash_usuario_sessao"]').val());
-			request.setRequestHeader("Authority-Optima-id", $('input[name="id_usuario_sessao"]').val());
-			request.setRequestHeader("Authority-Optima-id", $('input[name="id_usuario_sessao"]').val());
+			request.setRequestHeader("Authority-Moon-hash", $('input[name="hash_usuario_sessao"]').val());
+			request.setRequestHeader("Authority-Moon-id", $('input[name="id_usuario_sessao"]').val());
+			request.setRequestHeader("Authority-Moon-nivel", $('input[name="nivel_usuario_sessao"]').val());
 			adicionarLoader();
 		},
 		success: function (data) {
@@ -397,9 +400,9 @@ function LoadInfosUsuario() {
 		data: {id: id, hash_login: hash_login},
 		url: '/sistema/usuarios/ver/perfil/',
 		beforeSend: function(request) {
-			request.setRequestHeader("Authority-Optima-hash", $('input[name="hash_usuario_sessao"]').val());
-			request.setRequestHeader("Authority-Optima-id", $('input[name="id_usuario_sessao"]').val());
-			request.setRequestHeader("Authority-Optima-id", $('input[name="id_usuario_sessao"]').val());
+			request.setRequestHeader("Authority-Moon-hash", $('input[name="hash_usuario_sessao"]').val());
+			request.setRequestHeader("Authority-Moon-id", $('input[name="id_usuario_sessao"]').val());
+			request.setRequestHeader("Authority-Moon-nivel", $('input[name="nivel_usuario_sessao"]').val());
 			adicionarLoader();
 		},
 		success: function(data) {
@@ -416,5 +419,5 @@ function LoadInfosUsuario() {
 // ESPECIFICO
 function AddFormatEspecifico() {
 	$('.dropdown-button').dropdown();
-	$('.collapsible').collapsible();
+	
 }

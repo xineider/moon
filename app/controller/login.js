@@ -29,6 +29,8 @@ router.post('/', function(req, res, next) {
 			req.session.usuario = {};
 			req.session.usuario.id = data[0].id;
 			req.session.usuario.hash_login = data[0].hash_login;
+			req.session.usuario.nivel = data[0].nivel;
+			req.session.usuario.nome = data[0].nome;
 			res.redirect('/sistema');
 	  } else {
   		res.render('login/index', { erro: 'Login ou senha incorreto(s).', tipo_erro: 'login' });
