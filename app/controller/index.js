@@ -14,7 +14,7 @@ router.get('/', function(req, res, next) {
 	console.log('kokokokokokoko usuario requisição kokokokokokokokoko')
 	console.log(req.session.usuario);
 	console.log('kokokokokokokokokokokokokokokokokokokokokokokokokoko');
-	res.render(req.isAjaxRequest() == true ? 'api' : 'montador', {html: 'inicio/index', data: data, usuario: req.session.usuario});
+	res.render(req.isAjaxRequest() == true ? 'api' : 'montador', {html: 'historico/historico', data: data, usuario: req.session.usuario});
 });
 
 

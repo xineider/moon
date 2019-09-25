@@ -52,7 +52,16 @@
 		<!-- <span class="sr-only">Loading...</span> -->
 	</div>
 	<header class="white-text">
-		<div class="header-info text-center">
+		<div class="header-logo w100">
+			<img src="/public/images/logo.png">
+			<a class="logout block float-right" href="/logout" onclick="return confirm('Você deseja sair?');">
+				<i class="fas fa-sign-out-alt primary-text"></i>
+				<div class="white-text">Sair</div>
+			</a>
+		</div>
+
+
+		<div class="header-info text-center margin-t-10">
 			Olá <span class="primary-text"><%= usuario.nome %></span>.
 			<br>
 			Seu último acesso foi em 00/00 às 00h00.
@@ -67,7 +76,7 @@
 			</span>
 		</div>
 
-		<div class="primary_line w90 margin-center"></div>
+		<div class="primary_line w90 margin-center margin-t-5"></div>
 
 		<div class="w90 header-plano uppercase white-text margin-t-10 margin-b-10">
 			<div class="row">
@@ -89,7 +98,7 @@
 			
 		</div>
 
-		<nav class="w100">
+		<nav class="w100 header-menu">
 			<%- include('menu_header'); %>
 		</nav>
 	</header>
