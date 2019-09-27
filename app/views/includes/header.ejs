@@ -68,7 +68,14 @@
 
 			<br>
 			<span class="primary-text uppercase">
-				Seu aporte inicial foi de <span class="white-text">R$10.000,00</span>
+			
+				<% if (typeof data.primeiro_aporte != 'undefined' && data.primeiro_aporte.length > 0){ %>
+				Seu aporte inicial foi de <span class="white-text">R$<%= data.primeiro_aporte[0].valor%></span>
+				<%}else{%>
+				<span class="f20">Você não fez nenhum <span class="bold">aporte</span> <a >clique aqui</a> para fazer!</span>
+				<%}%>
+
+				
 			</span>
 			<br>
 			<span class="green-text uppercase">

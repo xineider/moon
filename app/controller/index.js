@@ -11,10 +11,13 @@ app.use(require('express-is-ajax-request'));
 
 /* GET pagina de login. */
 router.get('/', function(req, res, next) {
-	console.log('kokokokokokoko usuario requisição kokokokokokokokoko')
-	console.log(req.session.usuario);
-	console.log('kokokokokokokokokokokokokokokokokokokokokokokokokoko');
-	res.render(req.isAjaxRequest() == true ? 'api' : 'montador', {html: 'historico/historico', data: data, usuario: req.session.usuario});
+	model.GetPrimeiroAporte(req.session.usuario.id).then(data_primeiro_aporte=>{
+		data.primeiro_aporte = data_primeiro_aporte;
+		console.log('kokokokokokoko usuario requisição kokokokokokokokoko')
+		console.log(data);
+		console.log('kokokokokokokokokokokokokokokokokokokokokokokokokoko');
+		res.render(req.isAjaxRequest() == true ? 'api' : 'montador', {html: 'historico/historico', data: data, usuario: req.session.usuario});
+	});
 });
 
 
