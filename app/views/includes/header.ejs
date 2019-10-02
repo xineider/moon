@@ -68,7 +68,7 @@
 
 			<br>
 			<span class="primary-text uppercase">
-			
+
 				<% if (typeof data.primeiro_aporte != 'undefined' && data.primeiro_aporte.length > 0){ %>
 				Seu aporte inicial foi de <span class="white-text">R$<%= data.primeiro_aporte[0].valor%></span>
 				<%}else{%>
@@ -79,7 +79,11 @@
 			</span>
 			<br>
 			<span class="green-text uppercase">
-				Saldo Atualizado R$10.960,00
+				<% if (typeof data.saldo_atualizado != 'undefined' && data.saldo_atualizado.length > 0){ %>
+				Saldo Atualizado  R$<%= data.saldo_atualizado[0].saldo_atualizado %>
+				<%}else{%>
+				<span class="f20">Você não fez nenhum <span class="bold">aporte</span> <a >clique aqui</a> para fazer!</span>
+				<%}%>				
 			</span>
 		</div>
 
@@ -90,14 +94,27 @@
 				<div class="col text-center border-2-right-primary padding-b-10">
 					<span class="primary-text">Plano Atual</span>
 					<br>
-					12 MESES
+					<% if (typeof data.plano != 'undefined' && data.plano.length > 0){ %>
+
+					<span class="uppercase"><%= data.plano[0].plano %></span>
 					<br>
-					60% da Performance
+					<span class="uppercase">
+						<%= data.plano[0].performance %>% da Performance
+					</span>
+					<%}else{%>
+					<span class="uppercase">Nenhum plano atualmente!</span>
+					<%}%>
 				</div>
 				<div class="col text-center padding-b-10">
-					<span class="primary-text">06 MESES</span>
+					<% if (typeof data.meses_decorridos != 'undefined' && data.meses_decorridos.length > 0){ %>
+					<span class="uppercase primary-text"><%= data.meses_decorridos[0].meses_decorridos %> meses</span>
 					<br>
 					Decorridos do seu plano
+					<%}else{%>
+					<span class="uppercase">Nenhum plano atualmente!</span>
+					<%}%>
+					
+					
 				</div>
 			</div>
 			

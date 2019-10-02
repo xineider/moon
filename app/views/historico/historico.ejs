@@ -1,25 +1,17 @@
 <div class="historico">
 	<ul class="nav white-text justify-content-center">
-		<li class="nav-item uppercase">
-			<a class="ajax-load nav-link">
-				Jun
-			</a>
-		</li>
-		<li class="nav-item uppercase">
-			<a class="ajax-load nav-link active">
-				Jul
-			</a>
-		</li>
-		<li class="nav-item uppercase">
-			<a class="ajax-load nav-link">
-				Ago
-			</a>
-		</li>
-		<li class="nav-item uppercase">
-			<a class="ajax-load nav-link">
-				Set
-			</a>
-		</li>
+		<%
+		if (typeof data.meses_com_caixa != 'undefined' && data.meses_com_caixa.length > 0) {
+			for (var i = 0; i < data.meses_com_caixa.length; i++) { %>
+			<li class="nav-item uppercase">
+				<a class="ajax-load nav-link <%= data.meses_com_caixa[i].numero_mes == data.mes_atual_ativo[0].mes_atual_ativo ? 'active' : '' %>" href="sistema/historico/verHistoricoMes/<%= data.meses_com_caixa[i].numero_mes %>">
+					<%= data.meses_com_caixa[i].nome_mes %>
+				</a>
+			</li>
+
+
+			<%}
+		}%>
 	</ul>
 
 	<div class="grey historico_saldo_final_mes w100 white-text text-center padding-20">

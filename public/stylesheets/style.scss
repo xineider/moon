@@ -91,4 +91,16 @@ body{
 		@include linha_underline_efeito;
 		background:$primary-color;
 	}
+
+	.nav-link{
+		color:#ffffff;
+
+		&:hover{
+			color: $primary-color;
+			&.active::after{
+				background:#ffffff;
+			}
+		}
+	}
+
 }
