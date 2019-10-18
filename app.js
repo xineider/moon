@@ -14,6 +14,7 @@ var index = require('./app/controller/index');
 var api = require('./app/controller/api');
 var configuracoes = require('./app/controller/configuracoes');
 var usuarios = require('./app/controller/usuarios');
+var administracao = require('./app/controller/administracao');
 
 var VerificacaoModel = require('./app/model/verificacaoModel');
 var verificacao = new VerificacaoModel;
@@ -98,6 +99,7 @@ app.use("/public", express.static(__dirname + '/public'));
 app.use('/', login);
 app.use('/sistema', index);
 app.use('/sistema/api', api);
+app.use('/sistema/administracao', administracao);
 app.use('/sistema/configuracoes', configuracoes);
 app.use('/sistema/usuarios', usuarios);
 

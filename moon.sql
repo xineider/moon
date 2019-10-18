@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: 11-Out-2019 às 13:27
+-- Generation Time: 18-Out-2019 às 23:14
 -- Versão do servidor: 5.7.19
 -- PHP Version: 5.6.31
 
@@ -198,7 +198,7 @@ CREATE TABLE IF NOT EXISTS `usuarios` (
 --
 
 INSERT INTO `usuarios` (`id`, `id_setor`, `email`, `senha`, `imagem`, `nome`, `telefone`, `nivel`, `hash_login`, `deletado`, `data_cadastro`) VALUES
-(1, 0, 'admin@admin.com.br', '745536f0652656dae49565e5fa26152b', 'user-padrao.jpg', 'Administrador', '00 00000 0000', 1, 'ad73a4e6aed0db0cec83be2881d90f63', 0, '2017-11-30 18:49:14');
+(1, 0, 'admin@admin.com.br', '745536f0652656dae49565e5fa26152b', 'user-padrao.jpg', 'Administrador', '00 00000 0000', 1, '6a503dae14752990978b066912fd7c51', 0, '2017-11-30 18:49:14');
 
 -- --------------------------------------------------------
 
