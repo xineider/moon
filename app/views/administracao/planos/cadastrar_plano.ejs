@@ -1,0 +1,29 @@
+<div class="col s12 center">
+	<div class="w90 center-align gold margin-center padding-5 border-radius-5 f20">Adicionar Plano</div>
+	
+	
+	<%if(usuario.nivel == 4 || usuario.nivel == 5){ %>
+
+
+	<form method="POST" action="" enctype="multipart/form-data">
+
+
+		<div class="margin-t-20">
+			<div class="input-field col s12">
+				<label class="gold-text" for="nome">Nome do Plano</label>
+				<input class="validate border-gold border-radius-5 white-text" type="text" name="nome">
+			</div>					
+		</div>
+
+		<button data-href="/sistema/administracao/plano/cadastrar" data-action="<%= data.link_sistema%>/administracao/planos/" class="btn gold ajax-submit margin-b-10">
+			Salvar <i class="far fa-save-o" aria-hidden="true"></i>
+		</button>
+
+	</form>
+
+
+	<%}else{%>
+	<div class="card light">Você não possui permissão para acessar esse conteúdo</div>
+	<%}%>
+
+</div>

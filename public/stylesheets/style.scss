@@ -97,7 +97,7 @@ body{
 
 
 
-.historico{
+.sub_menu{
 	.active::after{
 		@include linha_underline_efeito;
 		background:$primary-color;
@@ -117,4 +117,30 @@ body{
 }
 
 
+.table-full-width{
+	display: block;
+	overflow-x: auto;
+}
 
+
+
+.btn.primary{
+	border:0;
+}
+
+
+/*DataTable Over*/
+.dataTables_filter{
+	color:#ffffff;
+}
+
+
+a:hover{
+	color: $primary-color;
+}
+
+
+/*Remover focus azul do chrome*/
+th:focus{
+	outline: none;
+}

@@ -1,0 +1,69 @@
+<div class="col s12 center">
+	<div class="w90 center-align gold margin-center padding-5 border-radius-5 f20">Aprovação de Saque</div>
+	
+	
+	<%if(usuario.nivel == 4 || usuario.nivel == 5){ %>
+	
+	
+		<div class="row margin-t-20">
+			<div class="input-field col s12">
+				<label class="gold-text" for="titulo">Nome</label>
+				<input type="text" disabled value="<%= data[0].nome %>" class="border-gold border-radius-5 white-text">
+			</div>
+		</div>
+
+		<div class="row">			
+			<div class="input-field col s12">
+				<label class="gold-text" for="titulo">Perfil</label>
+				<input type="text" disabled value="<%= data[0].plano %>" class="border-gold border-radius-5 white-text">
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="input-field col s12">
+				<label class="gold-text" for="titulo">Qtd. Tether</label>
+				<input type="text" disabled value="<%= data[0].qtd_stable %>" class="border-gold border-radius-5 white-text">
+			</div>
+		</div>
+
+		<% if(data[0].carteira!=undefined ) {%>
+
+		<div class="row">
+			<div class="input-field col s12">
+				<label class="gold-text" for="carteira">Carteira</label>
+				<input type="text" disabled value="<%= data[0].carteira %>" class="border-gold border-radius-5 white-text">
+			</div>
+		</div>
+
+		<%}else{%>
+		<div class="center margin-b-10">Cliente não enviou carteira!</div>
+
+		<%}%>
+
+		<div class="center-align">
+
+			<a class="btn red border-radius-5 ajax-load-to margin-t-10 white-text margin-l-10" href="<%= data.link_sistema%>/administracao/pedido-saque/negacao_saque_motivo/<%= data[0].id %>" data-to="container_aprovacao_negacao_saque">
+				Negar Saque
+			</a>
+
+			<a class="btn gold ajax-load-to margin-t-10 margin-l-10" href="<%= data.link_sistema%>/administracao/pedido-saque/aprovacao_saque_qtd_btc/<%= data[0].id %>" data-to="container_aprovacao_negacao_saque">
+				Aprovar Saque
+			</a>
+		</div>
+
+
+		<div class="container_aprovacao_negacao_saque"></div>
+
+
+		
+	
+	
+	
+	
+	
+	
+	<%}else{%>
+	<div class="card light">Você não possui permissão para acessar esse conteúdo</div>
+	<%}%>
+	
+</div>

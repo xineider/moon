@@ -1,0 +1,34 @@
+<div class="border-radius-5 margin-t-20 border-red margin-b-10" style="border:1px solid #F44336;">
+	<div class="f25 bold center-align white-text margin-t-10">Negação de Aporte</div>
+	<div class="center-align f15 light-font margin-t-5 gold-text">Informar o motivo da Negação do Aporte</div>
+
+	<form method="POST" action="" enctype="multipart/form-data">
+
+		<input type="hidden" name="id" value="<%= data[0].id %>">
+
+		<div class="center-align">
+
+			<div class="col s12 ">
+				<span class="gold-text">Motivo</span>
+				<div class="input-field inline">
+					<select class="browser-default perfil_saque_select border-gold border-radius-5" name="status" class="">
+						<option>Comprovante Incorreto</option>
+						<option>Aporte Duplicado</option>
+						<option>Qtd. Btc Informada Incorreto</option>
+						<option>Não Recebimento da Transação</option>
+						<option>Entrar em contato com o Suporte</option>
+					</select>
+				</div>
+			</div>
+
+		</div>
+
+		<div class="center-align">
+			<button data-href="/sistema/administracao/pedido-aporte/negar" data-action="<%= data.link_sistema%>/administracao/pedidos-aportes/" class="btn gold ajax-submit-update-mensagem margin-b-10" data-mensagem-sucesso="Aporte Negado!">
+				Negar <i class="far fa-save-o" aria-hidden="true"></i>
+			</button>
+		</div>
+	</form>
+
+</div>
+

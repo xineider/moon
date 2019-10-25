@@ -1,0 +1,76 @@
+<div class="col s12 padding-0">
+	<div class="bold f25 margin-l-20 border-bottom-gold margin-b-10">
+		Administração de Planos
+		<i class="fas fa-file right margin-r-20 gold-text"></i>
+	</div>
+	
+	
+	<%if(usuario.nivel == 4 || usuario.nivel == 5){ %>
+
+
+	<div class="row center-align">
+		<a class="btn gold ajax-load" href="<%= data.link_sistema%>/administracao/plano/criar">Cadastrar Plano</a>
+	</div>
+
+	<div class="col s12">
+
+		<table class="table-full-width tabela_filtrada">
+			<thead class="gold-text">
+				<tr>
+					<th>Nome do Plano</th>
+					<th>Data Cadastro</th>
+					<th class="center">Ação</th>
+				</tr>
+			</thead>
+			<tbody>
+
+				<%
+				if (typeof data.planos != 'undefined' && data.planos.length > 0) {
+					for (var i = 0; i < data.planos.length; i++) { %>
+
+					<tr class="border-bottom-gold" style=<%= data.planos[i].deletado != 0 ? 'background:#777777' : '' %>>
+						<td>
+							<a class="limitador_3_linhas ajax-load white-text" href="<%= data.link_sistema%>/administracao/plano/editar/<%= data.planos[i].id %>">
+								<%= data.planos[i].nome %>
+							</a> 
+						</td>
+						<td>
+							<a class="limitador_3_linhas ajax-load white-text" href="<%= data.link_sistema%>/administracao/plano/editar/<%= data.planos[i].id %>">
+								<span class="hide"><%= data.planos[i].data_table_filtro %></span>
+								<%= data.planos[i].data_cadastro %>
+							</a>
+						</td>
+						<td style="width: 30%;" class="center">
+							<% if(data.planos[i].deletado == 0){%>
+							<a href="" style="font-size: 1.4em;">
+								<i class="fas fa-times red-text modal-remover-mount" data-href="#modaldeletar" data-id="<%= data.planos[i].id %>" data-texto="Você tem certeza que quer desativar '<%= data.planos[i].nome %>'? " data-to="<%= data.link_sistema%>/administracao/plano/desativar" data-back="<%= data.link_sistema%>/administracao/planos"></i>
+							</a>
+							<%}else{%>
+							<a class="modal-mount" style="font-size: 1.4em;" data-link="/administracao/plano/ativar/<%= data.planos[i].id %>" data-href="#modalinfo">
+								<i class="fas fa-check-square green-text" ></i>
+							</a>
+							<%}%>
+						</td>
+
+					</tr>
+
+					<%} 
+				}else{%>
+				<tr>
+					<td colspan="4" class="center">Não há planos no momento</td>
+				</tr>
+				<%}%>
+			</tbody>
+
+		</table>
+	</div>
+
+
+
+
+
+	<%}else{%>
+	<div class="card light">Você não possui permissão para acessar esse conteúdo</div>
+	<%}%>
+
+</div>

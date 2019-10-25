@@ -1,0 +1,83 @@
+<div class="col s12 center">
+	<div class="w90 center-align gold margin-center padding-5 border-radius-5 f20">Cadastrar Usuário</div>
+	
+	
+	<%if(usuario.nivel == 2 || usuario.nivel == 4 || usuario.nivel == 5){ %>
+
+
+	<form method="POST" action="" enctype="multipart/form-data">
+
+
+
+		<div class="margin-t-20">
+			<div class="input-field col s12">
+				<label class="gold-text" for="login">Login</label>
+				<input required="true" class="validate border-gold border-radius-5 white-text" type="text" name="login">
+			</div>
+		</div>
+
+		<div class="input-field col s12">
+			<label class="gold-text" for="nome">Nome</label>
+			<input required="true" class="validate border-gold border-radius-5 white-text" type="text" name="nome">
+		</div>
+
+
+		<div class="input-field col s12">
+			<label class="gold-text" for="nome">Email</label>
+			<input required="true" class="validate border-gold border-radius-5 white-text" type="email" name="email">
+		</div>
+
+		<div class="input-field col s12">
+			<label class="gold-text" for="telefone">Telefone</label>
+			<input required="true" class="validate tel border-gold border-radius-5 white-text" type="text" name="telefone">
+		</div>
+
+		<div class="input-field col s12">
+			<span class="gold-text" for="nivel">Nível</span>
+			<select required="true" name="nivel" class="browser-default cadastrar_usuario_nivel_select border-gold border-radius-5 white-text">
+				<option value="0" selected>Coachee</option>
+				<option value="1">Coach</option>
+				<% if(usuario.nivel > 2){ %>
+				<option value="2">Manager</option>
+				<option value="3">Investidor</option>
+				<option value="4">Coordenação</option>
+				<% if(usuario.nivel == 5) { %>
+				<option value="5">Administrador</option>
+				<% }} %>
+			</select>			
+		</div>
+
+		<div class="input-field col s12 cadastrar_usuario_coach_container margin-t-2rem">
+			<span class="gold-text" for="id_coach">Coach</span>	
+			<select name="id_coach" class="browser-default border-gold border-radius-5 white-text">
+				<%
+				if (typeof data.coach != 'undefined' && data.coach.length > 0) {
+					for (var i = 0; i < data.coach.length; i++) { %>
+					<option value=" <%= data.coach[i].id %>"> <%= data.coach[i].nome %></option>				
+					<% }
+				} %>
+			</select>							
+		</div>
+
+
+		<div class="input-field col s12">
+			<label class="gold-text">Cripto Wallet</label>
+			<input type="text" name="crypto_wallet" class="border-gold border-radius-5 white-text">
+		</div>
+
+		<button data-href="/sistema/administracao/usuarios/cadastrar" data-action="<%= data.link_sistema%>/administracao/usuarios/" class="btn gold ajax-submit margin-b-10">
+			Salvar <i class="far fa-save-o" aria-hidden="true"></i>
+		</button>
+
+		
+	</form>
+
+
+
+
+
+	<%}else{%>
+	<div class="card light">Você não possui permissão para acessar esse conteúdo</div>
+	<%}%>
+
+</div>

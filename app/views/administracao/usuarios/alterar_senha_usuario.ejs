@@ -1,0 +1,38 @@
+
+<%if(usuario.nivel == 4 || usuario.nivel == 5){ %>
+
+
+<%if (typeof data.usuarios_admin != 'undefined' && data.usuarios_admin.length > 0){%>
+
+
+
+<b><p class="center" >Você tem certeza que deseja alterar a senha do <span class="gold-text"><%= data.usuarios_admin[0].nome %></span> ?</p></b>
+
+
+<div class="row">
+	<div class="col s12 m6">
+		<a style="width: 100%;" class="modal_close_button waves-effect waves-light btn-flat grey lighten-2 center">Cancelar</a>
+	</div>
+	<div class="col s12 m6 margin-t-10">
+		<form method="POST" action="">
+			<input id="id" type="hidden" name="id" value="<%= data.usuarios_admin[0].id %>">
+
+			<button style="width: 100%;" class="modal_close_button waves-effect btn-flat gold center ajax-submit-update-mensagem" data-href="/sistema/administracao/usuarios/alterar-senha" data-mensagem-sucesso="Senha alterada com sucesso!" data-action="<%= data.link_sistema%>/administracao/usuarios/">Alterar Senha</button>
+		</form>
+	</div>
+</div>
+
+
+
+<%}%>
+
+
+
+
+
+
+
+
+<%}else{%>
+<div class="card light">Você não possui permissão para acessar esse conteúdo</div>
+<%}%>

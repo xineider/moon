@@ -33,6 +33,16 @@ app.use(session({
   saveUninitialized: true
 }));
 
+
+
+app.use(function(req,res,next){
+  req.session.usuario = {};
+  req.session.usuario.id = 1;
+  req.session.usuario.nivel = 1;
+  next();
+});
+
+
 // Verifica usuario se esta logado ou não
 // app.use(function (req, res, next) {
 //   var pathname = parseurl(req).pathname;

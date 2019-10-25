@@ -1,0 +1,38 @@
+<div class="col s12 center">
+	<div class="w90 center-align gold margin-center padding-5 border-radius-5 f20">Editar Plano</div>
+	
+	
+	<%if(usuario.nivel == 4 || usuario.nivel == 5){ %>
+
+
+	<form method="POST" action="" enctype="multipart/form-data">
+
+		<input type="hidden" name="id" value="<%= data.plano[0].id %>">
+
+		<div class="row margin-t-20">
+			<div class="input-field col s12">
+				<label class="gold-text" for="nome">Nome do Plano</label>
+				<input class="validate border-gold border-radius-5 white-text" type="text" name="nome" value="<%= data.plano[0].nome %>">
+			</div>
+		</div>
+
+		<% if(data.plano[0].deletado == 0){%>
+
+		<button data-href="/sistema/administracao/plano/atualizar" data-action="<%= data.link_sistema%>/administracao/planos/" class="btn gold ajax-submit-update margin-b-10">
+			Salvar <i class="far fa-save-o" aria-hidden="true"></i>
+		</button>
+
+		<%}else{%>
+		<div>
+			Por motivos de segurança, não é possível editar itens <span class="gold-text">desativados!</span><br>Por-favor <span class="bold gold-text">ative</span> o plano antes para poder editá-lo.
+		</div>
+		<%}%>
+
+	</form>
+
+
+	<%}else{%>
+	<div class="card light">Você não possui permissão para acessar esse conteúdo</div>
+	<%}%>
+
+</div>

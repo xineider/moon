@@ -114,6 +114,14 @@ class AdministracaoModel {
 			});
 	}
 
+	GetUsuariosMenosProprio(id) {
+		return new Promise(function(resolve, reject) {
+			helper.Query('SELECT * FROM usuarios WHERE deletado = ? AND id != ?	ORDER BY data_cadastro ', [0,id]).then(data => {
+				resolve(data);
+			});
+		});
+	}
+
 
 
 
