@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: 18-Out-2019 às 23:14
+-- Generation Time: 01-Nov-2019 às 22:16
 -- Versão do servidor: 5.7.19
 -- PHP Version: 5.6.31
 
@@ -179,7 +179,7 @@ CREATE TABLE IF NOT EXISTS `super_banca_mes_banca` (
 DROP TABLE IF EXISTS `usuarios`;
 CREATE TABLE IF NOT EXISTS `usuarios` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `id_setor` int(11) NOT NULL COMMENT 'PADRAO: 1 = Adminstrativo, 2 = Financeiro, 3 = T.I',
+  `id_conector` int(11) NOT NULL,
   `email` varchar(150) NOT NULL,
   `senha` varchar(150) NOT NULL,
   `imagem` varchar(150) NOT NULL DEFAULT 'user-padrao.jpg',
@@ -190,15 +190,17 @@ CREATE TABLE IF NOT EXISTS `usuarios` (
   `deletado` tinyint(1) NOT NULL DEFAULT '0',
   `data_cadastro` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  KEY `id_setor` (`id_setor`)
-) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+  KEY `id_conector` (`id_conector`)
+) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
 
 --
 -- Extraindo dados da tabela `usuarios`
 --
 
-INSERT INTO `usuarios` (`id`, `id_setor`, `email`, `senha`, `imagem`, `nome`, `telefone`, `nivel`, `hash_login`, `deletado`, `data_cadastro`) VALUES
-(1, 0, 'admin@admin.com.br', '745536f0652656dae49565e5fa26152b', 'user-padrao.jpg', 'Administrador', '00 00000 0000', 1, '6a503dae14752990978b066912fd7c51', 0, '2017-11-30 18:49:14');
+INSERT INTO `usuarios` (`id`, `id_conector`, `email`, `senha`, `imagem`, `nome`, `telefone`, `nivel`, `hash_login`, `deletado`, `data_cadastro`) VALUES
+(1, 0, 'admin@admin.com.br', '745536f0652656dae49565e5fa26152b', 'user-padrao.jpg', 'Administrador', '00 00000 0000', 1, 'f8ec7d567e7621209fa4321b05a8cc6c', 0, '2017-11-30 18:49:14'),
+(2, 0, 'gerente@gerente.com.br', '745536f0652656dae49565e5fa26152b', 'user-padrao.jpg', 'Gerente', '00 00000 0000', 2, '2125c516247379df72abe007a2714996', 0, '2017-11-30 18:49:14'),
+(3, 0, 'usuario@usuario.com.br', '745536f0652656dae49565e5fa26152b', 'user-padrao.jpg', 'Usuário', '00 00000 0000', 3, '2125c516247379df72abe007a2714996', 0, '2017-11-30 18:49:14');
 
 -- --------------------------------------------------------
 

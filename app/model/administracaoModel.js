@@ -84,9 +84,9 @@ class AdministracaoModel {
 	GetMesAtualAtivo(){
 		return new Promise(function(resolve, reject) {
 			helper.Query('SELECT MONTH(NOW()) as mes_atual_ativo', []).then(data => {
-					resolve(data);
-				});
+				resolve(data);
 			});
+		});
 	}
 
 
@@ -117,6 +117,23 @@ class AdministracaoModel {
 	GetUsuariosMenosProprio(id) {
 		return new Promise(function(resolve, reject) {
 			helper.Query('SELECT * FROM usuarios WHERE deletado = ? AND id != ?	ORDER BY data_cadastro ', [0,id]).then(data => {
+				resolve(data);
+			});
+		});
+	}
+
+	GetConectores() {
+		return new Promise(function(resolve, reject) {
+			helper.Query('SELECT * FROM usuarios WHERE deletado = ? AND nivel = ? ORDER BY nome', [0,2]).then(data => {
+				resolve(data);
+			});
+		});
+	}
+
+
+	DesativarUsuario(POST) {
+		return new Promise(function(resolve, reject) {
+			helper.Desativar('usuarios', POST).then(data => {
 				resolve(data);
 			});
 		});

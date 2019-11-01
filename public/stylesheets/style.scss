@@ -1,4 +1,5 @@
 $primary-color:#f4811e;
+$secondary-color:#ec1550;
 
 html{
 	background:#000000;
@@ -8,6 +9,18 @@ html{
 
 body{
 	background:transparent;
+}
+
+.btn.primary{
+	color: #ffffff;
+
+	&:hover{
+		background: #90060c;
+		background: -moz-linear-gradient(45deg, #90060c 0%, #c10237 50%, #c15e08 100%);
+		background: -webkit-linear-gradient(45deg, #90060c 0%,#c10237 50%,#c15e08 100%);
+		background: linear-gradient(45deg, #90060c 0%,#c10237 50%,#c15e08 100%);
+		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#90060c', endColorstr='#c15e08',GradientType=0 );
+	}
 }
 
 .primary{
@@ -130,9 +143,17 @@ body{
 
 
 /*DataTable Over*/
-.dataTables_filter{
-	color:#ffffff;
+table.dataTable tbody tr{
+	background:transparent;
 }
+
+
+
+.dataTables_filter,.dataTables_info{
+	color:#ffffff!important;
+}
+
+
 
 
 a:hover{
@@ -141,6 +162,19 @@ a:hover{
 
 
 /*Remover focus azul do chrome*/
+
+/*Reset chrome*/
 th:focus{
 	outline: none;
+}
+
+input:focus{
+		outline: none;
+	}
+
+.form-control{
+	background:transparent;
+	border:1px solid $secondary-color;
+	color: #ffffff;
+	border-radius:0.5rem;
 }

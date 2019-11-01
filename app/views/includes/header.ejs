@@ -6,6 +6,7 @@
 	<link rel="icon" type="image/png" sizes="16x16" href="/public/images/favicon-16x16.png">
 	<link rel='stylesheet' href='/public/stylesheets/fontawesome.min.css' />
 	<link rel='stylesheet' href='/public/stylesheets/bootstrap/bootstrap.css' />
+	<link rel='stylesheet' href='/public/stylesheets/datatables.min.css' />
 	<link rel='stylesheet' href='/public/stylesheets/utils.css' />
 	<link rel='stylesheet' href='/public/stylesheets/style.css' />
 	<script src="/public/javascripts/moment.min.js"></script>
@@ -24,24 +25,28 @@
 	<input type="hidden" value="<%= usuario.nivel %>" name="nivel_usuario_sessao">
 	<div class="error_ajax none">Você parece ter se disconectado, tentando reconectar...</div>
 	<!-- Modal Structure -->
-	<div id="modaldeletar" class="modal" style="overflow: hidden;">
-		<div class="modal-content">
-			<b><p style="text-align: center;" id="texto">Remover</p></b>
-		</div>
-		<div class="modal-footer">
-			<div class="row">
-				<div class="col s12 m6">
-					<a style="width: 100%; text-align: center;" href="#!" class="modal-action modal-close waves-effect waves-green btn-flat grey lighten-2">Cancelar</a>
+	<div id="modaldeletar" class="modal fade" tabindex="-1" role="dialog">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-body text-center">
+					<b><p id="texto">Remover</p></b>
 				</div>
-				<div class="col s12 m6">
-					<form method="POST" action="">
-						<input id="id" type="hidden" name="id">
-						<input type="hidden" name="deletado" value="1">
-						<button style="width: 100%; text-align: center;" class="modal-action modal-close waves-effect waves-green btn-flat red lighten-2 white-text ajax-submit"
-						data-href=""
-						data-action=""
-						>Excluir</button>
-					</form>
+				<div class="modal-footer">
+					<div class="row">
+						<div class="col col-sm-6">
+							<button type="button" class="btn grey white-text" data-dismiss="modal">Cancelar</a>
+						</div>
+						<div class="col col-sm-6">
+							<form method="POST" action="">
+								<input id="id" type="hidden" name="id">
+								<input type="hidden" name="deletado" value="1">
+								<button style="width: 100%; text-align: center;" class="btn red white-text ajax-submit"
+								data-href=""
+								data-action="" data-dismiss="modal"
+								>Excluir</button>
+							</form>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>

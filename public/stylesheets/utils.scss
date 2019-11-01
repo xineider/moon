@@ -480,3 +480,27 @@
 .grey-text{
 	color: #999999;
 }
+
+.red{
+	background:#ec3434;
+}
+
+
+.btn.grey:hover{
+	background:#7d7d7d;
+	color: #ffffff;
+}
+
+.btn.red:hover{
+	background:#bd2626;
+	color: #ffffff;
+}
+
+.btn:focus, .btn.focus{
+	box-shadow: none;
+}
+
+
+.pointer{
+	cursor: pointer;
+}

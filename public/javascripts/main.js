@@ -1,6 +1,7 @@
 // Eventos DOM
 $(document).ready(function () {
 
+	console.log('estou aqui no ready do começo');
 	adicionarLoader();
 	FormatInputs();
 
@@ -13,13 +14,13 @@ $(document).ready(function () {
 
 	$(document).on('click', '.modal-remover-mount', function (e) {
 		e.preventDefault();
-		var modal = $(this).data('href');
+		var modal = $(this).data('modal');
 		var texto = $(this).data('texto');
 		var id = $(this).data('id');
 		var to = $(this).data('to');
 		var back = $(this).data('back');
 
-		$(modal).modal('open');
+		$(modal).modal();
 		$(modal).find('#texto').text(texto);
 		$(modal).find('#id').val(id);
 		$(modal).find('button').data('href', to).data('action', back);
@@ -99,22 +100,26 @@ $(document).ready(function () {
 		$('.modal').modal('close');
 	});
 
-	// EVENTOS ESPECIFICOS
 });
+
+
 // Eventos Após DOM
-$(window).on('load', function (e) {
+
+$(window).on('load', function() {
+	console.log('removi o loader');
 	removerLoader();
 	FormatInputs();
 });
-
 
 
 // Funções
 function adicionarLoader() {
 	$('body').css('overflow', 'hidden');
 	$('.loader').fadeIn('fast');
+	console.log('estou sendo chamado, adicionarLoader()');
 }
 function removerLoader() {
+	console.log('estou sendo chamado, a função de removerLoader');
 	$('body').css('overflow', 'auto');
 	$('.loader').fadeOut('fast');
 }
@@ -150,7 +155,7 @@ function GoTo(link, state) {
     	//$('.modal').modal('close');
     	FormatInputs();
     }
-  });
+});
 	if (state == true) {
 		window.history.pushState('Sistema Quorp', 'Sistema Quorp', link);
 	}
@@ -178,7 +183,7 @@ function LoadTo(link, to) {
     	//$('.modal').modal('close');
     	FormatInputs();
     }
-  });
+});
 }
 function FormatInputs(focus) {
 	$('.cnpj').mask('00.000.000/0000-00', {reverse: true});
@@ -223,7 +228,7 @@ function GetEndereco(cep, pai) {
     complete: function() {
     	removerLoader();
     }
-  });
+});
 }
 function SubmitAjax(post, link, back, method) {
 	$.ajax({
@@ -249,7 +254,7 @@ function SubmitAjax(post, link, back, method) {
     complete: function() {
     	removerLoader();
     }
-  });
+});
 }
 function Reestruturar(str) {
 	var i = 1;
@@ -301,7 +306,7 @@ function MountModal(modal, link) {
     	$('.tooltipped').tooltip({delay: 50});
     	FormatInputs();
     }
-  });
+});
 }
 
 function VerificarForm(form) {

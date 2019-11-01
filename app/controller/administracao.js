@@ -44,22 +44,14 @@ router.get('/usuarios', function(req, res, next) {
 			data.saldo_atualizado = data_saldo_atualizado;
 			model.GetPlanoUsuario(req.session.usuario.id).then(data_plano=>{
 				data.plano = data_plano;
-				model.GetMesesDecorridosUsuario(req.session.usuario.id).then(data_meses_decorridos=>{
-					data.meses_decorridos = data_meses_decorridos;
-					model.GetCaixaMesesUsuario(req.session.usuario.id).then(data_meses_caixa=>{
-						data.meses_com_caixa = data_meses_caixa;
-						model.GetMesAtualAtivo().then(data_mes_atual_ativo=>{
-							data.mes_atual_ativo = data_mes_atual_ativo;
-							model.GetUsuariosMenosProprio(req.session.usuario.id).then(data_usuarios=>{
-								data.usuarios_admin = data_usuarios;
-								data.link_sistema = '/sistema';
-								console.log('===================== ADMINISTRACAO USUARIO ===-================');
-								console.log(data);
-								console.log('=======================================================');
-								res.render(req.isAjaxRequest() == true ? 'api' : 'montador', {html: 'administracao/usuarios/usuarios', data: data, usuario: req.session.usuario});
-							});
-						});
-					});
+
+				model.GetUsuariosMenosProprio(req.session.usuario.id).then(data_usuarios=>{
+					data.usuarios_admin = data_usuarios;
+					data.link_sistema = '/sistema';
+					console.log('===================== ADMINISTRACAO USUARIO ===-================');
+					console.log(data);
+					console.log('=======================================================');
+					res.render(req.isAjaxRequest() == true ? 'api' : 'montador', {html: 'administracao/usuarios/usuarios', data: data, usuario: req.session.usuario});
 				});
 			});
 		});
@@ -147,23 +139,50 @@ router.get('/alterar-senha-usuario/:id', function(req, res, next) {
 
 /* Ínicio Criar GET Administração */
 
+
+// router.get('/usuarios', function(req, res, next) {
+// 	model.GetPrimeiroAporte(req.session.usuario.id).then(data_primeiro_aporte=>{
+// 		data.primeiro_aporte = data_primeiro_aporte;
+// 		model.GetValorSaldoAtualizado(req.session.usuario.id).then(data_saldo_atualizado =>{
+// 			data.saldo_atualizado = data_saldo_atualizado;
+// 			model.GetPlanoUsuario(req.session.usuario.id).then(data_plano=>{
+// 				data.plano = data_plano;
+// 				model.GetMesAtualAtivo().then(data_mes_atual_ativo=>{
+// 					data.mes_atual_ativo = data_mes_atual_ativo;
+// 					model.GetUsuariosMenosProprio(req.session.usuario.id).then(data_usuarios=>{
+// 						data.usuarios_admin = data_usuarios;
+// 						data.link_sistema = '/sistema';
+// 						console.log('===================== ADMINISTRACAO USUARIO ===-================');
+// 						console.log(data);
+// 						console.log('=======================================================');
+// 						res.render(req.isAjaxRequest() == true ? 'api' : 'montador', {html: 'administracao/usuarios/usuarios', data: data, usuario: req.session.usuario});
+// 					});
+// 				});
+// 			});
+// 		});
+// 	});
+// });
+
+
+
+
 router.get('/usuarios/criar', function(req, res, next) {
 
-	if(req.session.usuario.nivel == 2){
-		model.GetCoachsDoManagerEManager(req.session.usuario.id).then(data_coach=>{
-			data.coach = data_coach;			
-			data.link_sistema = '/sistema';
-			res.render(req.isAjaxRequest() == true ? 'api' : 'montador', {html: 'administracao/usuarios/cadastrar_usuario', data: data, usuario: req.session.usuario});
+	model.GetPrimeiroAporte(req.session.usuario.id).then(data_primeiro_aporte=>{
+		data.primeiro_aporte = data_primeiro_aporte;
+		model.GetValorSaldoAtualizado(req.session.usuario.id).then(data_saldo_atualizado =>{
+			data.saldo_atualizado = data_saldo_atualizado;
+			model.GetPlanoUsuario(req.session.usuario.id).then(data_plano=>{
+				data.plano = data_plano;
+				model.GetConectores().then(data_conectores=>{
+					data.conector = data_conectores;
+					data.link_sistema = '/sistema';
+					res.render(req.isAjaxRequest() == true ? 'api' : 'montador', {html: 'administracao/usuarios/cadastrar_usuario', data: data, usuario: req.session.usuario});
+				});
+			});
 		});
-	}else{
-		model.GetCoach().then(data_coach=>{
-			data.coach = data_coach;
-			data.link_sistema = '/sistema';
-			res.render(req.isAjaxRequest() == true ? 'api' : 'montador', {html: 'administracao/usuarios/cadastrar_usuario', data: data, usuario: req.session.usuario});
-		});
-	}
+	});
 });
-
 
 router.get('/caixa/criar', function(req, res, next) {
 	model.GetUsuarios().then(data_usuario=>{
