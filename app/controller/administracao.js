@@ -515,58 +515,47 @@ router.post('/usuarios/cadastrar/', function(req, res, next) {
 	POST.senha = senha;
 
 
-	//Se for criado um coach ou seja nivel 1 e quem tá cadastrando é o manager então vai o id do manager
-	if(POST.nivel == 1 && req.session.usuario.nivel == 2){
-		POST.id_coach = req.session.usuario.id;
-	}
-
-	if(POST.id_coach == undefined){
-		POST.id_coach = 0;
+	if(POST.id_conector == undefined){
+		POSt.id_conector = 0;
 	}
 
 	console.log('PPPPPPPPPPOOOOOOOOOOOST USUARIOS POOOOOOSSSSSSSSSTTTTTTTTTTTTTTTT');
 	console.log(POST);
 	console.log('PPPPPPPPPPPPPPPPOOOOOOOOOOOSSSSSSSSSSSSSSSSSSSSSSTTTTTTTTTTTTTTTT');
 
-	model.VerificarSeTemLoginDisponivel(POST.login).then(tem_login => {
+	model.VerificarSeTemEmailDisponivel(POST.email).then(tem_email => {
 		console.log('ttttttttttt tem login ttttt');
-		console.log(tem_login);
+		console.log(tem_email);
 		console.log('ttttttttttttttttttttttttttt');
 
-		if(tem_login == ''){
-			model.VerificarSeTemEmailDisponivel(POST.email).then(tem_email => {
-				if(tem_email == ''){
+		if(tem_email == ''){
+			model.CadastrarUsuario(POST).then(data => {
 
-					model.CadastrarUsuario(POST).then(data => {
+				var html = "Bem vindo ao Moon Austronauta!. Segue abaixo as informações sobre sua conta."+
+				"<br><b>Login:</b> "+POST.email+
+				"<br><b>Senha:</b> "+senha+ 
+				"<br><br>Recomendamos que você altera sua senha ao acessar o botão meus dados no menu."+
+				"<br>Acesse via o site : http://moon.com.br"+
+				"<br>Os dados da sua conta são responsabilidade sua, não a entregue a pessoas sem permissão."+
+				"<br><b>Por favor, não responda essa mensagem, pois ela é enviada automaticamente!</b>";
 
-						var html = "Bem vindo ao Eagle Finances. Segue abaixo as informações sobre sua conta."+
-						"<br><b>Login:</b> "+POST.login+
-						"<br><b>Senha:</b> "+senha+ 
-						"<br><br>Recomendamos que você altera sua senha ao acessar o seu perfil ao clicar no menu e ir no item 'Perfil'."+
-						"<br>Acesse via o aplicativo Eagle Finance"+
-						"<br>Os dados da sua conta são responsabilidade sua, não a entregue a pessoas sem permissão."+
-						"<br><b>Por favor, não responda essa mensagem, pois ela é enviada automaticamente!</b>";
+				var text = "Bem vindo ao Eagle Finances. Segue abaixo as informações sobre sua conta."+
+				"<br>Login: "+POST.login+
+				"<br>Senha: "+senha+
+				"<br><br>Recomendamos que você altera sua senha ao acessar o seu perfil ao clicar no menu e ir no item 'Perfil'."+
+				"<br>Acesse via o aplicativo Eagle Finance"+
+				"<br>Os dados da sua conta são responsabilidade sua, não a entregue a pessoas sem permissão."+
+				"<br>Por favor, não responda essa mensagem, pois ela é enviada automaticamente!";
 
-						var text = "Bem vindo ao Eagle Finances. Segue abaixo as informações sobre sua conta."+
-						"<br>Login: "+POST.login+
-						"<br>Senha: "+senha+
-						"<br><br>Recomendamos que você altera sua senha ao acessar o seu perfil ao clicar no menu e ir no item 'Perfil'."+
-						"<br>Acesse via o aplicativo Eagle Finance"+
-						"<br>Os dados da sua conta são responsabilidade sua, não a entregue a pessoas sem permissão."+
-						"<br>Por favor, não responda essa mensagem, pois ela é enviada automaticamente!";
+				control.SendMail(POST.email, 'Bem-vindo ao Moon!', text,html);
 
-
-						control.SendMail(POST.email, 'Bem-vindo ao Eagle Finances!', text,html);
-
-						res.json(data);
-					});
-				}else{
-					res.json({error:'possui_email',element:'input[name="email"]',texto:'Email já cadastrado, por favor inserir outro!'});
-				}
+				res.json(data);
 			});
+
+
 		}else{
 			console.log('JJJJJJJJJJJJJJJJJJJ já existe login JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ');
-			res.json({error:'possui_login',element:'input[name="login"]',texto:'Login existente, tente outro!'});
+			res.json({error:'possui_email',element:'input[name="email"]',texto:'Email já cadastrado, por-favor tente outro!'});
 		}
 	});
 });

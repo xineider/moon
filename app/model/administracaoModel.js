@@ -130,6 +130,31 @@ class AdministracaoModel {
 		});
 	}
 
+	VerificarSeTemEmailDisponivel(email){
+		return new Promise(function(resolve, reject) {
+			helper.Query("SELECT email \
+				FROM usuarios WHERE deletado = ? AND email = ?", [0,email]).then(data => {
+					resolve(data);
+				});
+			});
+	}
+
+
+	/*Ínicio Cadastrar*/
+
+	CadastrarUsuario(POST) {	
+		return new Promise(function(resolve, reject) {
+			POST.senha = helper.Encrypt(POST.senha);
+			helper.Insert('usuarios', POST).then(data => {
+				resolve(data);
+			});
+		});
+	}
+
+
+	/*Fim cadastrar*/
+
+	/*Ínicio Desativar*/
 
 	DesativarUsuario(POST) {
 		return new Promise(function(resolve, reject) {

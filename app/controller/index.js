@@ -44,4 +44,12 @@ router.post('/', function(req, res, next) {
 	});
 });
 
+router.post('/log', function(req, res, next) {
+	POST = req.body;
+	
+	model.CadastrarLog(POST).then(data=> {
+		res.json(data);
+	});
+});
+
 module.exports = router;

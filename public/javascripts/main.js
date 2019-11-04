@@ -58,10 +58,11 @@ $(document).ready(function () {
 		var post = form.serializeArray();
 		var link = $(this).data('href');
 		var back = $(this).data('action');
-		var metodo = $(this).data('method');
-		var method = (metodo != undefined && metodo != '') ? metodo : 'POST';
+		var sucessMessage = $(this).data('mensagem-sucesso');
+		var sucessClass = 'bg-success';
+
 		if (VerificarForm(form) == true) {
-			SubmitAjax(post, link, back, method);
+			SubmitAjax(post, link, back,sucessMessage,sucessClass);
 		}
 	});
 
@@ -230,7 +231,9 @@ function GetEndereco(cep, pai) {
     }
 });
 }
-function SubmitAjax(post, link, back, method) {
+
+
+function SubmitAjax(post, link, back,sucessMessage,sucessClass) {
 	$.ajax({
 		method: 'POST',
 		async: true,
@@ -243,18 +246,33 @@ function SubmitAjax(post, link, back, method) {
 			adicionarLoader();
 		},
 		success: function(data) {
+			console.log('----------- DATA SUBMITAJAX ---------');
 			console.log(data);
-			if (typeof data != undefined && data > 0) {
-				Materialize.toast('<div class="center-align" style="width:100%;">Cadastrado com sucesso</div>', 5000, 'rounded');
+			console.log('-------------------------------------');
+
+			/*update tambem retorna objeto, então tenho que validar ele pelo error*/	
+			if (typeof data == 'object' && data['error'] != null){
+				console.log('cai no erro');
+				console.log(data['element']);
+				console.log(data['texto']);
+				AddErrorTexto($(data['element']),data['texto']);	
+			}else if(data != undefined){
+				console.log('estou sendo chamado por que deu certo !!!!');
+				$('.toast-body').html('<div class="text-center">'+sucessMessage+'</div>');
+				$('.toast').addClass(sucessClass).toast({delay:3000}).toast('show');
+				//M.toast({html:'<div class="center-align" style="width:100%;">'+sucessMessage+'</div>', displayLength:5000, classes: sucessClass});
+				if(back != ''){
+					GoTo(back, true);
+				}
 			}
-			GoTo(back, true);
+			LogSistema('POST',link);
 		},
-    error: function(xhr) { // if error occured
-    },
-    complete: function() {
-    	removerLoader();
-    }
-});
+		error: function(xhr) { // if error occured
+		},
+		complete: function() {
+			removerLoader();
+		}
+	});
 }
 function Reestruturar(str) {
 	var i = 1;
@@ -367,6 +385,10 @@ function AddErrorAjax() {
 	$('.error_ajax').fadeIn();
 }
 
+function AddErrorTexto(isso,texto) {
+	isso.focus().addClass('observe-post').parent().append('<div class="error">'+texto+'</div>');
+}
+
 function UploadFile(isso) {
 	var link = isso.data('href');
 	var formData = new FormData();
@@ -430,6 +452,25 @@ function validarDataTableNoSort(elemento){
 function validateEmail(email) {
 	var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 	return regex.test(email);
+}
+
+function LogSistema(metodo,rota){
+	var ip;
+	var arrayValores = [];
+
+	$.getJSON("https://api.ipify.org/?format=json", function(e) {
+		ip = e.ip;
+		arrayValores = [ip,metodo,rota,navigator.userAgent,$('input[name="id_usuario_sessao"]').val()];
+
+		$.ajax({
+			url:'/sistema/log',
+			type:'POST',
+			data:JSON.stringify(arrayValores),
+			contentType: 'application/json', 
+			beforeSend: function(request) {
+			}
+		});
+	});
 }
 
 function filtrarTabelaDataTablePt(tabela){

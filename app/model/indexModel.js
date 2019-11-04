@@ -84,9 +84,9 @@ class IndexModel {
 	GetMesAtualAtivo(){
 		return new Promise(function(resolve, reject) {
 			helper.Query('SELECT MONTH(NOW()) as mes_atual_ativo', []).then(data => {
-					resolve(data);
-				});
+				resolve(data);
 			});
+		});
 	}
 
 
@@ -112,6 +112,21 @@ class IndexModel {
 					resolve(data);
 				});
 			});
+	}
+
+	CadastrarLog(POST) {
+		var cadastrarLog = [];
+		cadastrarLog.ip = POST[0];
+		cadastrarLog.method = POST[1];
+		cadastrarLog.rota = POST[2];
+		cadastrarLog.user_agent = POST[3];
+		cadastrarLog.id_usuario = POST[4];
+
+		return new Promise(function(resolve, reject) {
+			helper.Insert('log', cadastrarLog).then(data => {
+				resolve(data);
+			});
+		});
 	}
 }
 module.exports = IndexModel;

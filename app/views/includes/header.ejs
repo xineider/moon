@@ -35,104 +35,111 @@
 					<div class="row">
 						<div class="col col-sm-6">
 							<button type="button" class="btn grey white-text" data-dismiss="modal">Cancelar</a>
-						</div>
-						<div class="col col-sm-6">
-							<form method="POST" action="">
-								<input id="id" type="hidden" name="id">
-								<input type="hidden" name="deletado" value="1">
-								<button style="width: 100%; text-align: center;" class="btn red white-text ajax-submit"
-								data-href=""
-								data-action="" data-dismiss="modal"
-								>Excluir</button>
-							</form>
+							</div>
+							<div class="col col-sm-6">
+								<form method="POST" action="">
+									<input id="id" type="hidden" name="id">
+									<input type="hidden" name="deletado" value="1">
+									<button style="width: 100%; text-align: center;" class="btn red white-text ajax-submit"
+									data-href=""
+									data-action="" data-dismiss="modal"
+									>Excluir</button>
+								</form>
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-	</div>
-	<!-- Modal Structure -->
-	<div id="modalinfo" class="modal">
-		<div class="modal-content">
+		<!-- Modal Structure -->
+		<div id="modalinfo" class="modal">
+			<div class="modal-content">
+			</div>
 		</div>
-	</div>
-	<div class="loader none">
-		<i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
-		<!-- <span class="sr-only">Loading...</span> -->
-	</div>
-	<header class="white-text">
-		<div class="header-logo w100">
-			<img src="/public/images/logo.png">
-			<a class="logout block float-right" href="/logout" onclick="return confirm('Você deseja sair?');">
-				<i class="fas fa-sign-out-alt primary-text"></i>
-				<div class="white-text">Sair</div>
-			</a>
+		<div class="loader none">
+			<i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+			<!-- <span class="sr-only">Loading...</span> -->
 		</div>
 
+		<header class="white-text">
+			<div class="header-logo w100">
+				<img src="/public/images/logo.png">
+				<a class="logout block float-right" href="/logout" onclick="return confirm('Você deseja sair?');">
+					<i class="fas fa-sign-out-alt primary-text"></i>
+					<div class="white-text">Sair</div>
+				</a>
 
-		<div class="header-info text-center margin-t-10">
-			Olá <span class="primary-text"><%= usuario.nome %></span>.
-			<br>
-			Seu último acesso foi em 00/00 às 00h00.
-
-			<br>
-			<span class="primary-text uppercase">
-
-				<% if (typeof data.primeiro_aporte != 'undefined' && data.primeiro_aporte.length > 0){ %>
-				Seu aporte inicial foi de <span class="white-text">R$<%= data.primeiro_aporte[0].valor%></span>
-				<%}else{%>
-				<span class="f20">Você não fez nenhum <span class="bold">aporte</span> <a >clique aqui</a> para fazer!</span>
-				<%}%>
-
-				
-			</span>
-			<br>
-			<span class="green-text uppercase">
-				<% if (typeof data.saldo_atualizado != 'undefined' && data.saldo_atualizado.length > 0){ %>
-				Saldo Atualizado  R$<%= data.saldo_atualizado[0].saldo_atualizado %>
-				<%}else{%>
-				<span class="f20">Você não fez nenhum <span class="bold">aporte</span> <a >clique aqui</a> para fazer!</span>
-				<%}%>				
-			</span>
-		</div>
-
-		<div class="primary_line w90 margin-center margin-t-5"></div>
-
-		<div class="w90 header-plano uppercase white-text margin-t-10 margin-b-10">
-			<div class="row">
-				<div class="col text-center border-2-right-primary padding-b-10">
-					<span class="primary-text">Plano Atual</span>
-					<br>
-					<% if (typeof data.plano != 'undefined' && data.plano.length > 0){ %>
-
-					<span class="uppercase"><%= data.plano[0].plano %></span>
-					<br>
-					<span class="uppercase">
-						<%= data.plano[0].performance %>% da Performance
-					</span>
-					<%}else{%>
-					<span class="uppercase">Nenhum plano atualmente!</span>
-					<%}%>
-				</div>
-				<div class="col text-center padding-b-10">
-					<% if (typeof data.meses_decorridos != 'undefined' && data.meses_decorridos.length > 0){ %>
-					<span class="uppercase primary-text"><%= data.meses_decorridos[0].meses_decorridos %> meses</span>
-					<br>
-					Decorridos do seu plano
-					<%}else{%>
-					<span class="uppercase">Nenhum plano atualmente!</span>
-					<%}%>
-					
-					
+				<div class="toast" role="alert" aria-live="assertive" aria-atomic="true" style="position: absolute; top: 70px; right: 0;">
+					<div class="toast-body">
+						Texto
+					</div>
 				</div>
 			</div>
-			
 
-			
-		</div>
 
-		<nav class="w100 header-menu">
-			<%- include('menu_header'); %>
-		</nav>
-	</header>
+			<div class="header-info text-center margin-t-10">
+				Olá <span class="primary-text"><%= usuario.nome %></span>.
+				<br>
+				Seu último acesso foi em 00/00 às 00h00.
+
+				<br>
+				<span class="primary-text uppercase">
+
+					<% if (typeof data.primeiro_aporte != 'undefined' && data.primeiro_aporte.length > 0){ %>
+					Seu aporte inicial foi de <span class="white-text">R$<%= data.primeiro_aporte[0].valor%></span>
+					<%}else{%>
+					<span class="f20">Você não fez nenhum <span class="bold">aporte</span> <a >clique aqui</a> para fazer!</span>
+					<%}%>
+
+
+				</span>
+				<br>
+				<span class="green-text uppercase">
+					<% if (typeof data.saldo_atualizado != 'undefined' && data.saldo_atualizado.length > 0){ %>
+					Saldo Atualizado  R$<%= data.saldo_atualizado[0].saldo_atualizado %>
+					<%}else{%>
+					<span class="f20">Você não fez nenhum <span class="bold">aporte</span> <a >clique aqui</a> para fazer!</span>
+					<%}%>				
+				</span>
+			</div>
+
+			<div class="primary_line w90 margin-center margin-t-5"></div>
+
+			<div class="w90 header-plano uppercase white-text margin-t-10 margin-b-10">
+				<div class="row">
+					<div class="col text-center border-2-right-primary padding-b-10">
+						<span class="primary-text">Plano Atual</span>
+						<br>
+						<% if (typeof data.plano != 'undefined' && data.plano.length > 0){ %>
+
+						<span class="uppercase"><%= data.plano[0].plano %></span>
+						<br>
+						<span class="uppercase">
+							<%= data.plano[0].performance %>% da Performance
+						</span>
+						<%}else{%>
+						<span class="uppercase">Nenhum plano atualmente!</span>
+						<%}%>
+					</div>
+					<div class="col text-center padding-b-10">
+						<% if (typeof data.meses_decorridos != 'undefined' && data.meses_decorridos.length > 0){ %>
+						<span class="uppercase primary-text"><%= data.meses_decorridos[0].meses_decorridos %> meses</span>
+						<br>
+						Decorridos do seu plano
+						<%}else{%>
+						<span class="uppercase">Nenhum plano atualmente!</span>
+						<%}%>
+
+
+					</div>
+				</div>
+
+
+
+			</div>
+
+			<nav class="w100 header-menu">
+				<%- include('menu_header'); %>
+			</nav>
+		</header>
 

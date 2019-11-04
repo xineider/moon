@@ -39,7 +39,7 @@ router.get('/editar/perfil/:id', function(req, res, next) {
 });
 
 // POSTS
-	router.post('/cadastrar', function(req, res, next) {
+router.post('/cadastrar', function(req, res, next) {
 		// Recebendo o valor do post
 		POST = req.body;
 		POST.senha = control.Encrypt('optima');
@@ -54,7 +54,7 @@ router.get('/editar/perfil/:id', function(req, res, next) {
 		});
 	});
 
-	router.post('/atualizar', function(req, res, next) {
+router.post('/atualizar', function(req, res, next) {
 		// Recebendo o valor do post
 		POST = req.body;
 		model.AtualizarUsuario(POST).then(data => {
@@ -62,37 +62,37 @@ router.get('/editar/perfil/:id', function(req, res, next) {
 		});
 	});
 
-	router.post('/desativar', function(req, res, next) {
+router.post('/desativar', function(req, res, next) {
 		// Recebendo o valor do post
 		POST = req.body;
-  	model.DesativarUsuario(POST).then(data=> {
-  		res.json(data);
-  	});
+		model.DesativarUsuario(POST).then(data=> {
+			res.json(data);
+		});
 	});
 
-	router.post('/ver/perfil/', function(req, res, next) {
+router.post('/ver/perfil/', function(req, res, next) {
 		// Recebendo o valor do post
 		POST = req.body;
 		model.LoadPerfil(POST.id).then(data => {
 			res.render(req.isAjaxRequest() == true ? 'api' : 'montador', {html: 'usuarios/usuarios_perfil_header', data: data});
 		});
 	});
-	
-	router.post('/uploadarquivo', function(req, res, next) {
-	  var sampleFile = req.files.arquivo;
-	  var nome = control.DateTimeForFile()+'_'+sampleFile.name;
-		var id = req.session.id_usuario;
 
-	 	model.CadastraArquivo(id, nome).then(data => {
+router.post('/uploadarquivo', function(req, res, next) {
+	var sampleFile = req.files.arquivo;
+	var nome = control.DateTimeForFile()+'_'+sampleFile.name;
+	var id = req.session.id_usuario;
+
+	model.CadastraArquivo(id, nome).then(data => {
 		  // Use the mv() method to place the file somewhere on your server
 		  sampleFile.mv('./assets/uploads/'+nome, function(err) {
-		    if (err) {
-		      return res.status(500).send(err);
-		    }
+		  	if (err) {
+		  		return res.status(500).send(err);
+		  	}
 
-				res.json(nome);
+		  	res.json(nome);
 		  });
-	 	});
-	});
+		});
+});
 
 module.exports = router;
