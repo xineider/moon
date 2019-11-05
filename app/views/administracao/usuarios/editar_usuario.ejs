@@ -1,160 +1,103 @@
-<div class="col s12 center">
-	<div class="w90 center-align gold margin-center padding-5 border-radius-5 f20">Editar Usuário</div>
-	
-	
-	<%if(usuario.nivel == 2 || usuario.nivel == 4 || usuario.nivel == 5){ %>
+<div>
+	<%- include('../submenu'); %>
+</div>
 
+<%if(usuario.nivel == 1){ %>
+<div class="container-fluid">
+	<div class="w100 text-center">
+		<div class="bold f25 text-center white-text margin-b-10">Editar Usuário</div>
 
-	<form method="POST" action="" enctype="multipart/form-data">
+		<form method="POST" action="" enctype="multipart/form-data">
+			<input type="hidden" name="id" value="<%= data.usuario_admin[0].id %>">
 
-		<input type="hidden" name="id" value="<%= data.usuario_admin[0].id %>">
-
-		<div class="row margin-t-20">
-			<div class="input-field col s12">
-				<label class="gold-text" for="login">Login</label>
-				<input class="validate border-gold border-radius-5 white-text" type="text" name="login" value="<%= data.usuario_admin[0].login %>">
+			<div class="row">
+				<div class="form-group col-md-6">
+					<div class="row">
+						<label class="white-text col-sm-2" for="email">Email</label>
+						<div class="col-sm-10">
+							<input required="true" class="validate form-control " type="text" name="email" value="<%= data.usuario_admin[0].email %>">
+						</div>
+					</div>
+				</div>
+				<div class="form-group col-md-6">
+					<div class="row">
+						<label class="white-text col-sm-2" for="nome">Nome</label>
+						<div class="col-sm-10">
+							<input required="true" class="validate form-control" type="text" name="nome" value="<%= data.usuario_admin[0].nome %>">
+						</div>
+					</div>
+				</div>
 			</div>
-		</div>
 
-		<div class="row">
-			<div class="input-field col s12">
-				<label class="gold-text" for="nome">Nome</label>
-				<input class="validate border-gold border-radius-5 white-text" type="text" name="nome" value="<%= data.usuario_admin[0].nome %>">
+			<div class="row">
+
+				<div class="form-group col-md-6">
+					<div class="row">
+						<label class="white-text col-sm-2" for="telefone">Celular</label>
+						<div class="col-sm-10">
+							<input required="true" class="validate tel form-control" type="text" name="telefone" value="<%= data.usuario_admin[0].telefone %>">
+						</div>
+					</div>
+				</div>
+				<div class="form-group col-md-6">
+					<div class="row">
+						<label class="white-text col-sm-2" for="nivel">Nível</label>
+						<div class="col-sm-10">
+							<select required="true" name="nivel" class="form-control select_change_container" data-container="container_conectores" data-number-appear="3" data-link="<%= data.link_sistema%>/administracao/lista-conectores">
+								<option value="3" <%= data.usuario_admin[0].nivel == 3 ? 'selected' : '' %>>Comum</option>
+								<option value="2" <%= data.usuario_admin[0].nivel == 2 ? 'selected' : '' %>>Conector</option>					
+								<option value="1" <%= data.usuario_admin[0].nivel == 1 ? 'selected' : '' %>>Administrador</option>			
+							</select>
+						</div>
+					</div>
+				</div>
 			</div>
-		</div>
-
-		<div class="row">
-			<div class="input-field col s12">
-				<label class="gold-text" for="nome">Email</label>
-				<input class="validate border-gold border-radius-5 white-text" type="text" name="email" value="<%= data.usuario_admin[0].email %>">
-			</div>
-		</div>
-
-		<div class="row">
-			<div class="input-field col s12">
-				<label class="gold-text" for="telefone">Telefone</label>
-				<input class="validate tel border-gold border-radius-5 white-text" type="text" name="telefone" value="<%= data.usuario_admin[0].telefone %>">
-			</div>
-		</div>
 
 
-		<div class="row">
-			<div class="input-field col s12 ">
-
-				<%if(usuario.nivel == 4 && data.usuario_admin[0].nivel == 5){%>
-				<span class="gold-text" for="nivel">Nível</span>
-				<select name="nivel" class="browser-default border-gold border-radius-5 white-text">
-					<option disabled selected>Administrador</option>
-				</select>
+			<div class="row container_conectores">
 
 
-				<% }else{ %>				
-				<span class="gold-text" for="nivel">Nível</span>
-				<select name="nivel" class="cadastrar_usuario_nivel_select browser-default border-gold border-radius-5 white-text">
-					<option value="0" <%= data.usuario_admin[0].nivel == 0 ? 'selected' : '' %> >Coachee</option>
-					<option value="1" <%= data.usuario_admin[0].nivel == 1 ? 'selected' : '' %> >Coach</option>
-					<% if(usuario.nivel > 2){ %>
-					<option value="2" <%= data.usuario_admin[0].nivel == 2 ? 'selected' : '' %> >Manager</option>
-					<option value="3" <%= data.usuario_admin[0].nivel == 3 ? 'selected' : '' %> >Investidor</option>
-					<option value="4" <%= data.usuario_admin[0].nivel == 4 ? 'selected' : '' %> >Coordenação</option>
-					<% if(usuario.nivel == 5){ %>
-					<option value="5" <%= data.usuario_admin[0].nivel == 5 ? 'selected' : '' %> >Administrador</option>
-					<% }} %>
-				</select>
-				
+				<%if(data.usuario_admin[0].nivel==3){%>
 
+
+				<div class="form-group col-sm-12">
+					<div class="row">
+						<label class="white-text col-sm-1" for="id_conector">Conector</label>
+						<div class="col-sm-11">
+							<select name="id_conector" class="form-control">
+								<%
+								if (typeof data.conector != 'undefined' && data.conector.length > 0) {
+									for (var i = 0; i < data.conector.length; i++) { %>
+									<option value=" <%= data.conector[i].id %>" <%= data.conector[i].id == data.usuario_admin[0].id_conector ? 'selected' : ''%>> <%= data.conector[i].nome %></option>				
+									<% }
+								} %>
+							</select>
+						</div>
+					</div>
+				</div>
 
 				<%} %>
 			</div>
-		</div>
 
+			<button data-href="/sistema/administracao/usuarios/atualizar" data-action="<%= data.link_sistema%>/administracao/usuarios/" class="btn primary ajax-submit margin-b-10" data-mensagem-sucesso="Usuário Atualizado com Sucesso!" >
+				Salvar <i class="far fa-save-o" aria-hidden="true"></i>
+			</button>
 
-		<%if(data.usuario_admin[0].nivel==0){%>
-		<div class="row">
-			<div class="input-field col s12 cadastrar_usuario_coach_container margin-t-2rem">
-				<span class="gold-text" for="id_coach">Coach</span>	
-				<select name="id_coach" class="browser-default border-gold border-radius-5 white-text">
-					<%
-					if (typeof data.coach != 'undefined' && data.coach.length > 0) {
-						for (var i = 0; i < data.coach.length; i++) { %>
-						<option value="<%= data.coach[i].id %>" <%= data.coach[i].id == data.usuario_admin[0].id_coach ? 'selected' : ''%>> <%= data.coach[i].nome %></option>				
-						<% }
-					} %>
-				</select>
+		</form>
+	</div>
 
-			</div>
-		</div>
+	<div class="w100 text-center margin-t-10">
 
-
-		<%}else if(data.usuario_admin[0].nivel==1){ %>
-		<div class="row">
-			<div class="input-field col s12 cadastrar_usuario_coach_container margin-t-2rem">
-				<span class="gold-text" for="id_coach">Manager</span>	
-				<select name="id_coach" class="browser-default border-gold border-radius-5 white-text">
-					<!-- se for o manager ele não vê a Eagle como Manager -->
-					<% if(usuario.nivel == 4 || usuario.nivel == 5){ %>
-					<option value="0" <%= data.usuario_admin[0].id_coach == 0 ? 'selected' : '' %>>Eagle</option>
-					<%}%>
-					<%
-					if (typeof data.manager != 'undefined' && data.manager.length > 0) {
-						for (var i = 0; i < data.manager.length; i++) { %>
-						<option value="<%= data.manager[i].id %>" <%= data.manager[i].id == data.usuario_admin[0].id_coach ? 'selected' : ''%>> <%= data.manager[i].nome %></option>				
-						<% }
-					} %>
-				</select>
-
-			</div>
-		</div>
-
-		<% }else{%>
-		<div class="input-field col s12 cadastrar_usuario_coach_container margin-t-2rem">
-		</div>
-		<%}%>
-
-
-
-		<div class="row margin-t-10">
-			<div class="input-field col s12">
-				<label class="gold-text">Cripto Wallet</label>
-				<input type="text" name="crypto_wallet" value="<%= data.usuario_admin[0].crypto_wallet %>" class=" border-gold border-radius-5 white-text">
-			</div>
-
-		</div>
-
-		<%if(usuario.nivel == 4 && data.usuario_admin[0].nivel == 5){%>
-
-		<div>Você não possui permissão para alterar o Administrador!</div>
-
-		<% }else{ %>
-
-
-
-
-		<%if(usuario.nivel == 5 || (usuario.nivel == 4 && data.usuario_admin[0].nivel != 5)){%>
-
-		<div class="row">
-			<a class="modal-mount btn gold margin-b-10" data-href="#modalinfoclose" data-link="/administracao/alterar-senha-usuario/<%= data.usuario_admin[0].id %>">
-				Alterar Senha Usuário
-			</a>
-		</div>
-
-		<%}%>
-
-
-		<button data-href="/sistema/administracao/usuarios/atualizar" data-action="<%= data.link_sistema%>/administracao/usuarios/" class="btn gold ajax-submit-update margin-b-10">
-			Salvar <i class="far fa-save-o" aria-hidden="true"></i>
+		<button class="modal-mount btn secondary margin-b-10" data-modal="#modalinfo" data-link="/sistema/administracao/alterar-senha-usuario/<%= data.usuario_admin[0].id %>">
+			Alterar Senha Usuário
+			<i class="fas fa-key white-text"></i>
 		</button>
 
-		<% } %>
+	</div>
 
-	</form>
-
-
-
-
-
-	<%}else{%>
-	<div class="card light">Você não possui permissão para acessar esse conteúdo</div>
-	<%}%>
 
 </div>
+
+<%}else{%>
+<div class="white-text text-center f25">Você não possui permissão para acessar esse conteúdo!</div>
+<%}%>

@@ -27,7 +27,7 @@ router.get('/', function(req, res, next) {
 							console.log('kokokokokokoko usuario requisição kokokokokokokokoko')
 							console.log(data);
 							console.log('kokokokokokokokokokokokokokokokokokokokokokokokokoko');
-							res.render(req.isAjaxRequest() == true ? 'api' : 'montador', {html: 'administracao/upload-csv', data: data, usuario: req.session.usuario});
+							res.render(req.isAjaxRequest() == true ? 'api' : 'montador', {html: 'administracao/upload-csv/upload-csv', data: data, usuario: req.session.usuario});
 						});
 					});
 				});
@@ -44,7 +44,6 @@ router.get('/usuarios', function(req, res, next) {
 			data.saldo_atualizado = data_saldo_atualizado;
 			model.GetPlanoUsuario(req.session.usuario.id).then(data_plano=>{
 				data.plano = data_plano;
-
 				model.GetUsuariosMenosProprio(req.session.usuario.id).then(data_usuarios=>{
 					data.usuarios_admin = data_usuarios;
 					data.link_sistema = '/sistema';
@@ -95,7 +94,7 @@ router.get('/caixa', function(req, res, next) {
 
 
 router.get('/planos', function(req, res, next) {
-	model.GetTodosPlanosAteDeletados().then(data_planos=>{
+	model.GetPlanos().then(data_planos=>{
 		data.planos = data_planos;		
 		data.link_sistema = '/sistema';
 		console.log('===================== ADMINISTRACAO USUARIO ===-================');
@@ -131,6 +130,40 @@ router.get('/alterar-senha-usuario/:id', function(req, res, next) {
 		console.log(data);
 		console.log('*********************************************************************');
 		res.render(req.isAjaxRequest() == true ? 'api' : 'montador', {html: 'administracao/usuarios/alterar_senha_usuario', data: data, usuario: req.session.usuario});
+	});
+});
+
+router.get('/lista-conectores', function(req, res, next) {
+
+	model.GetConectores().then(data_conectores=>{
+		data.conector = data_conectores;
+		data.link_sistema = '/sistema';
+		res.render(req.isAjaxRequest() == true ? 'api' : 'montador', {html: 'administracao/listas/lista-conectores', data: data, usuario: req.session.usuario});
+	});
+});
+
+router.get('/upload-csv', function(req, res, next) {
+	model.GetPrimeiroAporte(req.session.usuario.id).then(data_primeiro_aporte=>{
+		data.primeiro_aporte = data_primeiro_aporte;
+		model.GetValorSaldoAtualizado(req.session.usuario.id).then(data_saldo_atualizado =>{
+			data.saldo_atualizado = data_saldo_atualizado;
+			model.GetPlanoUsuario(req.session.usuario.id).then(data_plano=>{
+				data.plano = data_plano;
+				model.GetMesesDecorridosUsuario(req.session.usuario.id).then(data_meses_decorridos=>{
+					data.meses_decorridos = data_meses_decorridos;
+					model.GetCaixaMesesUsuario(req.session.usuario.id).then(data_meses_caixa=>{
+						data.meses_com_caixa = data_meses_caixa;
+						model.GetMesAtualAtivo().then(data_mes_atual_ativo=>{
+							data.mes_atual_ativo = data_mes_atual_ativo;
+							console.log('kokokokokokoko usuario requisição kokokokokokokokoko')
+							console.log(data);
+							console.log('kokokokokokokokokokokokokokokokokokokokokokokokokoko');
+							res.render(req.isAjaxRequest() == true ? 'api' : 'montador', {html: 'administracao/upload-csv/upload-csv', data: data, usuario: req.session.usuario});
+						});
+					});
+				});
+			});
+		});
 	});
 });
 
@@ -225,37 +258,24 @@ router.get('/usuarios/editar/:id', function(req, res, next) {
 	console.log(id);
 	console.log('_________________________________');
 
-	if(req.session.usuario.nivel == 2){
-		model.GetCoachsDoManagerEManager(req.session.usuario.id).then(data_coach=>{
-			data.coach = data_coach;
-			model.GetProprioManager(req.session.usuario.id).then(data_manager=>{
-				data.manager = data_manager;
-				model.SelecionarUsuario(id).then(data_usuario_sel => {
-					data.usuario_admin = data_usuario_sel;
-					data.link_sistema = '/sistema';
-					console.log('EEEEEEEEEEEEEEE USUARIOS EDITAR EEEEEEEEEEEEEEEEEEEE');
-					console.log(data);	
-					console.log('EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE');
-					res.render(req.isAjaxRequest() == true ? 'api' : 'montador', {html: 'administracao/usuarios/editar_usuario', data: data, usuario: req.session.usuario});
+	model.GetPrimeiroAporte(req.session.usuario.id).then(data_primeiro_aporte=>{
+		data.primeiro_aporte = data_primeiro_aporte;
+		model.GetValorSaldoAtualizado(req.session.usuario.id).then(data_saldo_atualizado =>{
+			data.saldo_atualizado = data_saldo_atualizado;
+			model.GetPlanoUsuario(req.session.usuario.id).then(data_plano=>{
+				data.plano = data_plano;
+				model.GetConectores().then(data_conectores=>{
+					data.conector = data_conectores;
+					model.SelecionarUsuario(id).then(data_usuario_sel => {
+						data.usuario_admin = data_usuario_sel;
+						data.link_sistema = '/sistema';
+						console.log(data);
+						res.render(req.isAjaxRequest() == true ? 'api' : 'montador', {html: 'administracao/usuarios/editar_usuario', data: data, usuario: req.session.usuario});
+					});
 				});
 			});
 		});
-	}else{
-		model.GetCoach().then(data_coach=>{
-			data.coach = data_coach;
-			model.GetManager().then(data_manager=>{
-				data.manager = data_manager;
-				model.SelecionarUsuario(id).then(data_usuario_sel => {
-					data.usuario_admin = data_usuario_sel;
-					data.link_sistema = '/sistema';
-					console.log('EEEEEEEEEEEEEEE USUARIOS EDITAR EEEEEEEEEEEEEEEEEEEE');
-					console.log(data);	
-					console.log('EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE');
-					res.render(req.isAjaxRequest() == true ? 'api' : 'montador', {html: 'administracao/usuarios/editar_usuario', data: data, usuario: req.session.usuario});
-				});
-			});
-		});
-	}
+	});
 });
 
 
@@ -516,7 +536,7 @@ router.post('/usuarios/cadastrar/', function(req, res, next) {
 
 
 	if(POST.id_conector == undefined){
-		POSt.id_conector = 0;
+		POST.id_conector = 0;
 	}
 
 	console.log('PPPPPPPPPPOOOOOOOOOOOST USUARIOS POOOOOOSSSSSSSSSTTTTTTTTTTTTTTTT');
@@ -578,11 +598,10 @@ router.post('/usuarios/alterar-senha/', function(req, res, next) {
 
 	model.SelecionarUsuario(POST.id).then(data_usuario => {
 		model.AlterarSenhaUsuario(POST).then(senha_alteradao =>{
-			var html = "Olá sua senha foi alterada pelo administrador do Sistema Eagle Finances. Segue abaixo as informações sobre sua conta."+
-			"<br><b>Login:</b> "+data_usuario[0].login+
-			"<br><b>Senha:</b> "+senha+ 
-			"<br><br>Recomendamos que você altera sua senha ao acessar o seu perfil ao clicar na imagem no cabeçalho a direita."+
-			"<br>Acesse via o aplicativo Eagle Finance"+
+			var html = "Olá sua senha foi alterada pelo administrador do Sistema Moon. Segue abaixo as informações sobre sua conta."+
+			"<br>O E-mail segue sendo este e a nova senha é:"
+			"<br>"+senha+ 
+			"<br><br>Recomendamos que você altera sua senha ao acessar os meus dados ao clicar no menu abaixo"+
 			"<br>Os dados da sua conta são responsabilidade sua, não a entregue a pessoas sem permissão."+
 			"<br><b>Por favor, não responda essa mensagem, pois ela é enviada automaticamente!</b>";
 
@@ -590,7 +609,6 @@ router.post('/usuarios/alterar-senha/', function(req, res, next) {
 			"<br>Login: "+data_usuario[0].login+
 			"<br>Senha: "+senha+
 			"<br><br>Recomendamos que você altera sua senha ao acessar o seu perfil ao clicar na imagem no cabeçalho a direita."+
-			"<br>Acesse via o aplicativo Eagle Finance"+
 			"<br>Os dados da sua conta são responsabilidade sua, não a entregue a pessoas sem permissão."+
 			"<br>Por favor, não responda essa mensagem, pois ela é enviada automaticamente!";
 			control.SendMail(data_usuario[0].email, 'Alterado Senha no Eagle Finances!', html, text);
@@ -628,100 +646,41 @@ router.post('/usuarios/atualizar/', function(req, res, next) {
 	console.log(POST);
 	console.log('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA');
 	//Se for criado um coach ou seja nivel 1 e quem tá cadastrando é o manager então vai o id do manager
-	if(POST.nivel == 1 && req.session.usuario.nivel == 2){
-		POST.id_coach = req.session.usuario.id;
-	}
-	if(POST.id_coach == undefined){
-		POST.id_coach = 0;
-	}
 
-	var html = "Olá seu email foi alterado pela administração no Eagle Finances. Segue abaixo as informações sobre sua conta."+
-	"<br><b>Login:</b> "+POST.login+
+	var html = "Olá seu email foi alterado pela administração no Moon. Os dados continuam os mesmos."+
 	"<br><br>Caso você não saiba sua senha por favor contate o suporte."
-	"<br>Acesse via o aplicativo Eagle Finance"+
 	"<br>Os dados da sua conta são responsabilidade sua, não a entregue a pessoas sem permissão."+
 	"<br><b>Por favor, não responda essa mensagem, pois ela é enviada automaticamente!</b>";
 
-	var text = "Olá seu email foi alterado pela administração no Eagle Finances. Segue abaixo as informações sobre sua conta."+
-	"<br>Login: "+POST.login+
+	var text = "Olá seu email foi alterado pela administração no Moon.Os dados continuam os mesmos"+
 	"<br><br>Caso você não saiba sua senha por favor contate o suporte."
-	"<br>Acesse via o aplicativo Eagle Finance"+
 	"<br>Os dados da sua conta são responsabilidade sua, não a entregue a pessoas sem permissão."+
 	"<br>Por favor, não responda essa mensagem, pois ela é enviada automaticamente!";
 
-
-
-	model.VerificarSeTemMesmoLogin(POST).then(tem_mesmo_login => {
-
-		console.log('ttttttttttt tem mesmo login ttttt');
-		console.log(tem_mesmo_login);
-		console.log('ttttttttttttttttttttttttttt');
-		/*verificar se o login foi alterado*/
-		if(tem_mesmo_login != ''){
-			/*verificar se o email é o mesmo, se não for enviar um e-mail para o novo informando as alterações*/
-			model.VerificarSeTemMesmoEmail(POST).then(tem_mesmo_email => {
-				console.log('eeeeeeeeeeeeee tem mesmo email eeeeeeeeeeeeeeeeeeeeeeee');
-				console.log(tem_mesmo_email);
-				console.log('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
-				if(tem_mesmo_email != ''){
+	/*verificar se o email é o mesmo, se não for enviar um e-mail para o novo informando as alterações*/
+	model.VerificarSeTemMesmoEmail(POST).then(tem_mesmo_email => {
+		console.log('eeeeeeeeeeeeee tem mesmo email eeeeeeeeeeeeeeeeeeeeeeee');
+		console.log(tem_mesmo_email);
+		console.log('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
+		if(tem_mesmo_email != ''){
+			model.AtualizarUsuario(POST).then(data => {
+				res.json(data);
+			});
+		}else{
+			/*Se o e-mail foi alterado verificar se ele está disponivel(unico)*/
+			model.VerificarSeTemEmailDisponivel(POST.email).then(tem_email => {
+				if(tem_email == ''){
 					model.AtualizarUsuario(POST).then(data => {
+						control.SendMail(POST.email, 'E-mail alterado no Moon!', html, text);
 						res.json(data);
 					});
 				}else{
-					/*Se o e-mail foi alterado verificar se ele está disponivel(unico)*/
-					model.VerificarSeTemEmailDisponivel(POST.email).then(tem_email => {
-						if(tem_email == ''){
-							model.AtualizarUsuario(POST).then(data => {
-								control.SendMail(POST.email, 'E-mail alterado no Eagle Finances!', html, text);
-								res.json(data);
-							});
-						}else{
-							res.json({error:'possui_email',element:'input[name="email"]',texto:'Email já cadastrado, por favor inserir outro!'});
-						}
-					});
+					res.json({error:'possui_email',element:'input[name="email"]',texto:'Email já cadastrado, por favor inserir outro!'});
 				}
-			});
-		}else{
-			/*caso o login seja alterado ver se o novo tem disponibilidade */
-			model.VerificarSeTemLoginDisponivel(POST.login).then(tem_login => {
-				console.log('eeeeeeee login novo para ver se é diferente eeeeeee');
-				console.log(tem_login);
-				console.log('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
-
-				if(tem_login == ''){
-					/*se tiver disponibilidade ver se o e-mail foi alterado, se for enviar um e-mail para o novo email*/
-					model.VerificarSeTemMesmoEmail(POST).then(tem_mesmo_email => {
-						console.log('mmmmmmmmmmmmmmmmaiiiiiiilllllllllllll');
-						console.log(tem_mesmo_email);
-						console.log('mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm');
-						if(tem_mesmo_email != ''){
-							model.AtualizarUsuario(POST).then(data => {
-								res.json(data);
-							});
-						}else{
-							/*Se o e-mail foi alterado verificar se ele é disponivel(unico)*/
-							model.VerificarSeTemEmailDisponivel(POST.email).then(tem_email => {
-								if(tem_email == ''){
-									model.AtualizarUsuario(POST).then(data => {
-										control.SendMail(POST.email, 'E-mail alterado no Eagle Finances!', html, text);
-										res.json(data);
-									});
-								}else{
-									res.json({error:'possui_email',element:'input[name="email"]',texto:'Email já cadastrado, por favor inserir outro!'});
-								}
-							});
-						}
-						
-
-					});
-
-				}else{
-					res.json({error:'possui_login',element:'input[name="login"]',texto:'Login existente, tente outro!'});
-				}
-
 			});
 		}
 	});
+
 });
 
 router.post('/pedido-saque/confirmar/', function(req, res, next) {

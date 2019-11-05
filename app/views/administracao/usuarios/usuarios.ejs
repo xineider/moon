@@ -23,9 +23,10 @@
 			<thead class="primary-text">
 				<tr>
 					<th>Nome</th>
+					<th>Conector</th>
 					<th>Email</th>
 					<th>Nível</th>
-					<th>Excluir</th>
+					<th>Ações</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -37,6 +38,11 @@
 						<td>
 							<a class="ajax-load white-text" href="<%= data.link_sistema%>/administracao/usuarios/editar/<%= data.usuarios_admin[i].id %>">
 								<%= data.usuarios_admin[i].nome %> 
+							</a>
+						</td>
+						<td>
+							<a class="ajax-load white-text" href="<%= data.link_sistema%>/administracao/usuarios/editar/<%= data.usuarios_admin[i].id %>">
+								<%= data.usuarios_admin[i].conector %> 
 							</a>
 						</td>
 						<td>
@@ -60,7 +66,12 @@
 							</td>
 							<td style="width: 30%;" class="center">
 								<% if(usuario.nivel == 1){ %>
-								<div class="btn primary modal-remover-mount pointer" data-modal="#modaldeletar" data-id="<%= data.usuarios_admin[i].id %>" data-texto="Você tem certeza que quer deletar '<%= data.usuarios_admin[i].nome %>'? " data-to="/sistema/administracao/usuarios/desativar" data-back="<%= data.link_sistema%>/administracao/usuarios">
+
+								<div class="btn primary modal-mount pointer" data-modal="#modalinfo" data-link="/sistema/administracao/alterar-senha-usuario/<%= data.usuarios_admin[i].id %>"data-toggle="tooltip" data-placement="top" title="Alterar Senha do Usuário">
+									<i class="fas fa-key white-text"></i>
+								</div>
+								
+								<div class="btn primary modal-remover-mount pointer" data-modal="#modaldeletar" data-id="<%= data.usuarios_admin[i].id %>" data-texto="Você tem certeza que quer deletar '<%= data.usuarios_admin[i].nome %>'? " data-to="/sistema/administracao/usuarios/desativar" data-back="<%= data.link_sistema%>/administracao/usuarios"data-mensagem-sucesso="Usuário Deletado com Sucesso!" data-toggle="tooltip" data-placement="top" title="Deletar Usuário">
 									<i class="fas fa-times white-text"></i>
 								</div>
 
@@ -85,7 +96,7 @@
 
 
 		<%}else{%>
-		<div class="card light">Você não possui permissão para acessar esse conteúdo</div>
+		<div class="white-text text-center f25">Você não possui permissão para acessar esse conteúdo!</div>
 		<%}%>
 
 	</div>

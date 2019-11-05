@@ -116,15 +116,78 @@ class AdministracaoModel {
 
 	GetUsuariosMenosProprio(id) {
 		return new Promise(function(resolve, reject) {
-			helper.Query('SELECT * FROM usuarios WHERE deletado = ? AND id != ?	ORDER BY data_cadastro ', [0,id]).then(data => {
-				resolve(data);
+			helper.Query('SELECT a.*,\
+				(SELECT b.nome FROM usuarios as b WHERE b.id = a.id_conector) as conector FROM usuarios as a WHERE deletado = ? AND id != ?	ORDER BY data_cadastro ', [0,id]).then(data => {
+					resolve(data);
+				});
 			});
-		});
 	}
 
 	GetConectores() {
 		return new Promise(function(resolve, reject) {
 			helper.Query('SELECT * FROM usuarios WHERE deletado = ? AND nivel = ? ORDER BY nome', [0,2]).then(data => {
+				resolve(data);
+			});
+		});
+	}
+
+	GetPedidosAportes() {
+		return new Promise(function(resolve, reject) {
+			helper.Query('SELECT a.*,\
+				DATE_FORMAT(a.data_cadastro, "%d/%m/%Y") as data_cadastro, \
+				DATE_FORMAT(a.data_cadastro, "%Y%m%d %H:%i") as data_table_filtro,\
+				REPLACE(REPLACE(REPLACE(FORMAT(a.valor, 2), ".", "@"), ",", "."), "@", ",") as valor_real,\
+				(SELECT b.nome FROM usuarios as b WHERE b.id = a.id_usuario AND b.deletado = ?) as nome, \
+				(SELECT c.nome FROM planos as c WHERE c.id = a.id_plano) as plano \
+				FROM caixa as a WHERE a.deletado = ? AND a.tipo = ? AND a.confirmado = ?', [0,0,0,0]).then(data => {
+					resolve(data);
+				});
+			});
+	}
+
+	GetPedidosSaques() {
+		return new Promise(function(resolve, reject) {
+			helper.Query('SELECT a.*,\
+				DATE_FORMAT(a.data_cadastro, "%Y%m%d %H:%i") as data_table_filtro,\
+				DATE_FORMAT(a.data_cadastro, "%d/%m/%Y") as data_cadastro, \
+				REPLACE(REPLACE(REPLACE(FORMAT(a.valor, 2), ".", "@"), ",", "."), "@", ",") as valor_real,\
+				(SELECT b.nome FROM usuarios as b WHERE b.id = a.id_usuario AND b.deletado = ?) as nome, \
+				(SELECT c.nome FROM planos as c WHERE c.id = a.id_plano) as plano \
+				FROM caixa as a \
+				WHERE a.deletado = ? AND (a.tipo = ? OR a.tipo = ?) AND a.confirmado = ?', [0,0,1,3,0]).then(data => {
+					resolve(data);
+				});
+			});
+	}
+
+	GetCaixa(dolar) {
+		return new Promise(function(resolve, reject) {
+			helper.Query('SELECT a.*,  \
+				DATE_FORMAT(a.data_cadastro, "%d/%m/%Y") as data_cadastro,\
+				DATE_FORMAT(a.data_cadastro, "%Y%m%d %H:%i") as data_table_filtro,\
+				REPLACE(REPLACE(REPLACE(FORMAT(a.valor, 2), ".", "@"), ",", "."), "@", ",") as valor_real,\
+				(SELECT nome FROM planos as b WHERE b.id = a.id_plano) as plano,\
+				(SELECT nome FROM usuarios as c WHERE c.id = a.id_usuario) as nome_usuario,\
+				CASE \
+				WHEN a.tipo = 0 THEN "Aporte"\
+				WHEN a.tipo = 1 THEN "Saque do Aporte"\
+				WHEN a.tipo = 2 THEN "Rendimento"\
+				WHEN a.tipo = 3 THEN "Saque do Rendimento"\
+				WHEN a.tipo = 4 THEN "Reaporte"\
+				ELSE "Indefinido"\
+				END AS tipo\
+				FROM caixa as a WHERE a.deletado = ? AND a.confirmado = ?', [0,1]).then(data => {
+					console.log('sssssssss sai assim do getCaixa() sssssssssssss');
+					console.log(data);
+					console.log('sssssssssssssssssssssssssssssssssssssssssssssss');
+					resolve(data);
+				});
+			});
+	}
+
+	GetPlanos() {
+		return new Promise(function(resolve, reject) {
+			helper.Query('SELECT * FROM planos WHERE deletado = ?', [0]).then(data => {
 				resolve(data);
 			});
 		});
@@ -139,6 +202,31 @@ class AdministracaoModel {
 			});
 	}
 
+	VerificarSeTemMesmoEmail(POST){
+		return new Promise(function(resolve, reject) {
+			helper.Query("SELECT email \
+				FROM usuarios WHERE deletado = ? AND email = ? AND id = ?", [0,POST.email,POST.id]).then(data => {
+					resolve(data);
+
+				});
+			});
+	}
+
+
+
+	/*Ínicio Selecionar*/
+
+	SelecionarUsuario(id) {
+		return new Promise(function(resolve, reject) {
+			helper.Query("SELECT * FROM usuarios WHERE id = ? AND deletado = ?", [id,0]).then(data => {
+				resolve(data);
+			});
+		});
+	}
+
+
+
+	/*Fim Selecionar*/
 
 	/*Ínicio Cadastrar*/
 
@@ -154,6 +242,27 @@ class AdministracaoModel {
 
 	/*Fim cadastrar*/
 
+	/*Ínicio Update*/
+
+	AlterarSenhaUsuario(POST) {
+		return new Promise(function(resolve, reject) {
+			POST.senha = helper.Encrypt(POST.senha);
+			helper.Update('usuarios', POST).then(data => {
+				resolve(data);
+			});
+		});
+	}
+
+	AtualizarUsuario(POST) {
+		return new Promise(function(resolve, reject) {
+			helper.Update('usuarios', POST).then(data => {
+				resolve(data);
+			});
+		});
+	}
+
+	/*Fim Update/
+
 	/*Ínicio Desativar*/
 
 	DesativarUsuario(POST) {
@@ -163,6 +272,14 @@ class AdministracaoModel {
 			});
 		});
 	}
+
+	DesativarCaixa(POST) {
+	return new Promise(function(resolve, reject) {
+		helper.Desativar('caixa', POST).then(data => {
+			resolve(data);
+		});
+	});
+}
 
 
 

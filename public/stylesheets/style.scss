@@ -23,12 +23,30 @@ body{
 	}
 }
 
+
+.btn.secondary{
+	color: #ffffff!important;
+
+	&:hover{
+		background:#ffffff;
+		color: $secondary-color!important;
+		.fas{
+			color: $secondary-color!important;
+		}
+	}
+}
+
+
 .primary{
 	background: #c3141b;
 	background: -moz-linear-gradient(45deg, #c3141b 0%, #ec1550 50%, #f4811e 100%);
 	background: -webkit-linear-gradient(45deg, #c3141b 0%,#ec1550 50%,#f4811e 100%);
 	background: linear-gradient(45deg, #c3141b 0%,#ec1550 50%,#f4811e 100%);
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#c3141b', endColorstr='#f4811e',GradientType=1 );
+}
+
+.secondary{
+	background:$secondary-color;
 }
 
 .primary-text{
@@ -169,9 +187,11 @@ th:focus{
 }
 
 input:focus{
-		outline: none;
-	}
+	outline: none;
+}
 
+
+/*Bootstrap*/
 .form-control{
 	background:transparent;
 	border:1px solid $secondary-color;
@@ -181,13 +201,51 @@ input:focus{
 	&:focus{
 		background:transparent;
 		color: #ffffff;
+		border-color:$primary-color;
+		box-shadow: none;
 	}
 }
 
+select.form-control{
+	background: #000000;
+}
+
+.form-control option{
+	background:#000000;
+	border-color:$primary-color;
+
+	&:focus{
+		outline: none;
+	}
+}
+
+.tooltip-inner{
+	background:#fff;
+	color: #000000;
+}
+
+
+.tooltip.bs-tooltip-auto[x-placement^=top] .arrow::before, .tooltip.bs-tooltip-top .arrow::before {
+	border-top-color: #ffffff;
+}
+
+.tooltip.bs-tooltip-auto[x-placement^=bottom] .arrow::before, .tooltip.bs-tooltip-bottom .arrow::before {
+	border-bottom-color: #ffffff;
+}
+
+.tooltip.bs-tooltip-auto[x-placement^=right] .arrow::before, .tooltip.bs-tooltip-right .arrow::before {
+	border-right-color: #ffffff;
+}
+
+.tooltip.bs-tooltip-auto[x-placement^=left] .arrow::before, .tooltip.bs-tooltip-left .arrow::before {
+	border-left-color: #ffffff;
+}
+
+/**/
 
 .error{
 	color: #ffffff;
-    margin-top: 5px;
-    border-radius: 5px;
-    background:#ec3434;
+	margin-top: 5px;
+	border-radius: 5px;
+	background:#ec3434;
 }

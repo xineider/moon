@@ -4,6 +4,7 @@ $(document).ready(function () {
 	console.log('estou aqui no ready do começo');
 	adicionarLoader();
 	FormatInputs();
+	
 
 	$(document).ajaxError(function () {
 		AddErrorAjax();
@@ -19,16 +20,18 @@ $(document).ready(function () {
 		var id = $(this).data('id');
 		var to = $(this).data('to');
 		var back = $(this).data('back');
+		var mensagem_sucesso = $(this).data('mensagem-sucesso');
+		console.log('mensagem_sucesso:' + mensagem_sucesso);
 
 		$(modal).modal();
 		$(modal).find('#texto').text(texto);
 		$(modal).find('#id').val(id);
-		$(modal).find('button').data('href', to).data('action', back);
+		$(modal).find('.delete_button').data('href', to).data('action', back).data('mensagem-sucesso',mensagem_sucesso);
 	});
 
 	$(document).on('click', '.modal-mount', function (e) {
 		e.preventDefault();
-		var modal = $(this).data('href');
+		var modal = $(this).data('modal');
 		var link = $(this).data('link');
 		MountModal(modal, link);
 	});
@@ -59,9 +62,15 @@ $(document).ready(function () {
 		var link = $(this).data('href');
 		var back = $(this).data('action');
 		var sucessMessage = $(this).data('mensagem-sucesso');
-		var sucessClass = 'bg-success';
-
+		var sucessClass = $(this).data('mensagem-sucesso-color');
+		console.log('sucessClass:'+sucessClass);
+		if(sucessClass == undefined){
+			console.log('estrei aqui no sucessClass');
+			sucessClass = 'bg-success';
+		}
 		if (VerificarForm(form) == true) {
+			console.log('o que está indo de fato para o submit ajax de cor')
+			console.log(sucessClass);
 			SubmitAjax(post, link, back,sucessMessage,sucessClass);
 		}
 	});
@@ -72,6 +81,24 @@ $(document).ready(function () {
 		}
 	});
 
+
+	$(document).on('change', '.select_change_container', function(e) {
+		
+		console.log('----------------- VALOR DO SELECT ---------------');
+		console.log($(this).val());
+		console.log('-------------------------------------------------');
+
+		console.log('number-appear:'+$(this).data('number-appear'));
+		console.log('container:'+$(this).data('container'));
+		console.log('link:'+$(this).data('link'));
+
+		if($(this).val() == $(this).data('number-appear')){
+			LoadTo($(this).data('link'),$(this).data('container'));
+		}else{
+			$('.'+$(this).data('container')).empty();
+		}		
+	});
+
 	$(document).on('submit', 'form', function(e) {
 		e.preventDefault();
 	});
@@ -80,12 +107,12 @@ $(document).ready(function () {
 		GetEndereco($(this).val(), $(this).closest('.row'));
 	});
 
-	
+
 
 	window.onpopstate = function() {
 		GoTo(location.pathname, false);
 	};
-	// ALTERE CORRETAMENTE PARA FUNCIONAR DE ACORDO
+
 	$(document).on('click', '.arquivo-escolha', function(e) {
 		e.preventDefault();
 		var nome = $(this).data('nome');
@@ -111,6 +138,7 @@ $(window).on('load', function() {
 	removerLoader();
 	FormatInputs();
 });
+
 
 
 // Funções
@@ -156,7 +184,7 @@ function GoTo(link, state) {
     	//$('.modal').modal('close');
     	FormatInputs();
     }
-});
+  });
 	if (state == true) {
 		window.history.pushState('Sistema Quorp', 'Sistema Quorp', link);
 	}
@@ -184,7 +212,7 @@ function LoadTo(link, to) {
     	//$('.modal').modal('close');
     	FormatInputs();
     }
-});
+  });
 }
 function FormatInputs(focus) {
 	$('.cnpj').mask('00.000.000/0000-00', {reverse: true});
@@ -200,6 +228,7 @@ function FormatInputs(focus) {
 	});
 	$('.money').mask('000000000000000,00', {reverse: true});
 	validarDataTable($('.tabela_filtrada'));
+	$('[data-toggle="tooltip"]').tooltip()
 }
 function GetEndereco(cep, pai) {
 	var link = 'https://viacep.com.br/ws/'+cep+'/json/ ';
@@ -229,7 +258,7 @@ function GetEndereco(cep, pai) {
     complete: function() {
     	removerLoader();
     }
-});
+  });
 }
 
 
@@ -259,8 +288,8 @@ function SubmitAjax(post, link, back,sucessMessage,sucessClass) {
 			}else if(data != undefined){
 				console.log('estou sendo chamado por que deu certo !!!!');
 				$('.toast-body').html('<div class="text-center">'+sucessMessage+'</div>');
-				$('.toast').addClass(sucessClass).toast({delay:3000}).toast('show');
-				//M.toast({html:'<div class="center-align" style="width:100%;">'+sucessMessage+'</div>', displayLength:5000, classes: sucessClass});
+				/*utilizo o attr para limpar a classe para que não tenha a classe de erro no cadastro que deveria ser o verde*/
+				$('.toast').attr('class','toast').addClass(sucessClass).toast({delay:3000}).toast('show')
 				if(back != ''){
 					GoTo(back, true);
 				}
@@ -304,7 +333,7 @@ function MountModal(modal, link) {
 	$.ajax({
 		method: "GET",
 		async: true,
-		url: '/sistema'+link,
+		url: link,
 		beforeSend: function(request) {
 			request.setRequestHeader("Authority-Moon-hash", $('input[name="hash_usuario_sessao"]').val());
 			request.setRequestHeader("Authority-Moon-id", $('input[name="id_usuario_sessao"]').val());
@@ -314,17 +343,16 @@ function MountModal(modal, link) {
 		success: function(data) {
 			console.log(link);
 			$(modal).find('.modal-content').html(data);
-			$(modal).modal('open');
+			$(modal).modal('show');
 		},
     error: function(xhr) { // if error occured
+    	removerLoader();
     },
     complete: function() {
     	removerLoader();
-    	$('.material-tooltip').remove();
-    	$('.tooltipped').tooltip({delay: 50});
     	FormatInputs();
     }
-});
+  });
 }
 
 function VerificarForm(form) {

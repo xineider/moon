@@ -1,24 +1,28 @@
-<div class="col s12 center padding-0">
-	<div class="bold f25 margin-l-20 border-bottom-gold margin-b-10">
+<div>
+	<%- include('../submenu'); %>
+</div>
+
+
+<div class="w100 text-center">
+	<div class="bold f25 text-center white-text">
 		Administração da Caixa
-		<i class="fas fa-hand-holding-usd right margin-r-20 gold-text"></i>
 	</div>
 	
 	
-	<%if(usuario.nivel == 4 || usuario.nivel == 5){ %>
+	<%if(usuario.nivel == 1){ %>
 
-	<div class="row center-align">
-		<a class="btn gold ajax-load" href="<%= data.link_sistema%>/administracao/caixa/criar">Cadastrar Caixa</a>
+
+	<div class="text-center margin-b-10 margin-t-10">
+		<a class="btn primary ajax-load white-text mx-auto" href="<%= data.link_sistema%>/administracao/caixa/criar">Cadastrar Caixa</a>
 	</div>
 
-	<div class="col s12 margin-t-20">
 
-		<table class="table-full-width tabela_filtrada">
-			<thead class="gold-text">
+	<div class="col s12">
+
+		<table class="tabela_filtrada text-center white-text margin-center">
+			<thead class="primary-text">
 				<tr>
-					<th>Valor</th>
-					<th>Qtd. Tether</th>
-					<th>Qtd. BTC</th>
+					<th>Valor em Reais</th>
 					<th>Usuário</th>
 					<th>Tipo</th>
 					<th>Plano</th>
@@ -31,68 +35,47 @@
 				<%
 				if (typeof data.caixa != 'undefined' && data.caixa.length > 0) {
 					for (var i = data.caixa.length - 1; i >= 0; i--) { %>
-
-
-					<tr class="border-bottom-gold">
+					<tr class="border-bottom-primary">
 						<td>
-							<a class="limitador_3_linhas ajax-load white-text" href="<%= data.link_sistema%>/administracao/caixa/editar/<%= data.caixa[i].id %>">
-								R$<%= data.caixa[i].qtd_real %>
-							</a> 
+							<a class="ajax-load white-text" href="<%= data.link_sistema%>/administracao/caixa/editar/<%= data.caixa[i].id %>">
+								<%= data.caixa[i].valor_real %> 
+							</a>
 						</td>
 						<td>
-							<a class="limitador_3_linhas ajax-load white-text" href="<%= data.link_sistema%>/administracao/caixa/editar/<%= data.caixa[i].id %>">
-								<%= data.caixa[i].qtd_stable %>
-							</a> 
-						</td>
-						<td>
-							<a class="limitador_3_linhas ajax-load white-text" href="<%= data.link_sistema%>/administracao/caixa/editar/<%= data.caixa[i].id %>">
-								<%= data.caixa[i].qtd_btc %>
-							</a> 
-						</td>
-						<td>
-							<a class="limitador_3_linhas ajax-load white-text" href="<%= data.link_sistema%>/administracao/caixa/editar/<%= data.caixa[i].id %>">
+							<a class="ajax-load white-text" href="<%= data.link_sistema%>/administracao/caixa/editar/<%= data.caixa[i].id %>">
 								<%= data.caixa[i].nome_usuario %> 
 							</a>
 						</td>
 						<td>
-							<a class="limitador_3_linhas ajax-load white-text" href="<%= data.link_sistema%>/administracao/caixa/editar/<%= data.caixa[i].id %>">
-
-								<% switch(data.caixa[i].tipo){
-									case 0:%>
-									Aporte
-									<% break;
-									case 1:%>
-									Saque
-									<%break;
-									case 2:%>
-									Rendimento
-									<%break;
-									case 3:%>
-									Saque R.
-									<%break;
-								}%>
+							<a class="ajax-load white-text" href="<%= data.link_sistema%>/administracao/caixa/editar/<%= data.caixa[i].id %>">
+								<%= data.caixa[i].tipo %>
 							</a>
 						</td>
 						<td>
-							<a class="limitador_3_linhas ajax-load white-text" href="<%= data.link_sistema%>/administracao/caixa/editar/<%= data.caixa[i].id %>">
+							<a class="ajax-load white-text" href="<%= data.link_sistema%>/administracao/caixa/editar/<%= data.caixa[i].id %>">
 								<%= data.caixa[i].plano %>
 							</a>
 						</td>
+
 						<td>
-							<a class="limitador_3_linhas ajax-load white-text" href="<%= data.link_sistema%>/administracao/caixa/editar/<%= data.caixa[i].id %>">
-								 <span class="hide"><%= data.caixa[i].data_table_filtro %></span>
-								<%= data.caixa[i].data_cadastro %> 
+							<a class="ajax-load white-text" href="<%= data.link_sistema%>/administracao/caixa/editar/<%= data.caixa[i].id %>">
+								<span class="d-none"><%= data.caixa[i].data_table_filtro %></span>
+								<%= data.caixa[i].data_cadastro %>
 							</a>
 						</td>
-						<td style="width: 30%;" class="center">
-							<div class="btn gold modal-remover-mount" data-href="#modaldeletar" data-id="<%= data.caixa[i].id %>" data-texto="Você tem certeza que quer deletar '<%= data.caixa[i].valor %>'? " data-to="/sistema/administracao/caixa/desativar" data-back="<%= data.link_sistema%>/administracao/caixa">
-								<i class="fas fa-times black-text"></i>
+						<td class="text-center">
+							<% if(usuario.nivel == 1){ %>
+
+							<div class="btn primary modal-remover-mount pointer" data-modal="#modaldeletar" data-id="<%= data.caixa[i].id %>" data-texto="Você tem certeza que quer deletar o R$<%= data.caixa[i].valor_real %>? " data-to="/sistema/administracao/caixa/desativar" data-back="<%= data.link_sistema%>/administracao/caixa" data-mensagem-sucesso="Valor Deletado com Sucesso!" data-toggle="tooltip" data-placement="top" title="Deletar Valor">
+								<i class="fas fa-times white-text"></i>
 							</div>
+
+							<% } %>
 						</td>
 
 					</tr>
 
-					<%} 
+					<%}
 				}else{%>
 				<tr>
 					<td colspan="6" class="center">Não há caixa no momento</td>
@@ -108,7 +91,7 @@
 
 
 	<%}else{%>
-	<div class="card light">Você não possui permissão para acessar esse conteúdo</div>
+	<div class="white-text text-center f25">Você não possui permissão para acessar esse conteúdo!</div>
 	<%}%>
 
 </div>
