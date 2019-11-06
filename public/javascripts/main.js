@@ -227,8 +227,14 @@ function FormatInputs(focus) {
 		}
 	});
 	$('.money').mask('000000000000000,00', {reverse: true});
+	$('.data-sem-hora').mask('00/00/0000');
 	validarDataTable($('.tabela_filtrada'));
-	$('[data-toggle="tooltip"]').tooltip()
+	$('[data-toggle="tooltip"]').tooltip();
+	$('.datepicker').datepicker({
+		format:'dd/mm/yyyy',
+		language:'pt-BR',
+		autoclose:true
+	});
 }
 function GetEndereco(cep, pai) {
 	var link = 'https://viacep.com.br/ws/'+cep+'/json/ ';

@@ -160,7 +160,7 @@ class AdministracaoModel {
 			});
 	}
 
-	GetCaixa(dolar) {
+	GetCaixa() {
 		return new Promise(function(resolve, reject) {
 			helper.Query('SELECT a.*,  \
 				DATE_FORMAT(a.data_cadastro, "%d/%m/%Y") as data_cadastro,\
@@ -187,7 +187,18 @@ class AdministracaoModel {
 
 	GetPlanos() {
 		return new Promise(function(resolve, reject) {
-			helper.Query('SELECT * FROM planos WHERE deletado = ?', [0]).then(data => {
+			helper.Query('SELECT a.*,\
+				DATE_FORMAT(a.data_cadastro, "%d/%m/%Y") as data_cadastro,\
+				DATE_FORMAT(a.data_cadastro, "%Y%m%d %H:%i") as data_table_filtro\
+				FROM planos as a WHERE a.deletado = ?', [0]).then(data => {
+					resolve(data);
+				});
+			});
+	}
+
+	GetUsuarios() {
+		return new Promise(function(resolve, reject) {
+			helper.Query('SELECT * FROM usuarios WHERE deletado = ?	ORDER BY nome ', [0]).then(data => {
 				resolve(data);
 			});
 		});
@@ -224,6 +235,26 @@ class AdministracaoModel {
 		});
 	}
 
+	SelecionarCaixa(id) {
+		return new Promise(function(resolve, reject) {
+			helper.Query('SELECT a.*, \
+				DATE_FORMAT(a.data_cadastro, "%d/%m/%Y") as data_cadastro,DATE_FORMAT(a.data, "%d/%m/%Y") as data,\
+				(SELECT nome FROM planos as b WHERE b.id = a.id_plano) as plano,\
+				(SELECT nome FROM usuarios as c WHERE c.id = a.id_usuario) as nome_usuario\
+				FROM caixa as a WHERE a.deletado = ? and id = ?', [0,id]).then(data => {
+					resolve(data);
+				});
+			});
+	}
+
+	SelecionarPlano(id) {
+		return new Promise(function(resolve, reject) {
+			helper.Query('SELECT a.* FROM planos as a WHERE a.id = ? and a.deletado = ?', [id,0]).then(data => {
+				resolve(data);
+			});
+		});
+	}
+
 
 
 	/*Fim Selecionar*/
@@ -234,6 +265,27 @@ class AdministracaoModel {
 		return new Promise(function(resolve, reject) {
 			POST.senha = helper.Encrypt(POST.senha);
 			helper.Insert('usuarios', POST).then(data => {
+				resolve(data);
+			});
+		});
+	}
+
+	CadastrarPlano(POST) {	
+		return new Promise(function(resolve, reject) {
+			helper.Insert('planos', POST).then(data => {
+				resolve(data);
+			});
+		});
+	}
+
+	CadastrarCaixa(POST) {
+
+		if(POST.data != null){
+			POST = helper.PrepareDates(POST, ['data']);
+		}
+
+		return new Promise(function(resolve, reject) {
+			helper.Insert('caixa', POST).then(data => {
 				resolve(data);
 			});
 		});
@@ -261,6 +313,30 @@ class AdministracaoModel {
 		});
 	}
 
+	AtualizarCaixa(POST) {
+
+		console.log('AtualizarCaixa AAaAAaAAaAAaAAaAAaAAaAAaAAaAAaAAaAA');
+		console.log(POST);
+		console.log('AAaAAaAAaAAaAAaAAaAAaAAaAAaAAaAAaAAaAAaAAaAAaAAaAA')
+
+		if(POST.data != null){
+			POST = helper.PrepareDates(POST, ['data']);
+		}
+		return new Promise(function(resolve, reject) {
+			helper.Update('caixa', POST).then(data => {
+				resolve(data);
+			});
+		});
+	}
+
+	AtualizarPlano(POST) {
+		return new Promise(function(resolve, reject) {
+			helper.Update('planos', POST).then(data => {
+				resolve(data);
+			});
+		});
+	}
+
 	/*Fim Update/
 
 	/*Ínicio Desativar*/
@@ -274,12 +350,20 @@ class AdministracaoModel {
 	}
 
 	DesativarCaixa(POST) {
-	return new Promise(function(resolve, reject) {
-		helper.Desativar('caixa', POST).then(data => {
-			resolve(data);
+		return new Promise(function(resolve, reject) {
+			helper.Desativar('caixa', POST).then(data => {
+				resolve(data);
+			});
 		});
-	});
-}
+	}
+
+	DesativarPlano(POST) {
+		return new Promise(function(resolve, reject) {
+			helper.Desativar('planos', POST).then(data => {
+				resolve(data);
+			});
+		});
+	}
 
 
 

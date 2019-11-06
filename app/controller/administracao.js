@@ -81,8 +81,7 @@ router.get('/pedidos-aportes', function(req, res, next) {
 });
 
 router.get('/caixa', function(req, res, next) {
-	var dolar = req.app.get('dolar');
-	model.GetCaixa(dolar).then(data_caixa=>{
+	model.GetCaixa().then(data_caixa=>{
 		data.caixa = data_caixa;
 		data.link_sistema = '/sistema';
 		console.log('CAIXACAIXACAIXACAIXACAIXA ADMINISTRAÇÃO CAIXA CAIXACAIXACAIXA');
@@ -220,7 +219,7 @@ router.get('/usuarios/criar', function(req, res, next) {
 router.get('/caixa/criar', function(req, res, next) {
 	model.GetUsuarios().then(data_usuario=>{
 		data.usuario = data_usuario;
-		model.GetTodosPlanosAteDeletados().then(data_plano=>{
+		model.GetPlanos().then(data_plano=>{
 			data.plano = data_plano;
 			data.link_sistema = '/sistema';
 			res.render(req.isAjaxRequest() == true ? 'api' : 'montador', {html: 'administracao/caixa/cadastrar_caixa', data: data, usuario: req.session.usuario});
@@ -369,16 +368,15 @@ router.get('/pedido-aporte/negacao_aporte_motivo/:id', function(req, res, next) 
 
 
 router.get('/caixa/editar/:id', function(req, res, next) {
-	var dolar = req.app.get('dolar');
 	var id = req.params.id;
-	console.log('selecionei o porcentagem-comissao no editar');
+	console.log('selecionei o editar do caixa');
 	console.log(id);
 	console.log('_________________________________');
 	model.GetUsuarios().then(data_usuario=>{
 		data.usuario = data_usuario;
-		model.SelecionarCaixa(id,dolar).then(data_caixa => {
+		model.SelecionarCaixa(id).then(data_caixa => {
 			data.caixa = data_caixa;
-			model.GetTodosPlanosAteDeletados().then(data_plano=>{
+			model.GetPlanos().then(data_plano=>{
 				data.plano = data_plano;
 				data.link_sistema = '/sistema';
 				console.log('$$$$$$$$$$$$$$$$$$ CAIXA EDITAR $$$$$$$$$$$$$$$$$');
@@ -440,91 +438,13 @@ router.post('/caixa/cadastrar/', function(req, res, next) {
 	console.log(POST);
 	console.log('PPPPPPPPPPPPPPPPPPPPPOOOOOOOOOOOOOOOOOSSSSSSSSSSS');
 
-	if(POST.tipo == 1 ||POST.tipo == 2 || POST.tipo == 3){
-		if(POST.qtd_stable > 0){
-			POST.qtd_stable = POST.qtd_stable.replace(',','.');
-			model.CadastrarCaixa(POST).then(data => {
-				res.json(data);
-			});
-		}else{
-			res.json({error:'qtd_stable_negativo_zero',element:'input[name="qtd_stable"]',texto:'Quantidade de Stable não pode ser 0 ou Negativo!'});
-		}
-	}
-
-	if(POST.tipo == 0){
-		if(POST.qtd_btc>0){
-			if(POST.dia_convertido_stable != ''){
-				if(POST.hora_convertido_stable != ''){
-					model.SelecionarHoje().then(data_hoje=>{
-						var hoje = new Date();
-						var diaHoje = hoje.getDate();
-						var mesHoje = hoje.getMonth() + 1;
-						var anoHoje = hoje.getFullYear();
-						var horaHoje = hoje.getHours();
-						var minutoHoje = hoje.getMinutes();
-						var dia_convertido_stable = POST.dia_convertido_stable;
-						var hora_convertido_stable = POST.hora_convertido_stable;
-						var data_convertido_array = dia_convertido_stable.split('/');
-						var dia_convertido = parseInt(data_convertido_array[0]);
-						var mes_convertido = parseInt(data_convertido_array[1]);
-						var ano_convertido = parseInt(data_convertido_array[2]);
-
-						var hora_convertido_array = hora_convertido_stable.split(':');
-						var hora_convertido = parseInt(hora_convertido_array[0]);
-						var minuto_convertido = parseInt(hora_convertido_array[1]);
-
-						var diferenca_anos = anoHoje - ano_convertido;
-
-						/*como o mes começa em 0 - janeiro e 11 - Dezembro tenho que diminuir para transformar para a binance*/
-						var mes_para_epoch = mes_convertido - 1;
-
-						if(diferenca_anos < 2){
-							if(anoHoje >= ano_convertido && mesHoje >= mes_convertido && diaHoje >= dia_convertido){
-								var data_para_epoch = new Date(ano_convertido,mes_para_epoch,dia_convertido,hora_convertido,minuto_convertido);
-								/*converto em epoch(aquela data em numeros) que é o que a binance lê*/
-								var epoch = control.Epoch(data_para_epoch);
-								var qtd_btc = POST.qtd_btc;
-								var btcusdt;
-								POST.qtd_btc = POST.qtd_btc.replace(',','.');
-								const binance = require('node-binance-api')().options({
-									APIKEY: 'nRtvsE8Y9MuI4JTltxCRqNRFB78KIMPWLNtm5vfiIcyWJaTjRMWlSTfDTMhNiQPb',
-									APISECRET: 'vBtTpJRg6ikuXZLT5AQsTKD2V1kIATX6qnCM5OfX57yQ3k1snkF6En6PKcZ135es',
-									useServerTime: true 							
- 									// If you get timestamp errors, synchronize to server time at startup
- 								});
-
-								binance.candlesticks("BTCUSDT", "5m", (error, ticks, symbol) => {									
-									let last_tick = ticks[ticks.length - 1];
-									let [time, open, high, low, close, volume, closeTime, assetVolume, trades, buyBaseVolume, buyAssetVolume, ignored] = last_tick;
-									btcusdt = close;
-									var qtd_stable_usd = qtd_btc * btcusdt;
-									POST.qtd_stable = qtd_stable_usd;
-									POST.data_conversao_aporte = data_hoje[0].hoje;
-									POST.tipo_conversao = 0;
-									console.log('************** POST CADASTRAR CAIXA ***************');
-									console.log(POST);
-									console.log('***************************************************');
-									model.CadastrarCaixa(POST).then(data => {
-										res.json(data);
-									});
-
-								});
-							}else{
-								res.json({error:'dia_convertido_maior_que_hoje',element:'input[name="dia_convertido_stable"]',texto:'Dia não pode ser maior que hoje!!'});
-							}
-						}else{
-							res.json({error:'data_convertida_antiga',element:'input[name="dia_convertido_stable"]',texto:'Data não pode ser tão antiga, informe outra!'});
-						}
-					});
-				}else{
-					res.json({error:'hora_convertido_vazio',element:'input[name="hora_convertido_stable"]',texto:'Por favor informar uma hora!'});
-				}
-			}else{
-				res.json({error:'dia_convertido_vazio',element:'input[name="dia_convertido_stable"]',texto:'Dia não pode ser vazio!'});
-			}
-		}else{
-			res.json({error:'qtd_btc_negativo_zero',element:'input[name="qtd_btc"]',texto:'Quantidade de BTC não pode ser 0 ou Negativo!'});
-		}
+	POST.valor = POST.valor.replace(',','.');
+	if(parseFloat(POST.valor) > 0){
+		model.CadastrarCaixa(POST).then(data => {
+			res.json(data);
+		});
+	}else{
+		res.json({error:'qtd_valor_negativo',element:'input[name="valor"]',texto:'Valor não pode ser 0 ou Negativo!'});
 	}
 
 });
@@ -949,9 +869,8 @@ router.post('/pedido-aporte/enviar-email/', function(req, res, next) {
 router.post('/caixa/atualizar/', function(req, res, next) {
 	POST = req.body;
 
-	if(POST.qtd_stable > 0){
-		POST.qtd_stable = POST.qtd_stable.replace(',','.');
-
+	POST.valor = POST.valor.replace(',','.');
+	if(parseFloat(POST.valor) > 0){
 		console.log('ACCCCCCCCCC ATUALIZAR CAIXA ACCCCCCCCCCCCCCCCCCC');
 		console.log(POST);
 		console.log('ACCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC');
@@ -959,7 +878,7 @@ router.post('/caixa/atualizar/', function(req, res, next) {
 			res.json(data);
 		});
 	}else{
-		res.json({error:'qtd_stable_negativo_zero',element:'input[name="qtd_stable"]',texto:'Quantidade de Stable não pode ser 0 ou Negativo!'});
+		res.json({error:'qtd_valor_negativo',element:'input[name="valor"]',texto:'Valor não pode ser 0 ou Negativo!'});
 	}
 
 });
@@ -984,27 +903,6 @@ router.post('/usuarios/desativar', function(req, res, next) {
 	
 	POST = req.body;
 	model.DesativarUsuario(POST).then(data=> {
-		res.json(data);
-	});
-});
-
-router.post('/pedido-saque/desativar', function(req, res, next) {
-	POST = req.body;
-	console.log('XXXXXXXXXXX PEDIDO SAQUE DESATIVAR XXXXXXXXXXXXXXXX');
-	console.log(POST);
-	console.log('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX');
-	model.DesativarPedidoSaque(POST).then(data=> {
-		res.json(data);
-	});
-});
-
-
-router.post('/pedido-aporte/desativar', function(req, res, next) {
-	POST = req.body;
-	console.log('XXXXXXXXXXX PEDIDO APORTE DESATIVAR XXXXXXXXXXXXXXXX');
-	console.log(POST);
-	console.log('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX');
-	model.DesativarPedidoAporte(POST).then(data=> {
 		res.json(data);
 	});
 });

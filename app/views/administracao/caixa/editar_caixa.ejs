@@ -1,163 +1,95 @@
-<div class="col s12 center">
-	<div class="w90 center-align gold margin-center padding-5 border-radius-5 f20">Editar Caixa</div>
-	
-	
-	<%if(usuario.nivel == 4 || usuario.nivel == 5){ %>
+<div>
+	<%- include('../submenu'); %>
+</div>
 
+<%if(usuario.nivel == 1){ %>
+<div class="container-fluid">
+	<div class="w100 text-center">
+		<div class="bold f25 text-center white-text margin-b-10">Editar Caixa</div>
 
-	<form method="POST" action="" enctype="multipart/form-data">
+		<form method="POST" action="" enctype="multipart/form-data">
 
-		<input type="hidden" name="id" value="<%= data.caixa[0].id %>">
-
-		
-		<div class="input-field col s12 margin-t-20">
-			<span class="gold-text">Tipo</span>	
-			<select disabled name="tipo" class="browser-default border-gold border-radius-5 white-text">
-				<option value="0" <%= data.caixa[0].tipo == 0 ? 'selected' : '' %>>Aporte</option>
-				<option value="1" <%= data.caixa[0].tipo == 1 ? 'selected' : '' %>>Saque</option>
-				<option value="2" <%= data.caixa[0].tipo == 2 ? 'selected' : '' %> >Rendimento</option>
-				<option value="2" <%= data.caixa[0].tipo == 3 ? 'selected' : '' %> >Saque Rendimento</option>
-			</select>
-
-		</div>
-
-		<input type="hidden" name="tipo" value="<%= data.caixa[0].tipo %>">
-		
-
-		<div class="input-field col s12">
-			<span class="gold-text">Plano</span>	
-			<select name="id_plano" class="browser-default border-gold border-radius-5 white-text">
-				<%
-				if (typeof data.plano != 'undefined' && data.plano.length > 0) {
-					for (var i = 0; i < data.plano.length; i++) { %>
-					<option value=" <%= data.plano[i].id %>" <%= data.caixa[0].id_plano == data.plano[i].id ? 'selected' : '' %>> 
-						<%= data.plano[i].nome %>								
-					</option>				
-					<% }
-				} %>
-			</select>
-		</div>
-
-
-		<div class="input-field col s12">
-			<span class="gold-text">Usuário</span>	
-			<select name="id_usuario" class="browser-default border-gold border-radius-5 white-text">
-				<%
-				if (typeof data.usuario != 'undefined' && data.usuario.length > 0) {
-					for (var i = 0; i < data.usuario.length; i++) { %>
-					<option value="<%= data.usuario[i].id %>" <%= data.caixa[0].id_usuario == data.usuario[i].id ? 'selected' : '' %>> 
-						<%= data.usuario[i].nome %>								
-					</option>				
-					<% }
-				} %>
-			</select>
-		</div>
-
-
-		<%if(data.caixa[0].qtd_stable != undefined){%>
-		
-		<div class="input-field col s12">
-			<label class="gold-text" for="qtd_stable">Quantidade de Stable</label>
-			<input class="validate border-gold border-radius-5 white-text" type="number" name="qtd_stable" value="<%= data.caixa[0].qtd_stable %>">
-		</div>
-
-		<div class="input-field col s12">
-			<span class="gold-text">Conversão Direta: R$<%= data.caixa[0].qtd_real %></span>
-		</div>
-
-		<%}%>
-		
-
-
-		<!-- Aporte, Saque, ou Saque Rendimento ambos tem que ter o arquivo e o Qtd. BTC -->
-		<% if(data.caixa[0].tipo == 0 || data.caixa[0].tipo == 1 || data.caixa[0].tipo == 3){%>
-
-		<%if(data.caixa[0].qtd_btc != undefined){%>
-		<div class="input-field col s12">
-			<label class="gold-text" for="qtd_btc">Quantidade de BTC</label>
-			<input class="validate border-gold border-radius-5 white-text" type="number" name="qtd_btc" value="<%= data.caixa[0].qtd_btc %>">
-		</div>
-		<%}%>
-
-		<%if(data.caixa[0].arquivo!=undefined){%>
-		<div class="input-field col s12">
-			<a download class="btn gold" href="<%= data.caixa[0].arquivo %>">Baixar Comprovante</a>					
-		</div>
-
-		<div>OU</div>
-
-		<input type="hidden" name="arquivo" value="<%= data.caixa[0].arquivo %>">
-
-		<div class="input-field col s12">
-			<button class="btn gold ajax-submit-update-mensagem" data-href="<%= data.link_sistema%>/administracao/pedido-aporte/enviar-email" data-action="" data-mensagem-sucesso="Email Enviado com Sucesso!">Enviar para o meu E-mail</button>
-		</div>
-
-
-		<%}else{%>
-		<div class="center margin-b-10">Cliente não enviou comprovante!</div>
-		<%}%>
-
-
-		<%}%>
-
-
-		<!-- Aporte -->
-		<% if(data.caixa[0].tipo == 0){%>
-
-		<%if(data.caixa[0].dia_convertido_stable!=undefined){%>
-
-		<div class="w90 margin-center f20 gold-text center-align margin-t-10">Conversão para Stable</div>
-
-		<div class="row margin-t-20">
-			<div class="input-field col s12">
-				<label class="gold-text" for="dia_convertido_stable">Dia Convertido Stable</label>
-				<input class="validate border-gold border-radius-5 white-text" disabled type="text" value="<%= data.caixa[0].dia_convertido_stable %>">
+			<input type="hidden" name="id" value="<%= data.caixa[0].id %>">
+			<div class="row">
+				<div class="form-group col-md-6">
+					<div class="row">
+						<label class="white-text col-sm-2" for="tipo">Tipo</label>
+						<div class="col-sm-10">
+							<select name="tipo" class="form-control tipo_caixa_select">
+								<option value="0" <%= data.caixa[0].tipo == 0 ? 'selected' : '' %>>Aporte</option>
+								<option value="1" <%= data.caixa[0].tipo == 1 ? 'selected' : '' %>>Saque</option>
+								<option value="2" <%= data.caixa[0].tipo == 2 ? 'selected' : '' %>>Rendimento</option>
+								<option value="3" <%= data.caixa[0].tipo == 3 ? 'selected' : '' %>>Saque rendimento</option>
+								<option value="4" <%= data.caixa[0].tipo == 4 ? 'selected' : '' %>>Reaporte</option>
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="form-group col-md-6">
+					<div class="row">
+						<label class="white-text col-sm-2" for="id_plano">Plano</label>
+						<div class="col-sm-10">
+							<select name="id_plano" class="form-control">
+								<%
+								if (typeof data.plano != 'undefined' && data.plano.length > 0) {
+									for (var i = 0; i < data.plano.length; i++) { %>
+									<option value=" <%= data.plano[i].id %>" <%= data.caixa[0].id_plano == data.plano[i].id ? 'selected' : '' %> ><%= data.plano[i].nome %></option>				
+									<% }
+								} %>
+							</select>
+						</div>
+					</div>
+				</div>
 			</div>
-		</div>
 
-		<div class="row">
-			<div class="input-field col s12">
-				<label class="gold-text" for="hora_convertido_stable">Hora Convertido Stable</label>
-				<input class="validate border-gold border-radius-5 white-text" disabled type="text" value="<%= data.caixa[0].hora_convertido_stable %>">
+			<div class="row">
+				<div class="form-group col-md-6">
+					<div class="row">
+						<label class="white-text col-sm-2" for="id_usuario">Usuário</label>
+						<div class="col-sm-10">
+							<select name="id_usuario" class="form-control">
+								<%
+								if (typeof data.usuario != 'undefined' && data.usuario.length > 0) {
+									for (var i = 0; i < data.usuario.length; i++) { %>
+									<option value="<%= data.usuario[i].id %>"><%= data.usuario[i].nome %></option>				
+									<% }
+								} %>
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="form-group col-md-6">
+					<div class="row">
+						<label class="white-text col-sm-2" for="valor">Valor em Reais</label>
+						<div class="col-sm-10">
+							<input required="true" class="validate form-control " type="number" name="valor" value="<%= data.caixa[0].valor %>">
+						</div>
+					</div>
+				</div>
 			</div>
-		</div>
 
-		<%}%>
+			<div class="row">
 
-		<%}%>
-
-
-		<!-- Saque ou Saque Rendimento -->
-		<% if(data.caixa[0].tipo == 1 || data.caixa[0].tipo == 3){ %>
-
-		<% if(data.caixa[0].carteira!=undefined ) {%>
-
-		<div class="row">
-			<div class="input-field col s12">
-				<label class="gold-text" for="carteira">Carteira</label>
-				<input type="text" disabled value="<%= data.caixa[0].carteira %>" class="border-gold border-radius-5 white-text">
+				<div class="form-group col-md-12">
+					<div class="row">
+						<label class="white-text col-sm-1" for="data">Data</label>
+						<div class="col-sm-11">
+							<input required="true" class="validate form-control datepicker data-sem-hora" type="text" name="data" value="<%= data.caixa[0].data %>">
+						</div>
+					</div>
+				</div>
 			</div>
-		</div>
-
-		<%}else{%>
-		<div class="center margin-b-10">Cliente não enviou carteira!</div>
-		<%}%>
-
-		<%}%>
 
 
-		<button data-href="/sistema/administracao/caixa/atualizar" data-action="<%= data.link_sistema%>/administracao/caixa/" class="btn gold ajax-submit-update margin-b-10">
-			Salvar <i class="far fa-save-o" aria-hidden="true"></i>
-		</button>
+			<button data-href="/sistema/administracao/caixa/atualizar" data-action="<%= data.link_sistema%>/administracao/caixa/" class="btn primary ajax-submit margin-b-10" data-mensagem-sucesso="Caixa Atualizado com Sucesso!" >
+				Salvar <i class="far fa-save-o" aria-hidden="true"></i>
+			</button>
 
-	</form>
-
-
-
-
-
-	<%}else{%>
-	<div class="card light">Você não possui permissão para acessar esse conteúdo</div>
-	<%}%>
+		</form>
+	</div>
 
 </div>
+
+<%}else{%>
+<div class="white-text text-center f25">Você não possui permissão para acessar esse conteúdo!</div>
+<%}%>
