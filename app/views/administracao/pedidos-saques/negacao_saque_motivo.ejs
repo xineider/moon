@@ -1,35 +1,46 @@
-<div class="border-radius-5 margin-t-20 border-red margin-b-10" style="border:1px solid #F44336;">
-	<div class="f25 bold center-align white-text margin-t-10">Negação de Saque</div>
-	<div class="center-align f15 light-font margin-t-5 gold-text">Informar o motivo da Negação do Saque</div>
+<%if(usuario.nivel == 1){ %>
 
-	<form method="POST" action="" enctype="multipart/form-data">
 
-		<input type="hidden" name="id" value="<%= data[0].id %>">
+<div class="border-radius-5 margin-t-20 border-red margin-b-10 text-center white-text">
+	<div class="container-fluid">
 
-		<div class="center-align">
 
-			<div class="col s12 ">
-				<span class="gold-text">Motivo</span>
-				<div class="input-field inline">
-					<select class="browser-default perfil_saque_select border-gold border-radius-5" name="status" class="">
-						<option>Valor Incorreto</option>
-						<option>Carteira Incorreta</option>
-						<option>Saque Já em Andamento</option>
-						<option>Usuário solicitou Cancelamento</option>
-						<option>Valor solicitado excede o limite</option>
-						<option selected="">Entrar em contato com o Suporte</option>
-					</select>
+		<div class="f25 bold margin-t-10">Negação de Saque</div>
+		<div class="margin-t-5 margin-b-10">Informar o motivo da Negação do Saque</div>
+
+		<form method="POST" action="" enctype="multipart/form-data">
+
+			<input type="hidden" name="id" value="<%= data.pedido_saque_n[0].id %>">
+
+			<div class="row">
+				<div class="form-group col-sm-12">
+					<div class="row">
+						<label class="white-text col-sm-2" for="status">Motivo</label>
+						<div class="col-sm-10">
+							<select name="status" class="form-control">
+								<option>Valor Incorreto</option>
+								<option>Carteira Incorreta</option>
+								<option>Saque Já em Andamento</option>
+								<option>Usuário solicitou Cancelamento</option>
+								<option selected="">Entrar em contato com o Suporte</option>
+							</select>
+						</div>
+					</div>
 				</div>
 			</div>
 
-		</div>
 
-		<div class="center-align">
-			<button data-href="/sistema/administracao/pedido-saque/negar" data-action="<%= data.link_sistema%>/administracao/pedidos-saques/" class="btn gold ajax-submit-update-mensagem margin-b-10" data-mensagem-sucesso="Saque Negado!">
-				Negar <i class="far fa-save-o" aria-hidden="true"></i>
+
+			<button data-href="/sistema/administracao/pedido-saque/negar" data-action="<%= data.link_sistema%>/administracao/pedidos-saques/" class="btn red white-text ajax-submit margin-b-10" data-mensagem-sucesso="Saque Negado!" data-mensagem-sucesso-color="bg-danger">
+				Negar Saque<i class="far fa-save-o" aria-hidden="true"></i>
 			</button>
-		</div>
-	</form>
+
+		</form>
+
+	</div>
 
 </div>
 
+<%}else{%>
+<div class="white-text text-center f25">Você não possui permissão para acessar esse conteúdo!</div>
+<%}%>

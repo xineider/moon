@@ -491,9 +491,12 @@
 	color: #ffffff;
 }
 
-.btn.red:hover{
-	background:#bd2626;
+.btn.red{
 	color: #ffffff;
+	&:hover{
+		background:#bd2626;
+	}
+
 }
 
 .btn:focus, .btn.focus{
@@ -503,4 +506,8 @@
 
 .pointer{
 	cursor: pointer;
+}
+
+.border-red{
+	border:1px solid #ec3434;
 }

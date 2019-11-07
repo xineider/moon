@@ -201,6 +201,7 @@ function LoadTo(link, to) {
 			adicionarLoader();
 		},
 		success: function(data) {
+			$('.'+to).empty();
 			$('.'+to).append(data);
 		},
     error: function(xhr) { // if error occured

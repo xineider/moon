@@ -1,69 +1,55 @@
-<div class="col s12 center">
-	<div class="w90 center-align gold margin-center padding-5 border-radius-5 f20">Aprovação de Saque</div>
-	
-	
-	<%if(usuario.nivel == 4 || usuario.nivel == 5){ %>
-	
-	
-		<div class="row margin-t-20">
-			<div class="input-field col s12">
-				<label class="gold-text" for="titulo">Nome</label>
-				<input type="text" disabled value="<%= data[0].nome %>" class="border-gold border-radius-5 white-text">
-			</div>
-		</div>
+<div>
+	<%- include('../submenu'); %>
+</div>
 
-		<div class="row">			
-			<div class="input-field col s12">
-				<label class="gold-text" for="titulo">Perfil</label>
-				<input type="text" disabled value="<%= data[0].plano %>" class="border-gold border-radius-5 white-text">
-			</div>
-		</div>
+<%if(usuario.nivel == 1){ %>
+<div class="container-fluid">
+	<div class="w100 text-center">
+		<div class="bold f25 text-center white-text margin-b-10">Aprovação de Saque</div>
 
 		<div class="row">
-			<div class="input-field col s12">
-				<label class="gold-text" for="titulo">Qtd. Tether</label>
-				<input type="text" disabled value="<%= data[0].qtd_stable %>" class="border-gold border-radius-5 white-text">
+			<div class="form-group col-md-3 f20 white-text">
+				Nome do Usuário: <span class="primary-text"><%= data.pedido_saque[0].nome_usuario %></span>
+			</div>
+			<div class="form-group col-md-3 f20 white-text">
+				Plano: <span class="primary-text"><%= data.pedido_saque[0].plano %></span>
+			</div>
+
+			<div class="form-group col-md-3 f20 white-text">
+				Valor: <span class="primary-text">R$<%= data.pedido_saque[0].valor_real %></span>
+			</div>
+
+			<div class="form-group col-md-3 f20 white-text">
+				<%if(data.pedido_saque[0].carteira != undefined){%>
+				Carteira: <span class="primary-text"><%= data.pedido_saque[0].carteira %></span>			
+
+				<%}else{%>
+				<div class="text-center">Cliente não possui carteira!</div>
+				<%}%>
 			</div>
 		</div>
 
-		<% if(data[0].carteira!=undefined ) {%>
+		<div class="row text-center margin-b-10">
 
-		<div class="row">
-			<div class="input-field col s12">
-				<label class="gold-text" for="carteira">Carteira</label>
-				<input type="text" disabled value="<%= data[0].carteira %>" class="border-gold border-radius-5 white-text">
+			<div class="w100 mx-auto">
+
+				<button class="btn red ajax-load-to margin-t-10 margin-l-10" href="<%= data.link_sistema%>/administracao/pedido-saque/negacao_saque_motivo/<%= data.pedido_saque[0].id %>" data-to="container_aprovacao_negacao_saque">
+					Negar Saque
+				</button>
+
+				<button class="btn primary ajax-load-to margin-t-10 margin-l-10" href="<%= data.link_sistema%>/administracao/pedido-saque/aprovacao_saque_data_hora/<%= data.pedido_saque[0].id %>" data-to="container_aprovacao_negacao_saque">
+					Aprovar Saque
+				</button>
 			</div>
-		</div>
-
-		<%}else{%>
-		<div class="center margin-b-10">Cliente não enviou carteira!</div>
-
-		<%}%>
-
-		<div class="center-align">
-
-			<a class="btn red border-radius-5 ajax-load-to margin-t-10 white-text margin-l-10" href="<%= data.link_sistema%>/administracao/pedido-saque/negacao_saque_motivo/<%= data[0].id %>" data-to="container_aprovacao_negacao_saque">
-				Negar Saque
-			</a>
-
-			<a class="btn gold ajax-load-to margin-t-10 margin-l-10" href="<%= data.link_sistema%>/administracao/pedido-saque/aprovacao_saque_qtd_btc/<%= data[0].id %>" data-to="container_aprovacao_negacao_saque">
-				Aprovar Saque
-			</a>
 		</div>
 
 
 		<div class="container_aprovacao_negacao_saque"></div>
 
+	</div>
 
-		
-	
-	
-	
-	
-	
-	
-	<%}else{%>
-	<div class="card light">Você não possui permissão para acessar esse conteúdo</div>
-	<%}%>
-	
 </div>
+
+<%}else{%>
+<div class="white-text text-center f25">Você não possui permissão para acessar esse conteúdo!</div>
+<%}%>

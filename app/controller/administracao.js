@@ -283,7 +283,8 @@ router.get('/pedido-saque/editar/:id', function(req, res, next) {
 	console.log('selecionei o pedido-saque no editar');
 	console.log(id);
 	console.log('_________________________________');
-	model.SelecionarPedidoSaque(id).then(data => {
+	model.SelecionarPedidoSaque(id).then(data_pedido_saque => {
+		data.pedido_saque = data_pedido_saque;
 		data.link_sistema = '/sistema';
 		console.log('QQQQQQQQQQQQQQ PEDIDO SAQUE EDITAR QQQQQQQQQQQQQQQQQQQ');
 		console.log(data);	
@@ -292,16 +293,17 @@ router.get('/pedido-saque/editar/:id', function(req, res, next) {
 	});
 });
 
-router.get('/pedido-saque/aprovacao_saque_qtd_btc/:id', function(req, res, next) {
+router.get('/pedido-saque/aprovacao_saque_data_hora/:id', function(req, res, next) {
 	var id = req.params.id;
 	console.log('selecionei o modal no editar');
 	console.log(id);
 	console.log('_________________________________');
-	model.SelecionarPedidoSaque(id).then(data => {
+	model.SelecionarPedidoSaque(id).then(data_pedido_saque_a => {
+		data.pedido_saque_a = data_pedido_saque_a;
 		data.link_sistema = '/sistema';
-		console.log('TTTTTTTTTTTTTTTTTT PEDIDO APORTE EDITAR TTTTTTTTTTTTTTTTTTTT');
+		console.log('================= APROVACAO SAQUE =========================');
 		console.log(data);	
-		console.log('TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT');
+		console.log('===========================================================');
 		res.render(req.isAjaxRequest() == true ? 'api' : 'montadorLimpo', {html: 'administracao/pedidos-saques/aprovacao_saque_qtd_btc', data: data, usuario: req.session.usuario});
 	});
 });
@@ -312,11 +314,12 @@ router.get('/pedido-saque/negacao_saque_motivo/:id', function(req, res, next) {
 	console.log('selecionei o modal no editar');
 	console.log(id);
 	console.log('_________________________________');
-	model.SelecionarPedidoSaque(id).then(data => {
+	model.SelecionarPedidoSaque(id).then(data_pedido_saque_n => {
+		data.pedido_saque_n = data_pedido_saque_n;
 		data.link_sistema = '/sistema';
-		console.log('TTTTTTTTTTTTTTTTTT PEDIDO APORTE EDITAR TTTTTTTTTTTTTTTTTTTT');
+		console.log('oooOOOOooOOoOOO NEGAR SAQUE oooOOooOOOooOOooo');
 		console.log(data);	
-		console.log('TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT');
+		console.log('ooooOOOooooOOOoooOOOooOoooOOooOooOoooooOOOoOO');
 		res.render(req.isAjaxRequest() == true ? 'api' : 'montadorLimpo', {html: 'administracao/pedidos-saques/negacao_saque_motivo', data: data, usuario: req.session.usuario});
 	});
 });
@@ -327,7 +330,8 @@ router.get('/pedido-aporte/editar/:id', function(req, res, next) {
 	console.log('selecionei o pedido-aporte no editar');
 	console.log(id);
 	console.log('_________________________________');
-	model.SelecionarPedidoAporte(id).then(data => {
+	model.SelecionarPedidoAporte(id).then(data_pedido_aporte => {
+		data.pedido_aporte = data_pedido_aporte;
 		data.link_sistema = '/sistema';
 		console.log('TTTTTTTTTTTTTTTTTT PEDIDO APORTE EDITAR TTTTTTTTTTTTTTTTTTTT');
 		console.log(data);	
@@ -342,7 +346,8 @@ router.get('/pedido-aporte/aprovacao_aporte_data_hora/:id', function(req, res, n
 	console.log('selecionei o modal no editar');
 	console.log(id);
 	console.log('_________________________________');
-	model.SelecionarPedidoAporte(id).then(data => {
+	model.SelecionarPedidoAporte(id).then(data_pedido_aporte_a => {
+		data.pedido_aporte_a = data_pedido_aporte_a;
 		data.link_sistema = '/sistema';
 		console.log('TTTTTTTTTTTTTTTTTT PEDIDO APORTE EDITAR TTTTTTTTTTTTTTTTTTTT');
 		console.log(data);	
@@ -357,7 +362,8 @@ router.get('/pedido-aporte/negacao_aporte_motivo/:id', function(req, res, next) 
 	console.log('selecionei o modal no editar');
 	console.log(id);
 	console.log('_________________________________');
-	model.SelecionarPedidoAporte(id).then(data => {
+	model.SelecionarPedidoAporte(id).then(data_pedido_aporte_n => {
+		data.pedido_aporte_n = data_pedido_aporte_n;
 		data.link_sistema = '/sistema';
 		console.log('TTTTTTTTTTTTTTTTTT PEDIDO APORTE EDITAR TTTTTTTTTTTTTTTTTTTT');
 		console.log(data);	
@@ -603,51 +609,38 @@ router.post('/usuarios/atualizar/', function(req, res, next) {
 
 });
 
-router.post('/pedido-saque/confirmar/', function(req, res, next) {
+router.post('/pedido-saque/aprovar/', function(req, res, next) {
 	POST = req.body;
 	POST.confirmado = 1;
 
-	if(POST.qtd_btc != '' && POST.qtd_btc > 0){
-		if(POST.arquivo != undefined){
-			POST.qtd_btc = POST.qtd_btc.replace(',','.');
-			POST.operacao = 1;
-			model.SelecionarHoje().then(data_hoje=>{
-				POST.data_conversao_aporte = data_hoje[0].hoje;
+	model.SelecionarHoje().then(data_hoje=>{
+		POST.dia_confirmacao = data_hoje[0].hoje;
+		model.AprovarPedidoSaque(POST).then(id_aprovar_saque => {
+			model.DescobrirUsuarioPorCaixaId(POST.id).then(data_usuario => {
+				model.DescobrirCaixaValorPorCaixaId(POST.id).then(data_caixa => {
 
-				/*Tenho que descobrir o usuário para poder saber o e-mail para qual devo enviar*/
-				model.DescobrirUsuarioPorCaixaId(POST.id).then(data_usuario => {
-					/*Tenho que descobrir o próprio caixa para saber a qtd de stable e o nome do Plano*/
-					model.DescobrirCaixaValorPorCaixaId(POST.id).then(data_caixa => {
-						console.log('@@@@@@@@@ usuario pedido data_caixa @@@');
-						console.log(data_caixa);
-						console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
+					var html = "Moon informa:"+
+					"<br>Foi <b>APROVADO</b> o seu saque de <b>R$"+data_caixa[0].valor_real+" no plano <b>"+data_caixa[0].nome_plano+"</b>."+
+					"<br>Qualquer dúvida por favor contatar o suporte."+ 
+					"<br><b>Por favor, não responda essa mensagem, pois ela é enviada automaticamente!</b>";
 
-						console.log('uuuuuuuuuuuuuu usuario pedido saque uuuuuuuuuuuuuuuuuuuuuuu');
-						console.log(data_usuario);
-						console.log('uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu');
+					var text = "Moon informa:"+
+					"Foi APROVADO o seu saque de R$"+data_caixa[0].valor_real+" no plano "+data_caixa[0].nome_plano+"."+
+					"Qualquer dúvida por favor contatar o suporte."+ 
+					"Por favor, não responda essa mensagem, pois ela é enviada automaticamente!";
 
-						var html = "Olá, foi realizado o pagamento do seu saque de "+data_caixa[0].qtd_stable+" Tether(s) no Plano "+data_caixa[0].nome_plano+" foi aprovado! O valor foi convertido em "+POST.qtd_btc+" BTC. <br>"+
-						"Segue em anexo o comprovante"+ 
-						"<br><b>Por favor, não responda essa mensagem, pois ela é enviada automaticamente!</b>";
-
-						var text = "Olá, foi realizado o pagamento do seu saque de "+data_caixa[0].qtd_stable+" Tether(s) no Plano "+data_caixa[0].nome_plano+" foi aprovado! O valor foi convertido em "+POST.qtd_btc+" BTC."+
-						"Segue em anexo o comprovante"+""+ 
-						"Por favor, não responda essa mensagem, pois ela é enviada automaticamente!";
-						control.SendMailAttachmentNoFileName(data_usuario[0].email, 'Saque Aprovado Eagle!', text, html,'.'+POST.arquivo);
-
-						model.AtualizarPedidoSaque(POST).then(data => {
-							res.json(data);
-						});
-					});
+					control.SendMail(data_usuario[0].email, 'Pedido de aporte Aprovado na Eagle!', text,html);
+					console.log('usuario uuuuu')
+					console.log(data_usuario);
+					console.log('uuuuuuuuuuuuu');
+					console.log('caixa xxxxxxxx');
+					console.log(data_caixa);
+					console.log('xxxxxxxxxxxxxx');
+					res.json(id_aprovar_saque);
 				});
 			});
-			
-		}else{
-			res.json({error:'sem_comprovante',element:'input[type="file"]',texto:'Por favor enviar um Comprovante para o Saque!'});
-		}
-	}else{
-		res.json({error:'sem_btc',element:'input[name="qtd_btc"]',texto:'BTC Não pode ser vazio ou negativo!'});
-	}
+		});
+	});
 });
 
 router.post('/pedido-saque/negar/', function(req, res, next) {
@@ -658,24 +651,24 @@ router.post('/pedido-saque/negar/', function(req, res, next) {
 	/*2 é negado*/
 	POST.confirmado = 2;
 	model.SelecionarHoje().then(data_hoje=>{
-		POST.data_conversao_aporte = data_hoje[0].hoje;
+		POST.dia_confirmacao = data_hoje[0].hoje;
 		model.NegarPedidoSaque(POST).then(id_negar_saque => {
 			model.DescobrirUsuarioPorCaixaId(POST.id).then(data_usuario => {
 				model.DescobrirCaixaValorPorCaixaId(POST.id).then(data_caixa => {
 
-					var html = "Aplicativo Eagle Finance informa:"+
-					"<br>Foi <b>NEGADO</b> o seu saque de <b>"+data_caixa[0].qtd_stable+" Tether(s)</b> no plano <b>"+data_caixa[0].nome_plano+"</b>."+
+					var html = "Moon informa:"+
+					"<br>Foi <b>NEGADO</b> o seu saque de <b>R$"+data_caixa[0].valor_real+" no plano <b>"+data_caixa[0].nome_plano+"</b>."+
 					"<br>Pelo seguinte motivo:<b>"+POST.status+"</b>."+
 					"<br>Qualquer dúvida por favor contatar o suporte."+ 
 					"<br><b>Por favor, não responda essa mensagem, pois ela é enviada automaticamente!</b>";
 
-					var text = "Aplicativo Eagle Finance informa:"+
-					"Foi NEGADO o seu saque de "+data_caixa[0].qtd_stable+" Tether(s) no plano "+data_caixa[0].nome_plano+"."+
+					var text = "Moon informa:"+
+					"Foi NEGADO o seu saque de R$"+data_caixa[0].qtd_stable+" no plano "+data_caixa[0].nome_plano+"."+
 					"Pelo seguinte motivo:"+POST.status+"."+
 					"Qualquer dúvida por favor contatar o suporte."+ 
 					"Por favor, não responda essa mensagem, pois ela é enviada automaticamente!";
 
-					control.SendMail(data_usuario[0].email, 'Pedido de saque Negado na Eagle!', text,html);
+					control.SendMail(data_usuario[0].email, 'Pedido de saque Negado no Moon!', text,html);
 					res.json(id_negar_saque);
 				});
 			});
@@ -683,154 +676,74 @@ router.post('/pedido-saque/negar/', function(req, res, next) {
 	});
 });
 
-router.post('/pedido-aporte/confirmar/', function(req, res, next) {
+router.post('/pedido-aporte/aprovar/', function(req, res, next) {
 	POST = req.body;
 	POST.confirmado = 1;
 
-	if(POST.dia_convertido_stable != ''){
-		if(POST.hora_convertido_stable != ''){
-			model.SelecionarHoje().then(data_hoje=>{
-				var hoje = new Date();
-				console.log('hoje');
-				console.log(hoje);
+	model.SelecionarHoje().then(data_hoje=>{
+		POST.dia_confirmacao = data_hoje[0].hoje;
+		model.AprovarPedidoAporte(POST).then(id_aprovar_aporte => {
+			model.DescobrirUsuarioPorCaixaId(POST.id).then(data_usuario => {
+				model.DescobrirCaixaValorPorCaixaId(POST.id).then(data_caixa => {
 
-				var diaHoje = hoje.getDate();
-				var mesHoje = hoje.getMonth() + 1;
-				var anoHoje = hoje.getFullYear();
-				var horaHoje = hoje.getHours();
-				var minutoHoje = hoje.getMinutes();
-				var dia_convertido_stable = POST.dia_convertido_stable;
-				var hora_convertido_stable = POST.hora_convertido_stable;
-				console.log("diaHoje:"+diaHoje);
-				console.log("mesHoje:"+mesHoje);
-				console.log("anoHoje:"+anoHoje);
-				console.log("horaHoje:"+horaHoje);
-				console.log("minutoHoje:"+minutoHoje);
-				/*converto e splito na barra para testar se não é maior do que hoje*/
-				/*[0] - dia
-				[1] - mes
-				[2] - ano*/
-				var data_convertido_array = dia_convertido_stable.split('/');
-				var dia_convertido = parseInt(data_convertido_array[0]);
-				var mes_convertido = parseInt(data_convertido_array[1]);
-				var ano_convertido = parseInt(data_convertido_array[2]);
-				console.log('dia_convertido:'+dia_convertido);
-				console.log('mes_convertido:'+mes_convertido);
-				console.log('ano_convertido:'+ano_convertido);
+					var html = "Moon informa:"+
+					"<br>Foi <b>APROVADO</b> o seu aporte de <b>R$"+data_caixa[0].valor_real+" no plano <b>"+data_caixa[0].nome_plano+"</b>."+
+					"<br>Qualquer dúvida por favor contatar o suporte."+ 
+					"<br><b>Por favor, não responda essa mensagem, pois ela é enviada automaticamente!</b>";
 
-				var hora_convertido_array = hora_convertido_stable.split(':');
-				var hora_convertido = parseInt(hora_convertido_array[0]);
-				var minuto_convertido = parseInt(hora_convertido_array[1]);
+					var text = "Moon informa:"+
+					"Foi APROVADO o seu aporte de R$"+data_caixa[0].valor_real+" no plano "+data_caixa[0].nome_plano+"."+
+					"Qualquer dúvida por favor contatar o suporte."+ 
+					"Por favor, não responda essa mensagem, pois ela é enviada automaticamente!";
 
-				console.log('hora_convertido_array:'+hora_convertido_array);
-				console.log('Hora:'+hora_convertido);
-				console.log('minuto:'+minuto_convertido);
-
-				var diferenca_anos = anoHoje - ano_convertido;
-				console.log('diferenca_anos: '+diferenca_anos);
-
-				/*como o mes começa em 0 - janeiro e 11 - Dezembro tenho que diminuir para transformar para a binance*/
-				var mes_para_epoch = mes_convertido - 1;
-				
-
-				/*Vejo se o ano, o mes e o dia de HOJE são maiores ou igual ao dia informado, se for quer dizer que 
-				a data informada não é maior que hoje*/
-
-				/*se a diferenca de anos for maior que 2 nem pega*/
-				if(diferenca_anos < 2){
-					/*se o ano de Hoje for maior o que for escolhido vai direto,
-					  se for o mesmo ano e Hoje for maior que o mês escolhido vai direto
-					  se for o mesmo ano, e o mesmo mes ver se o dia de hoje é o mesmo ou maior*/
-					  if((anoHoje > ano_convertido) || 
-					  	(anoHoje == ano_convertido && mesHoje > mes_convertido) || 
-					  	(anoHoje == ano_convertido && mesHoje == mes_convertido && diaHoje >= dia_convertido))
-					  {
-					  	model.SelecionarCaixa(POST.id).then(data_aporte=>{
-					  		console.log('DDDDDDDDD data aporte DDDDDDDDDDDDDD');
-					  		console.log(data_aporte);
-					  		console.log('DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD');
-
-					  		/*Seto a data para converter com base no que foi escolhido pelo usuario*/
-					  		var data_para_epoch = new Date(ano_convertido,mes_para_epoch,dia_convertido,hora_convertido,minuto_convertido);
-					  		console.log('HHHHHHHH DATA PARA EPOCH  HHHHHHHHH');
-					  		console.log(data_para_epoch);
-					  		console.log('HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH');
-					  		/*converto em epoch(aquela data em numeros) que é o que a binance lê*/
-					  		var epoch = control.Epoch(data_para_epoch);
-
-					  		console.log('epoch: ' + epoch);
-					  		var qtd_btc = data_aporte[0].qtd_btc;
-					  		var btcusdt;
-
-					  		const binance = require('node-binance-api')().options({
-					  			APIKEY: 'nRtvsE8Y9MuI4JTltxCRqNRFB78KIMPWLNtm5vfiIcyWJaTjRMWlSTfDTMhNiQPb',
-					  			APISECRET: 'vBtTpJRg6ikuXZLT5AQsTKD2V1kIATX6qnCM5OfX57yQ3k1snkF6En6PKcZ135es',
-					  			useServerTime: true 							
- 									// If you get timestamp errors, synchronize to server time at startup
- 								});
-
-
-					  		binance.candlesticks("BTCUSDT", "5m", (error, ticks, symbol) => {									
-					  			let last_tick = ticks[ticks.length - 1];
-					  			let [time, open, high, low, close, volume, closeTime, assetVolume, trades, buyBaseVolume, buyAssetVolume, ignored] = last_tick;
-					  			btcusdt = close;
-
-
-					  			console.log('btcusdt: '+btcusdt);
-
-					  			var qtd_stable_usd = qtd_btc * btcusdt;
-					  			POST.qtd_stable = qtd_stable_usd;
-					  			POST.data_conversao_aporte = data_hoje[0].hoje;
-					  			POST.tipo_conversao = 0;
-					  			console.log('ATATATATATAT CONFIRMAR PEDIDO APORTE  ATATATATATAT');
-					  			console.log(POST);
-					  			console.log('ATTATATATATATATATATATATATATATATATATATATATATATATATA');
-					  			model.AtualizarPedidoAporte(POST).then(data => {
-					  				res.json(data);
-					  			});
-					  		}, {limit: 500, endTime:epoch});
-					  	});
-					  }else{
-					  	res.json({error:'dia_convertido_maior_que_hoje',element:'input[name="dia_convertido_stable"]',texto:'Dia não pode ser maior que hoje!!'});
-					  }
-					}else{
-						res.json({error:'data_convertida_antiga',element:'input[name="dia_convertido_stable"]',texto:'Data não pode ser tão antiga, informe outra!'});
-					}
+					control.SendMail(data_usuario[0].email, 'Pedido de aporte Aprovado na Eagle!', text,html);
+					console.log('usuario uuuuu')
+					console.log(data_usuario);
+					console.log('uuuuuuuuuuuuu');
+					console.log('caixa xxxxxxxx');
+					console.log(data_caixa);
+					console.log('xxxxxxxxxxxxxx');
+					res.json(id_aprovar_aporte);
 				});
-}else{
-	res.json({error:'hora_convertido_vazio',element:'input[name="hora_convertido_stable"]',texto:'Por favor informar uma hora!'});
-}
-}else{
-	res.json({error:'dia_convertido_vazio',element:'input[name="dia_convertido_stable"]',texto:'Dia não pode ser vazio!'});
-}
+			});
+		});
+	});
 });
 
 router.post('/pedido-aporte/negar/', function(req, res, next) {
 	POST = req.body;
+	/*2 é negado*/
+	POST.confirmado = 2;
 	console.log('NNNNNNNNNNNN NEGAR PEDIDO APORTE  NNNNNNNNNNNNNNNNNNNNNNN');
 	console.log(POST);
 	console.log('NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN');
-	/*2 é negado*/
-	POST.confirmado = 2;
+	
 	model.SelecionarHoje().then(data_hoje=>{
-		POST.data_conversao_aporte = data_hoje[0].hoje;
+		POST.dia_confirmacao = data_hoje[0].hoje;
 		model.NegarPedidoAporte(POST).then(id_negar_aporte => {
 			model.DescobrirUsuarioPorCaixaId(POST.id).then(data_usuario => {
 				model.DescobrirCaixaValorPorCaixaId(POST.id).then(data_caixa => {
 
-					var html = "Aplicativo Eagle Finance informa:"+
-					"<br>Foi <b>NEGADO</b> o seu aporte de <b>"+data_caixa[0].qtd_btc+" BTC</b> no plano <b>"+data_caixa[0].nome_plano+"</b>."+
+					var html = "Moon informa:"+
+					"<br>Foi <b>NEGADO</b> o seu aporte de <b>R$"+data_caixa[0].valor_real+" no plano <b>"+data_caixa[0].nome_plano+"</b>."+
 					"<br>Pelo seguinte motivo:<b>"+POST.status+"</b>."+
 					"<br>Qualquer dúvida por favor contatar o suporte."+ 
 					"<br><b>Por favor, não responda essa mensagem, pois ela é enviada automaticamente!</b>";
 
-					var text = "Aplicativo Eagle Finance informa:"+
-					"Foi NEGADO o seu aporte de "+data_caixa[0].qtd_btc+" BTC no plano "+data_caixa[0].nome_plano+"."+
+					var text = "Moon informa:"+
+					"Foi NEGADO o seu aporte de R$"+data_caixa[0].valor_real+" no plano "+data_caixa[0].nome_plano+"."+
 					"Pelo seguinte motivo:<b>"+POST.status+"</b>."+
 					"Qualquer dúvida por favor contatar o suporte."+ 
 					"Por favor, não responda essa mensagem, pois ela é enviada automaticamente!";
 
 					control.SendMail(data_usuario[0].email, 'Pedido de aporte Negado na Eagle!', text,html);
+					console.log('id_negar_aporte:'+id_negar_aporte);
+					console.log('usuario uuuuu')
+					console.log(data_usuario);
+					console.log('uuuuuuuuuuuuu');
+					console.log('caixa xxxxxxxx');
+					console.log(data_caixa);
+					console.log('xxxxxxxxxxxxxx');
 					res.json(id_negar_aporte);
 				});
 			});

@@ -1,33 +1,38 @@
-<div class="border-gold border-radius-5 margin-t-20 margin-b-10">
-	<div class="f25 bold center-align white-text margin-t-10">Aprovação de Aporte</div>
-	<div class="center-align f15 light-font margin-t-5 gold-text">Data e Hora que o CriptoAtivo foi aprovado</div>
+<%if(usuario.nivel == 1){ %>
 
-	<form method="POST" action="" enctype="multipart/form-data">
+<div class="border-radius-5 margin-t-20 border-primary margin-b-10 text-center white-text">
+	<div class="container-fluid">
 
-		<input type="hidden" name="id" value="<%= data[0].id %>">
-		<input type="hidden" name="status" value="Aprovado">
-		
-		<div class="center-align">
-			<div class="col s12">
-				<span class="gold-text">Data</span>
-				<div class="input-field inline">
-					<input name="dia_convertido_stable" class="datepicker border-gold border-radius-5 white-text" required="true">
+
+		<div class="f25 bold margin-t-10">Aprovação de Aporte</div>
+
+		<div class="margin-t-5 margin-b-10">Informar o Dia que foi Ativado.</div>
+			<form method="POST" action="" enctype="multipart/form-data">
+
+				<input type="hidden" name="id" value="<%= data.pedido_aporte_a[0].id %>">
+
+				<div class="row">
+					<div class="form-group col-sm-12">
+						<div class="row">
+							<label class="white-text col-sm-2" for="data">Data</label>
+							<div class="col-sm-10">
+								<input required="true" class="validate form-control datepicker data-sem-hora" type="text" name="data">
+							</div>
+						</div>
+					</div>
 				</div>
-			</div>
-			<div class="col s12">
-				<span class="gold-text">Hora</span>
-				<div class="input-field inline">
-					<input name="hora_convertido_stable" class="timepicker border-gold border-radius-5 white-text hora_selecionar_aprovacao" required="true">
-				</div>
-			</div> 
+
+
+
+				<button data-href="/sistema/administracao/pedido-aporte/aprovar" data-action="<%= data.link_sistema%>/administracao/pedidos-aportes/" class="btn primary white-text ajax-submit margin-b-10" data-mensagem-sucesso="Aporte Aprovado!">
+					Aprovar Aporte<i class="far fa-save-o" aria-hidden="true"></i>
+				</button>
+
+			</form>
+
 		</div>
 
-		<div class="center-align">
-			<button data-href="/sistema/administracao/pedido-aporte/confirmar" data-action="<%= data.link_sistema%>/administracao/pedidos-aportes/" class="btn gold ajax-submit-update-mensagem margin-b-10" data-mensagem-sucesso="Aporte Aprovado com Sucesso!">
-				Aprovar <i class="far fa-save-o" aria-hidden="true"></i>
-			</button>
-		</div>
-	</form>
-
-</div>
-
+	</div>
+	<%}else{%>
+	<div class="white-text text-center f25">Você não possui permissão para acessar esse conteúdo!</div>
+	<%}%>
