@@ -28,6 +28,7 @@ router.get('/', function(req, res, next) {
 								model.GetCaixaMesUsuario(req.session.usuario.id,data_mes_atual_ativo[0].mes_atual_ativo).then(data_caixa=>{
 									data.caixa = data_caixa;
 									data.link_sistema = '/sistema';
+									data.numero_menu = 2;
 									console.log('ccccccccccccccccc carteira ccccccccccccccccccc');
 									console.log(data);
 									console.log('cccccccccccccccccccccccccccccccccccccccccccccc');

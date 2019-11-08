@@ -1,0 +1,57 @@
+<div class="meus_dados white-text">
+
+	<div class="container-fluid text-center">
+		<form method="POST" action="" enctype="multipart/form-data">
+			<div class="row margin-t-10 text-left">
+				<div class="col">
+					<span class="secondary-text">NOME: </span><span class="grey-text"><%= data.usuario[0].nome%></span>
+				</div>
+				<div class="col">
+					<span class="secondary-text">CPF: </span> <span class="grey-text"><%= data.usuario[0].cpf%></span>
+				</div>
+			</div>
+
+
+			<div class="row margin-t-10 text-left">
+				<div class="form-group col-sm-12">
+					<div class="row">
+
+						<label class="secondary-text col-sm-2" for="email">E-mail:</label>
+						<div class="col-sm-10">
+							<input required="true" class="form-control " type="text" name="email" value="<%= data.usuario[0].email %>">
+						</div>
+					</div>
+				</div>
+
+				<div class="form-group col-sm-12">
+					<div class="row">
+						<label class="secondary-text col-sm-2" for="telefone">Celular:</label>
+						<div class="col-sm-10">
+							<input required="true" class="form-control " type="text" name="telefone" value="<%= data.usuario[0].telefone %>">
+						</div>						
+					</div>
+				</div>
+
+			</div>
+
+			<button data-href="/sistema/meus_dados/atualizar" data-action="<%= data.link_sistema%>/meus_dados/" class="btn primary ajax-submit margin-b-10" data-mensagem-sucesso="Usuario Atualizado com Sucesso!" >
+				Salvar <i class="far fa-save-o" aria-hidden="true"></i>
+			</button>
+
+		</form>
+
+
+		<button class="btn black uppercase">Alterar Senha</button>
+
+	</div>
+
+	<div class="container-fluid border-primary text-center margin-t-10 border-radius-10">
+		Minhas Carteiras
+	</div>
+	
+	
+	
+	
+
+
+</div>

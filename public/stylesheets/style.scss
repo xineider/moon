@@ -297,6 +297,9 @@ select.form-control{
 	border:1px solid $primary-color!important;
 }
 
+.border-secondary{
+	border:1px solid $secondary-color!important;
+}
 
 .carteira_linha_dados_tipo{
 	width: calc(100% - 200px);
@@ -307,5 +310,15 @@ select.form-control{
 
 	i{
 		vertical-align: sub;
+	}
+}
+
+
+.btn.black{
+	border:1px solid $secondary-color;
+	color: $secondary-color;
+	&:hover{
+		color: #ffffff;
+		border:1px solid #ffffff;
 	}
 }

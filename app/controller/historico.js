@@ -24,6 +24,7 @@ router.get('/', function(req, res, next) {
 						data.meses_com_caixa = data_meses_caixa;
 						model.GetMesAtualAtivo().then(data_mes_atual_ativo=>{
 							data.mes_atual_ativo = data_mes_atual_ativo;
+							data.numero_menu = 1;
 							console.log('kokokokokokoko usuario requisição kokokokokokokokoko')
 							console.log(data);
 							console.log('kokokokokokokokokokokokokokokokokokokokokokokokokoko');
