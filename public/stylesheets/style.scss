@@ -9,6 +9,7 @@ html{
 
 body{
 	background:transparent;
+	font-family:'Trebuchet MS';
 }
 
 .btn.primary{
@@ -53,15 +54,28 @@ body{
 	color: $primary-color;
 }
 
+.secondary-text{
+	color: $secondary-color;
+}
+
 .primary_line{
-	height: 2px;
-	background:$primary-color;
+	height: 1px;
+	background: #c3141b;
+	background: -moz-linear-gradient(45deg, #c3141b 0%, #ec1550 50%, #f4811e 100%);
+	background: -webkit-linear-gradient(45deg, #c3141b 0%,#ec1550 50%,#f4811e 100%);
+	background: linear-gradient(45deg, #c3141b 0%,#ec1550 50%,#f4811e 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#c3141b', endColorstr='#f4811e',GradientType=1 );
 }
 
 .primary_line_vertical{
-	width: 2px;
-	background:$primary-color;
+	width: 1px;
+	background: #c3141b;
+	background: -moz-linear-gradient(45deg, #c3141b 0%, #ec1550 50%, #f4811e 100%);
+	background: -webkit-linear-gradient(45deg, #c3141b 0%,#ec1550 50%,#f4811e 100%);
+	background: linear-gradient(45deg, #c3141b 0%,#ec1550 50%,#f4811e 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#c3141b', endColorstr='#f4811e',GradientType=1 );
 }
+
 
 .border-top-primary{
 	border-top:1px solid $primary-color;
@@ -87,6 +101,9 @@ body{
 	border:1px solid $primary-color;
 }
 
+.border_secondary{
+	border:1px solid $secondary-color;
+}
 
 .header-logo{
 	width: 90%;
@@ -131,7 +148,7 @@ body{
 .sub_menu{
 	.active::after{
 		@include linha_underline_efeito;
-		background:$primary-color;
+		background:$secondary-color;
 	}
 
 	.nav-link{
@@ -278,4 +295,17 @@ select.form-control{
 
 .border-primary{
 	border:1px solid $primary-color!important;
+}
+
+
+.carteira_linha_dados_tipo{
+	width: calc(100% - 200px);
+}
+
+.carteira_linha_preco{
+	width: 200px;
+
+	i{
+		vertical-align: sub;
+	}
 }

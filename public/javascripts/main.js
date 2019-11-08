@@ -143,7 +143,7 @@ $(window).on('load', function() {
 
 // Funções
 function adicionarLoader() {
-	$('body').css('overflow', 'hidden');
+	// $('body').css('overflow', 'hidden');
 	$('.loader').fadeIn('fast');
 	console.log('estou sendo chamado, adicionarLoader()');
 }

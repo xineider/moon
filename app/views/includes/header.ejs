@@ -68,7 +68,7 @@
 		<!-- <span class="sr-only">Loading...</span> -->
 	</div>
 
-	<header class="white-text">
+	<header class="white-text container">
 		<div class="header-logo w100">
 			<img src="/public/images/logo.png">
 			<a class="logout block float-right" href="/logout" onclick="return confirm('Você deseja sair?');">
@@ -85,12 +85,12 @@
 
 
 		<div class="header-info text-center margin-t-10">
-			Olá <span class="primary-text"><%= usuario.nome %></span>.
+			Olá <span class="secondary-text"><%= usuario.nome %></span>.
 			<br>
 			Seu último acesso foi em 00/00 às 00h00.
 
 			<br>
-			<span class="primary-text uppercase">
+			<span class="secondary-text uppercase">
 
 				<% if (typeof data.primeiro_aporte != 'undefined' && data.primeiro_aporte.length > 0){ %>
 				Seu aporte inicial foi de <span class="white-text">R$<%= data.primeiro_aporte[0].valor%></span>
@@ -101,7 +101,7 @@
 
 			</span>
 			<br>
-			<span class="green-text uppercase">
+			<span class="white-text uppercase">
 				<% if (typeof data.saldo_atualizado != 'undefined' && data.saldo_atualizado.length > 0){ %>
 				Saldo Atualizado  R$<%= data.saldo_atualizado[0].saldo_atualizado %>
 				<%}else{%>
@@ -114,23 +114,23 @@
 
 		<div class="w90 header-plano uppercase white-text margin-t-10 margin-b-10">
 			<div class="row">
-				<div class="col text-center border-2-right-primary padding-b-10">
-					<span class="primary-text">Plano Atual</span>
+				<div class="col text-center padding-b-10">
+					<span class="secondary-text f25">Meu Plano</span>
 					<br>
 					<% if (typeof data.plano != 'undefined' && data.plano.length > 0){ %>
 
-					<span class="uppercase"><%= data.plano[0].plano %></span>
-					<br>
-					<span class="uppercase">
-						<%= data.plano[0].performance %>% da Performance
-					</span>
+					<span class="uppercase f20"><%= data.plano[0].plano %></span>
 					<%}else{%>
 					<span class="uppercase">Nenhum plano atualmente!</span>
 					<%}%>
 				</div>
+				<div class="primary_line_vertical"></div>
 				<div class="col text-center padding-b-10">
+					<div class="w100">
+						<img src="/public/images/rocket.png" class="mw40">
+					</div>
 					<% if (typeof data.meses_decorridos != 'undefined' && data.meses_decorridos.length > 0){ %>
-					<span class="uppercase primary-text"><%= data.meses_decorridos[0].meses_decorridos %> meses</span>
+					<span class="uppercase secondary-text f30"><%= data.meses_decorridos[0].meses_decorridos %> meses</span>
 					<br>
 					Decorridos do seu plano
 					<%}else{%>

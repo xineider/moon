@@ -80,6 +80,9 @@
 }
 
 
+.mw40{
+	max-width: 40%;
+}
 
 .bold{
 	font-weight: bold;
@@ -347,6 +350,9 @@
 	padding-bottom:25px;
 }
 
+.padding-tb-10{
+	padding:10px 0;
+}
 
 .border-radius-5{
 	border-radius: 5px!important;
@@ -466,7 +472,31 @@
 }
 
 .green-text{
-	color: #7fff00;
+	color: #00d900;
+}
+
+.yellow-text{
+	color: #ffff00;
+}
+
+.grey-text{
+	color: #bbbbbb;
+}
+
+.red-text{
+	color: #ff0000;
+}
+
+.blue-text{
+	color: #007fff;
+}
+
+.orange-text{
+	color:#f4811e;
+}
+
+.purple-text{
+	color: #C926FF;
 }
 
 .uppercase{
@@ -477,9 +507,7 @@
 	background:#333333;
 }
 
-.grey-text{
-	color: #999999;
-}
+
 
 .red{
 	background:#ec3434;
