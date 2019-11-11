@@ -184,7 +184,7 @@ function GoTo(link, state) {
     	//$('.modal').modal('close');
     	FormatInputs();
     }
-  });
+});
 	if (state == true) {
 		window.history.pushState('Sistema Quorp', 'Sistema Quorp', link);
 	}
@@ -213,7 +213,7 @@ function LoadTo(link, to) {
     	//$('.modal').modal('close');
     	FormatInputs();
     }
-  });
+});
 }
 function FormatInputs(focus) {
 	$('.cnpj').mask('00.000.000/0000-00', {reverse: true});
@@ -265,7 +265,7 @@ function GetEndereco(cep, pai) {
     complete: function() {
     	removerLoader();
     }
-  });
+});
 }
 
 
@@ -359,7 +359,7 @@ function MountModal(modal, link) {
     	removerLoader();
     	FormatInputs();
     }
-  });
+});
 }
 
 function VerificarForm(form) {
@@ -367,19 +367,25 @@ function VerificarForm(form) {
 	var qtdErros = 0;
 	
 	form.find('input:enabled:not([type="hidden"])[required="true"]').each(function(){
+		console.log('tem + de um input');
 		if(VerificaItem($(this)) == true) {
+			console.log('cai aqui no 1° erro')
 			qtdErros++;
 		};
-		if($('#alterar_senha').val() != $('#confirmar_alterar_senha').val())
-		{
-			AddErrorTexto($('#confirmar_alterar_senha'),'Senhas são diferentes');
-			qtdErros++;
-		}
 	});
+
+	if($('#alterar_senha').val() != $('#confirmar_alterar_senha').val())
+	{
+		console.log('cai no segundo erro');
+		console.log('qtdErros:'+qtdErros);
+		AddErrorTexto($('#confirmar_alterar_senha'),'Senhas são diferentes');
+		qtdErros++;
+	}
 
 	form.find('input:enabled:not([type="hidden"])[required="true"][type="email"]').each(function(){
 		if($(this).val()!= ''){
 			if(!validateEmail($(this).val())){
+				console.log('cai no terteiro erro');
 				qtdErros++;
 				AddErrorTexto($(this),'Email Incorreto!!');
 			}
@@ -388,12 +394,14 @@ function VerificarForm(form) {
 	
 	form.find('textarea:enabled[required="true"]').each(function(){
 		if(VerificaItem($(this)) == true) {
+			console.log('cai no quarto erro');
 			qtdErros++;
 		};
 	});
 	
 	form.find('select:enabled[required="true"]').each(function(){
 		if(VerificaItem($(this)) == true) {
+			console.log('cai no quinto erro');
 			qtdErros++;
 		};
 	});
@@ -421,7 +429,7 @@ function AddErrorAjax() {
 }
 
 function AddErrorTexto(isso,texto) {
-	isso.focus().addClass('observe-post').parent().append('<div class="error">'+texto+'</div>');
+	isso.focus().addClass('observe-post').parent().append('<div class="error text-center">'+texto+'</div>');
 }
 
 function UploadFile(isso) {

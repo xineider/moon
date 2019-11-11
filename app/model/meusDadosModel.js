@@ -98,6 +98,40 @@ class MeusDadosModel {
 		});
 	}
 
+	AtualizarUsuario(POST) {
+		return new Promise(function(resolve, reject) {
+			helper.Update('usuarios', POST).then(data => {
+				resolve(data);
+			});
+		});
+	}
+
+	VerificarSeTemMesmoEmail(POST){
+		return new Promise(function(resolve, reject) {
+			helper.Query("SELECT email \
+				FROM usuarios WHERE deletado = ? AND email = ? AND id = ?", [0,POST.email,POST.id]).then(data => {
+					resolve(data);
+
+				});
+			});
+	}
+	VerificarSeTemEmailDisponivel(email){
+		return new Promise(function(resolve, reject) {
+			helper.Query("SELECT email \
+				FROM usuarios WHERE deletado = ? AND email = ?", [0,email]).then(data => {
+					resolve(data);
+				});
+			});
+	}
+
+	VerificarSeSenhaAtualLegitima(id,senhaAtual) {
+		return new Promise(function(resolve, reject) {
+			helper.Query('SELECT * FROM usuarios WHERE deletado = ? AND id = ? AND senha = ?', [0, id,senhaAtual]).then(data => {
+				resolve(data);
+			});
+		});
+	}
+
 
 }
 module.exports = MeusDadosModel;
