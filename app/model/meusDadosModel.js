@@ -98,6 +98,40 @@ class MeusDadosModel {
 		});
 	}
 
+	GetPadraoContaBancaria(id) {
+		return new Promise(function(resolve, reject) {
+			helper.Query("SELECT * FROM conta_bancaria WHERE id_usuario = ? AND deletado = ? AND padrao = ?", [id,0,1]).then(data => {
+				resolve(data);
+			});
+		});
+	}
+
+	GetContaBancariaUsuario(id) {
+		return new Promise(function(resolve, reject) {
+			helper.Query("SELECT a.*, \
+				CASE \
+				WHEN a.tipo_conta = 0 THEN 'Conta Corrente'\
+				WHEN a.tipo_conta = 1 THEN 'Conta Poupança'\
+				ELSE 'Erro' END as nome_tipo_conta,\
+				(SELECT SUBSTRING(b.banco,7) FROM bancos as b WHERE b.id = a.id_banco) as nome_banco\
+				FROM conta_bancaria as a \
+				WHERE a.id_usuario = ? AND a.deletado = ?", [id,0]).then(data => {
+					resolve(data);
+				});
+			});
+	}
+
+	GetBancos(){
+		return new Promise(function(resolve, reject) {
+			helper.Query("SELECT a.* \
+				FROM bancos AS a WHERE a.deletado = ? \
+				ORDER BY a.principal DESC, a.banco ASC", [0]).then(data => {
+					resolve(data);
+				});
+			});
+
+	}
+
 	AtualizarUsuario(POST) {
 		return new Promise(function(resolve, reject) {
 			helper.Update('usuarios', POST).then(data => {
@@ -127,6 +161,40 @@ class MeusDadosModel {
 	VerificarSeSenhaAtualLegitima(id,senhaAtual) {
 		return new Promise(function(resolve, reject) {
 			helper.Query('SELECT * FROM usuarios WHERE deletado = ? AND id = ? AND senha = ?', [0, id,senhaAtual]).then(data => {
+				resolve(data);
+			});
+		});
+	}
+
+	CadastrarContaBancariaUsuario(POST) {	
+		return new Promise(function(resolve, reject) {
+			helper.Insert('conta_bancaria', POST).then(data => {
+				resolve(data);
+			});
+		});
+	}
+
+	SelecionarContaBancaria(id) {
+		return new Promise(function(resolve, reject) {
+			helper.Query("SELECT a.* FROM conta_bancaria as a \
+				WHERE a.id = ? AND a.deletado = ?", [id,0]).then(data => {
+					resolve(data);
+				});
+			});
+	}
+
+
+	AtualizarContaBancaria(POST) {
+		return new Promise(function(resolve, reject) {
+			helper.Update('conta_bancaria', POST).then(data => {
+				resolve(data);
+			});
+		});
+	}
+
+	DesativarContaBancaria(POST) {
+		return new Promise(function(resolve, reject) {
+			helper.Desativar('conta_bancaria', POST).then(data => {
 				resolve(data);
 			});
 		});

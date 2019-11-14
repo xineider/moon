@@ -18,12 +18,15 @@ router.get('/', function(req, res, next) {
 				data.plano = data_plano;
 				model.GetUsuario(req.session.usuario.id).then(data_usuario =>{
 					data.usuario = data_usuario;
-					data.link_sistema = '/sistema';
-					data.numero_menu = 3;
-					console.log('MMmmMMMmMMMmMMMMMM Meus Dados MMMMMmmMMmMMMMM');
-					console.log(data);
-					console.log('MMmmMMMmMMMmMMMMMMmmmmmmmmmMMMMMmmMmMmMMMMmMM');
-					res.render(req.isAjaxRequest() == true ? 'api' : 'montador', {html: 'meus_dados/meus_dados', data: data, usuario: req.session.usuario});
+					model.GetContaBancariaUsuario(req.session.usuario.id).then(data_conta_bancaria =>{
+						data.conta_bancaria = data_conta_bancaria;
+						data.link_sistema = '/sistema';
+						data.numero_menu = 3;
+						console.log('MMmmMMMmMMMmMMMMMM Meus Dados MMMMMmmMMmMMMMM');
+						console.log(data);
+						console.log('MMmmMMMmMMMmMMMMMMmmmmmmmmmMMMMMmmMmMmMMMMmMM');
+						res.render(req.isAjaxRequest() == true ? 'api' : 'montador', {html: 'meus_dados/meus_dados', data: data, usuario: req.session.usuario});
+					});
 				});
 			});
 		});
@@ -46,6 +49,66 @@ router.get('/alterar-senha', function(req, res, next) {
 					console.log(data);
 					console.log('MMmmMMMmMMMmMMMMMMmmmmmmmmmMMMMMmmMmMmMMMMmMM');
 					res.render(req.isAjaxRequest() == true ? 'api' : 'montador', {html: 'meus_dados/alterar_senha', data: data, usuario: req.session.usuario});
+				});
+			});
+		});
+	});
+});
+
+router.get('/adicionar_conta_bancaria', function(req, res, next) {
+	model.GetPrimeiroAporte(req.session.usuario.id).then(data_primeiro_aporte=>{
+		data.primeiro_aporte = data_primeiro_aporte;
+		model.GetValorSaldoAtualizado(req.session.usuario.id).then(data_saldo_atualizado =>{
+			data.saldo_atualizado = data_saldo_atualizado;
+			model.GetPlanoUsuario(req.session.usuario.id).then(data_plano=>{
+				data.plano = data_plano;
+				model.GetUsuario(req.session.usuario.id).then(data_usuario =>{
+					data.usuario = data_usuario;
+					model.GetBancos().then(data_bancos=>{
+						data.bancos = data_bancos;
+						model.GetPadraoContaBancaria(req.session.usuario.id).then(data_tem_padrao =>{
+							data.tem_padrao = data_tem_padrao;
+							data.link_sistema = '/sistema';
+							data.numero_menu = 3;
+							console.log('BBBBBbbbbb ADICIONAR CONTA BANCÁRIA BbbbBBbbBbbb');
+							console.log(data);
+							console.log('BBBBBBBBBbBbbbbbbbBBbBbbbbbbBBbbBbBbbbbbBBBBBbbB');
+							res.render(req.isAjaxRequest() == true ? 'api' : 'montador', {html: 'meus_dados/cadastrar_conta_bancaria', data: data, usuario: req.session.usuario});
+						});
+					});
+				});
+			});
+		});
+	});
+});
+
+
+router.get('/conta_bancaria/editar/:id', function(req, res, next) {
+	var id = req.params.id;
+
+	model.GetPrimeiroAporte(req.session.usuario.id).then(data_primeiro_aporte=>{
+		data.primeiro_aporte = data_primeiro_aporte;
+		model.GetValorSaldoAtualizado(req.session.usuario.id).then(data_saldo_atualizado =>{
+			data.saldo_atualizado = data_saldo_atualizado;
+			model.GetPlanoUsuario(req.session.usuario.id).then(data_plano=>{
+				data.plano = data_plano;
+				model.GetUsuario(req.session.usuario.id).then(data_usuario =>{
+					data.usuario = data_usuario;
+					model.GetBancos().then(data_bancos=>{
+						data.bancos = data_bancos;
+						model.GetPadraoContaBancaria(req.session.usuario.id).then(data_tem_padrao =>{
+							data.tem_padrao = data_tem_padrao;
+							model.SelecionarContaBancaria(id).then(data_conta_bancaria =>{
+								data.conta_bancaria = data_conta_bancaria;
+								data.link_sistema = '/sistema';
+								data.numero_menu = 3;
+								console.log('BBBBBbbbbb ADICIONAR CONTA BANCÁRIA BbbbBBbbBbbb');
+								console.log(data);
+								console.log('BBBBBBBBBbBbbbbbbbBBbBbbbbbbBBbbBbBbbbbbBBBBBbbB');
+								res.render(req.isAjaxRequest() == true ? 'api' : 'montador', {html: 'meus_dados/editar_conta_bancaria', data: data, usuario: req.session.usuario});
+							});
+						});
+					});
 				});
 			});
 		});
@@ -131,6 +194,50 @@ router.post('/alterar-senha', function(req, res, next) {
 			res.json({error:'senha_atual_errada',element:'#senha_atual',texto:'Senha Atual não é a mesma!'});
 		}
 		
+	});
+});
+
+
+router.post('/conta_bancaria/cadastrar', function(req, res, next) {
+	POST = req.body;
+	POST.id_usuario = req.session.usuario.id;
+
+	console.log('############ CONTA BANCARIA CADASTRAR #########');
+	console.log(POST);
+	console.log('###############################################');
+
+	if(POST.padrao == undefined){
+		POST.padrao = 0;
+	}
+
+	model.CadastrarContaBancariaUsuario(POST).then(data_conta_bancaria => {
+		res.json(data_conta_bancaria);		
+	});
+});
+
+
+router.post('/conta_bancaria/atualizar/', function(req, res, next) {
+	POST = req.body;
+
+	if(POST.padrao == undefined){
+		POST.padrao = 0;
+	}
+
+	console.log('ACCCCCCCCCC ATUALIZAR CONTA BANCARIA ACCCCCCCCCCCCCCCCCCC');
+	console.log(POST);
+	console.log('ACCCccccccccCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC');
+	
+	model.AtualizarContaBancaria(POST).then(data_a_conta_bancaria => {
+		res.json(data_a_conta_bancaria);
+	});
+});
+
+
+router.post('/conta_bancaria/desativar', function(req, res, next) {
+	
+	POST = req.body;
+	model.DesativarContaBancaria(POST).then(data=> {
+		res.json(data);
 	});
 });
 
