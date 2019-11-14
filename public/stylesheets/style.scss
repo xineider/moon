@@ -12,30 +12,58 @@ body{
 	font-family:'Trebuchet MS';
 }
 
-.btn.primary{
-	color: #ffffff;
+.btn{
+	&.primary{
+		color: #ffffff;
+		border:0;
 
-	&:hover{
-		background: #90060c;
-		background: -moz-linear-gradient(45deg, #90060c 0%, #c10237 50%, #c15e08 100%);
-		background: -webkit-linear-gradient(45deg, #90060c 0%,#c10237 50%,#c15e08 100%);
-		background: linear-gradient(45deg, #90060c 0%,#c10237 50%,#c15e08 100%);
-		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#90060c', endColorstr='#c15e08',GradientType=0 );
-	}
-}
-
-
-.btn.secondary{
-	color: #ffffff!important;
-
-	&:hover{
-		background:#ffffff;
-		color: $secondary-color!important;
-		.fas{
-			color: $secondary-color!important;
+		&:hover{
+			background: #90060c;
+			background: -moz-linear-gradient(45deg, #90060c 0%, #c10237 50%, #c15e08 100%);
+			background: -webkit-linear-gradient(45deg, #90060c 0%,#c10237 50%,#c15e08 100%);
+			background: linear-gradient(45deg, #90060c 0%,#c10237 50%,#c15e08 100%);
+			filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#90060c', endColorstr='#c15e08',GradientType=0 );
 		}
 	}
+
+	&.secondary{
+		color: #ffffff!important;
+
+		&:hover{
+			background:#ffffff;
+			color: $secondary-color!important;
+			.fas{
+				color: $secondary-color!important;
+			}
+		}
+	}
+
+	&.black{
+		border:1px solid $secondary-color;
+		color: $secondary-color;
+		&:hover{
+			color: #ffffff;
+			border:1px solid #ffffff;
+		}
+	}
+
+	&.transparent-secondary{
+		border:1px solid $secondary-color;
+		cursor: pointer;
+
+		&:hover{
+			border:1px solid #fff;
+			color: $secondary-color;
+		}
+	}
+
+
+
+
 }
+
+
+
 
 
 .primary{
@@ -76,6 +104,10 @@ body{
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#c3141b', endColorstr='#f4811e',GradientType=1 );
 }
 
+.secondary_line_vertical{
+	width: 1px;
+	background: $secondary-color;
+}
 
 .border-top-primary{
 	border-top:1px solid $primary-color;
@@ -170,11 +202,6 @@ body{
 	overflow-x: auto;
 }
 
-
-
-.btn.primary{
-	border:0;
-}
 
 
 /*DataTable Over*/
@@ -314,11 +341,30 @@ select.form-control{
 }
 
 
-.btn.black{
-	border:1px solid $secondary-color;
-	color: $secondary-color;
-	&:hover{
-		color: #ffffff;
-		border:1px solid #ffffff;
+
+.saque_caixa_input{
+	width: 100%;
+
+	label{
+		text-align: center;
+	}
+}
+
+.saque_caixa_limiter{
+	width: 100%;
+}
+
+
+@media (min-width: 768px) { 
+	.saque_caixa_input{
+		width: 40%;
+
+		label{
+			text-align: right;
+		}
+	}
+
+	.saque_caixa_limiter{
+		width: 40%;
 	}
 }

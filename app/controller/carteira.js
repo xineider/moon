@@ -23,8 +23,8 @@ router.get('/', function(req, res, next) {
 						model.GetMesAtualAtivo().then(data_mes_atual_ativo=>{
 							data.mes_ativo = data_mes_atual_ativo[0].mes_atual_ativo;
 							data.mesmo_mes = data_mes_atual_ativo[0].mes_atual_ativo;
-							model.GetUltimoSaldoMesUsuario(req.session.usuario.id,data_mes_atual_ativo[0].mes_atual_ativo).then(data_ultimo_saldo=>{
-								data.ultimo_saldo = data_ultimo_saldo;
+							model.GetSaldoUsuario(req.session.usuario.id).then(data_saldo=>{
+								data.ultimo_saldo = data_saldo;
 								model.GetCaixaMesUsuario(req.session.usuario.id,data_mes_atual_ativo[0].mes_atual_ativo).then(data_caixa=>{
 									data.caixa = data_caixa;
 									data.link_sistema = '/sistema';
@@ -42,6 +42,32 @@ router.get('/', function(req, res, next) {
 		});
 	});
 });
+
+
+
+router.get('/saque', function(req, res, next) {
+
+	model.GetSaldoRendimentoUsuario(req.session.usuario.id).then(data_saldo=>{
+		data.saldo = data_saldo;
+		model.GetDataHoje().then(data_hoje=>{
+			data.hoje = data_hoje;
+			model.GetContaBancariaUsuario(req.session.usuario.id).then(data_conta_bancaria =>{
+				data.conta_bancaria = data_conta_bancaria;
+				data.link_sistema = '/sistema';	
+				console.log('SSSSSSSSSSS FINANCEIRO SAQUE SSSSSSSSSSSSSSSSSSSSSSSSS');
+				console.log(data);
+				console.log('SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS');
+				console.log('¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬ ID ¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬');
+				console.log(req.session.usuario.id);
+				console.log('¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬');
+				res.render(req.isAjaxRequest() == true ? 'api' : 'montador', {html: 'carteira/saque', data: data, usuario: req.session.usuario});
+			});
+		});
+	});
+});
+
+
+
 
 
 router.get('/ver-carteira-mes/:mes', function(req, res, next) {

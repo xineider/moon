@@ -1,0 +1,131 @@
+
+<div class="saque_container text-center">
+	<div class="w100 text-center secondary-text f-rem-3 uppercase margin-t-10">Saque</div>
+	
+
+	<form method="POST" action="" enctype="multipart/form-data">
+
+		<div class="col s12 margin-t-10 justify margin-b-10">
+			<div class="white-text text-center f-rem-12">
+				Durante a vigência do seu plano você pode sacar somente os RENDIMENTOS.
+			</div>
+
+			<div class="grey-text text-center w50 mx-auto f-rem-08 margin-t-5">
+				O Saque INTEGRAL só é permitido após o fim do contrato ou 05 dias de antecedência sem os rendimentos.
+				<br>
+				O Saldo de rendimentos não sacado até o dia 05 de cada mês será reaportado automaticamente.
+			</div>
+
+			<div class="primary white-text text-center padding-b-10 margin-t-10">
+				<span class="f-rem-15">R$ </span><span class="f-rem-3"><%= data.saldo[0].valor_saldo%></span>
+				<br>
+				<span class="uppercase">Saque Máximo Disponível</span>
+			</div>
+
+		</div>
+
+
+
+<!--  		<div class="col s12 border-top-gold">
+			<span class="gold-text">Perfil</span>
+			<div class="input-field inline">
+				<select class="browser-default perfil_saque_select border-gold border-radius-5" name="id_plano" class="">
+					<%#
+					if (typeof data.investimento != 'undefined' && data.investimento.length > 0) {
+						for (var i = 0; i < data.investimento.length; i++) { %>
+						<option value="<%#= data.investimento[i].id %>"> 
+							<%#= data.investimento[i].nome %>
+						</option>				
+						<%# }
+					}else{ %>
+					<option class="red-text bold" value="99">Você não possui planos</option>
+					<%#}%>
+				</select>
+			</div>
+		</div>  -->
+
+
+		<div class="form-group col-md-12">
+			
+			<div class="mx-auto margin-t-10 row saque_caixa_input">
+				<label class="secondary-text col-sm-2 col-form-label">R$</label>
+				<div class="col-sm-10">
+					<input required="true" class="validate form-control" type="number" name="valor" id="valor_saque">
+				</div>			
+			</div>
+
+		</div>
+
+		<input type="hidden" value="<%= data.saldo[0].valor_saldo_number %>" id="valor_saque_total">
+
+		
+
+
+		<div class="form-group col-md-12">
+
+			<div class="mx-auto margin-t-10 row saque_caixa_input">
+				<label class="secondary-text col-sm-2 col-form-label">Senha</label>
+				<div class="col-sm-10">
+					<input required="true" class="validate form-control" type="password" name="senha">
+				</div>			
+			</div>
+
+		</div>
+
+		<div class="form-group col-md-12 white-text saque_caixa_limiter mx-auto">
+			<div class="row">
+				<div class="col uppercase f-rem-12">
+					Escolha a Conta Bancária
+				</div>
+				<div class="secondary_line_vertical"></div>
+				<div class="col text-left">
+
+					<%
+					if (typeof data.conta_bancaria != 'undefined' && data.conta_bancaria.length > 0) {
+						for (var i = 0; i < data.conta_bancaria.length; i++) { %>
+
+						<div class="form-check">
+							<input class="form-check-input" type="radio" name="id_conta_bancaria" value="<%= data.conta_bancaria[i].id%>" <%= data.conta_bancaria[i].padrao == 1 ? 'checked' : ''%> >
+							<label class="form-check-label" for="id_conta_bancaria">
+								<%= data.conta_bancaria[i].agencia %> | <%= data.conta_bancaria[i].numero_conta %> 
+								<%if(data.conta_bancaria[i].padrao == 1){%>
+								(Padrão)
+								<%}%>
+							</label>
+						</div>
+
+						<%} 
+					}else{%>
+					<div class="">Você não possui nenhuma conta bancária! Aperte <a class="ajax-load secondary-text" href="/sistema/meus_dados/adicionar_conta_bancaria">aqui</a> para cadastrar uma agora!</div>
+					<%}%>
+				</div>
+			</div>
+
+		</div>
+
+
+		<div class="white-text f12 text-center">
+			* Só é Possível pedir saque nos dias 1 à 5 do começo de cada mês.
+		</div>
+
+
+		<%#if(data.hoje[0].dia < 6) {%>
+
+		<div class="margin-t-10">
+			<button data-href="/sistema/carteira/pedir-saque" data-action="<%= data.link_sistema%>/carteira/" class="btn primary pedir-saque margin-b-10" data-mensagem-sucesso="Saque Pedido com Sucesso!" data-toggle="modal" data-target="#confirm-submit">
+				Pedir Saque
+			</button>
+		</div>
+
+
+		<%#}%>
+
+
+	</form>
+
+
+
+
+</div>
+
+

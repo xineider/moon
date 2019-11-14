@@ -206,5 +206,81 @@ class CarteiraModel {
 	}
 
 
+	GetSaldoUsuario(id_usuario) {
+
+		console.log('id_usuario:'+id_usuario);
+
+		return new Promise(function(resolve, reject) {
+			helper.Query('SELECT REPLACE(REPLACE(REPLACE(FORMAT(( \
+				(SUM(CASE WHEN (a.tipo = ? AND a.deletado = ? AND a.id_usuario = ? AND a.confirmado != ?) THEN a.valor ELSE 0 END)) + \
+				(SUM(CASE WHEN (a.tipo = ? AND a.deletado = ? AND a.id_usuario = ? AND a.confirmado != ?) THEN a.valor ELSE 0 END)) - \
+				(SUM(CASE WHEN (a.tipo = ? AND a.deletado = ? AND a.id_usuario = ? AND a.confirmado != ?) THEN a.valor ELSE 0 END)) - \
+				(SUM(CASE WHEN (a.tipo = ? AND a.deletado = ? AND a.id_usuario = ? AND a.confirmado != ?) THEN a.valor ELSE 0 END))\
+				), 2), ".", "@"), ",", "."), "@", ",") as valor_saldo\
+				FROM caixa as a \
+				WHERE a.id_usuario = ? AND a.deletado = ?\
+				ORDER BY a.data DESC\
+				',[
+				0,0,id_usuario,2,
+				2,0,id_usuario,2,
+				1,0,id_usuario,2,
+				3,0,id_usuario,2,
+				id_usuario,0]).then(data => {
+					resolve(data);
+				});
+			});
+	}
+
+	GetSaldoRendimentoUsuario(id_usuario) {
+
+		console.log('id_usuario:'+id_usuario);
+
+		return new Promise(function(resolve, reject) {
+			helper.Query('SELECT REPLACE(REPLACE(REPLACE(FORMAT(( \
+				(SUM(CASE WHEN (a.tipo = ? AND a.deletado = ? AND a.id_usuario = ? AND a.confirmado != ?) THEN a.valor ELSE 0 END)) - \
+				(SUM(CASE WHEN (a.tipo = ? AND a.deletado = ? AND a.id_usuario = ? AND a.confirmado != ?) THEN a.valor ELSE 0 END)) \
+				), 2), ".", "@"), ",", "."), "@", ",") as valor_saldo,\
+				FORMAT(( \
+				(SUM(CASE WHEN (a.tipo = ? AND a.deletado = ? AND a.id_usuario = ? AND a.confirmado != ?) THEN a.valor ELSE 0 END)) - \
+				(SUM(CASE WHEN (a.tipo = ? AND a.deletado = ? AND a.id_usuario = ? AND a.confirmado != ?) THEN a.valor ELSE 0 END)) \
+				), 2) as valor_saldo_number\
+				FROM caixa as a \
+				WHERE a.id_usuario = ? AND a.deletado = ?\
+				ORDER BY a.data DESC\
+				',[
+				1,0,id_usuario,2,
+				3,0,id_usuario,2,
+				1,0,id_usuario,2,
+				3,0,id_usuario,2,
+				id_usuario,0]).then(data => {
+					resolve(data);
+				});
+			});
+	}
+
+	GetDataHoje() {
+		return new Promise(function(resolve, reject) {
+			helper.Query('SELECT DAY(NOW()) as dia', []).then(data => {
+				resolve(data);
+			});
+		});
+	}
+
+	GetContaBancariaUsuario(id) {
+		return new Promise(function(resolve, reject) {
+			helper.Query("SELECT a.*, \
+				CASE \
+				WHEN a.tipo_conta = 0 THEN 'Conta Corrente'\
+				WHEN a.tipo_conta = 1 THEN 'Conta Poupança'\
+				ELSE 'Erro' END as nome_tipo_conta,\
+				(SELECT SUBSTRING(b.banco,7) FROM bancos as b WHERE b.id = a.id_banco) as nome_banco\
+				FROM conta_bancaria as a \
+				WHERE a.id_usuario = ? AND a.deletado = ?", [id,0]).then(data => {
+					resolve(data);
+				});
+			});
+	}
+
+
 }
 module.exports = CarteiraModel;

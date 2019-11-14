@@ -75,6 +75,35 @@ $(document).ready(function () {
 		}
 	});
 
+	$(document).on('click', '.pedir-saque', function(e) {
+		e.preventDefault();
+		var form = $(this).parents('form');
+		var post = form.serializeArray();
+		var link = $(this).data('href');
+		var back = $(this).data('action');
+		var sucessMessage = $(this).data('mensagem-sucesso');
+		var sucessClass = 'bg-success';
+
+		if (VerificarForm(form) == true) {
+			var caixa_saque = $('#valor_saque').val();
+			var caixa_dot = caixa_saque.toString().replace(',','.');
+			console.log('caixa_dot:'+caixa_dot);
+			var caixa_saque = parseFloat(caixa_dot);
+			console.log('caixa_saque:'+caixa_saque);
+			var caixa_saque_total = parseFloat($('#valor_saque_total').val());
+			console.log('caixa_saque_total:'+caixa_saque_total);
+			console.log('o que está indo de fato para o submit ajax de cor');
+			if(caixa_saque > caixa_saque_total){
+				AddErrorTexto($('#valor_saque'),'Valor Maior do que tem para Sacar!!');	
+			}else if(caixa_saque_total >= caixa_saque){
+				console.log('cai aqui no saque total');
+				//SubmitAjax(post, link, back,sucessMessage,sucessClass);
+			}else{
+				AddErrorTexto($('#valor_saque'),'Erro!');	
+			}
+		}
+	});
+
 	$(document).on('change', 'input[type="file"]', function () {
 		if($(this).val() != '') {
 			UploadFile($(this));

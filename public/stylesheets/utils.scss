@@ -124,6 +124,34 @@
 	font-size: 40px;
 }
 
+.f-rem-08{
+	font-size:0.8rem;
+}
+
+.f-rem-1{
+	font-size:1rem;
+}
+
+.f-rem-12{
+	font-size: 1.2rem;
+}
+
+.f-rem-15{
+	font-size:1.5rem;
+}
+
+.f-rem-2{
+	font-size:2rem;
+}
+
+.f-rem-25{
+	font-size:2.5rem;
+}
+
+.f-rem-3{
+	font-size:3rem;
+}
+
 .w12em{
 	width: 12em;
 }
@@ -481,7 +509,13 @@
 
 .grey-text{
 	color: #bbbbbb;
+
+	&.lighther-text-1{
+		color: #838383;
+	}
 }
+
+
 
 .red-text{
 	color: #ff0000;
