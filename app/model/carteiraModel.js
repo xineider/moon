@@ -266,6 +266,31 @@ class CarteiraModel {
 		});
 	}
 
+	GetDiaEHorario() {
+		return new Promise(function(resolve, reject) {
+			helper.Query('SELECT CONCAT(DAY(NOW()),".",\
+				CASE \
+				WHEN MONTH(NOW()) = 1 THEN "JANEIRO"\
+				WHEN MONTH(NOW()) = 2 THEN "FEVEREIRO"\
+				WHEN MONTH(NOW()) = 3 THEN "MARÇO"\
+				WHEN MONTH(NOW()) = 4 THEN "ABRIL"\
+				WHEN MONTH(NOW()) = 5 THEN "MAIO"\
+				WHEN MONTH(NOW()) = 6 THEN "JUNHO"\
+				WHEN MONTH(NOW()) = 7 THEN "JULHO"\
+				WHEN MONTH(NOW()) = 8 THEN "AGOSTO"\
+				WHEN MONTH(NOW()) = 9 THEN "SETEMBRO"\
+				WHEN MONTH(NOW()) = 10 THEN "OUTUBRO"\
+				WHEN MONTH(NOW()) = 11 THEN "NOVEMBRO"\
+				WHEN MONTH(NOW()) = 12 THEN "DEZEMBRO"\
+				END,".",\
+				YEAR(NOW())," - ",\
+				HOUR(NOW()),"H",\
+				MINUTE(NOW())) as horario', []).then(data => {
+				resolve(data);
+			});
+		});
+	}
+
 	GetContaBancariaUsuario(id) {
 		return new Promise(function(resolve, reject) {
 			helper.Query("SELECT a.*, \
@@ -280,6 +305,38 @@ class CarteiraModel {
 				});
 			});
 	}
+
+	ConfirmarSenhaUsuario(id,senhaAtual) {
+		return new Promise(function(resolve, reject) {
+			helper.Query('SELECT * FROM usuarios WHERE deletado = ? AND id = ? AND senha = ?', [0, id,senhaAtual]).then(data => {
+				resolve(data);
+			});
+		});
+	}
+
+
+	ConverterNumeroEmReal(numero) {
+		return new Promise(function(resolve, reject) {
+			helper.Query('SELECT REPLACE(REPLACE(REPLACE(FORMAT(?, 2), ".", "@"), ",", "."), "@", ",") as valor_real', [numero]).then(data => {
+				resolve(data);
+			});
+		});
+	}
+
+
+	GetContaBancariaById(id) {
+		return new Promise(function(resolve, reject) {
+			helper.Query('SELECT CONCAT(\
+				(SELECT SUBSTRING(b.banco,7) FROM bancos as b WHERE b.id = a.id_banco)," - ",\
+				a.agencia," - ",a.numero_conta) as conta_bancaria_usuario\
+				FROM conta_bancaria as a \
+				WHERE a.id = ? AND a.deletado = ?', [id,0]).then(data => {
+					resolve(data);
+				});
+			});
+	}
+
+
 
 
 }

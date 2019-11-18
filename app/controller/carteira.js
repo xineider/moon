@@ -107,4 +107,62 @@ router.get('/ver-carteira-mes/:mes', function(req, res, next) {
 	});
 });
 
+
+
+
+router.post('/pedir-saque-confirmar-dados/', function(req, res, next) {
+	POST = req.body;
+	console.log(POST);
+	POST.senha = control.Encrypt(POST.senha);
+	POST.id_usuario = req.session.usuario.id;
+	POST.valor = POST.valor.replace(',','.');
+
+
+	if(parseFloat(POST.valor) > 0){
+		console.log('PPPPPPPPPPPPPPPP PEDIR SAQUE PPPPPPPPPPPPPPPPPPPPPPPP');
+		console.log(POST);
+		console.log('PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP');
+
+		model.ConfirmarSenhaUsuario(req.session.usuario.id,POST.senha).then(data_usuario =>{
+			delete POST.senha;
+			data.usuario = data_usuario;
+
+			console.log('UUUUUUUUUUUUUUUU DATA USUARIO UUUUUUUUUUUUUUUUU');
+			console.log(data_usuario);
+			console.log('UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU');
+
+			if (data_usuario.length > 0){
+				model.GetDiaEHorario().then(data_dia_e_horario =>{
+					data.dia_horario = data_dia_e_horario;
+					model.ConverterNumeroEmReal(POST.valor).then(data_valor_saque =>{
+						data.valor_real_saque = data_valor_saque;
+						model.GetContaBancariaById(POST.id_conta_bancaria).then(data_conta_bancaria =>{
+							data.dados_conta_bancaria = data_conta_bancaria;
+							console.log('############# modal confirmar saque #####################');
+							console.log(data);
+							console.log('#########################################################');
+							res.json(data);
+						});
+					});
+				});				
+			}else{
+				res.json({error:'senha_saque_diferente',element:'input[name="senha"]',texto:'Senha Não Confere!'});
+			}
+		});
+
+	}else{
+		res.json({error:'valor_negativo_zero',element:'input[name="valor"]',texto:'Valor não pode ser 0 ou Negativo!'});
+	}
+
+});
+
+
+
+
+
+
+
+
+
+
 module.exports = router;

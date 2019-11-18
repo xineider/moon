@@ -80,9 +80,6 @@ $(document).ready(function () {
 		var form = $(this).parents('form');
 		var post = form.serializeArray();
 		var link = $(this).data('href');
-		var back = $(this).data('action');
-		var sucessMessage = $(this).data('mensagem-sucesso');
-		var sucessClass = 'bg-success';
 
 		if (VerificarForm(form) == true) {
 			var caixa_saque = $('#valor_saque').val();
@@ -97,7 +94,48 @@ $(document).ready(function () {
 				AddErrorTexto($('#valor_saque'),'Valor Maior do que tem para Sacar!!');	
 			}else if(caixa_saque_total >= caixa_saque){
 				console.log('cai aqui no saque total');
-				//SubmitAjax(post, link, back,sucessMessage,sucessClass);
+
+				$.ajax({
+					method: 'POST',
+					async: true,
+					data: post,
+					url: link,
+					beforeSend: function(request) {
+						request.setRequestHeader("Authority-Moon-hash", $('input[name="hash_usuario_sessao"]').val());
+						request.setRequestHeader("Authority-Moon-id", $('input[name="id_usuario_sessao"]').val());
+						request.setRequestHeader("Authority-Moon-nivel", $('input[name="nivel_usuario_sessao"]').val());
+						adicionarLoader();
+					},
+					success: function(data) {
+						console.log('----------- DATA SUBMITAJAX ---------');
+						console.log(data);
+						console.log('-------------------------------------');
+
+						/*update tambem retorna objeto, então tenho que validar ele pelo error*/	
+						if (typeof data == 'object' && data['error'] != null){
+							console.log('cai no erro');
+							console.log(data['element']);
+							console.log(data['texto']);
+							AddErrorTexto($(data['element']),data['texto']);	
+						}else if(data != undefined){
+							console.log('estou sendo chamado por que deu certo !!!!');
+							console.log('dia:');
+							console.log(data['dia_horario'][0].horario);
+							$('#modal_dia_saque_confirmacao').html(data['dia_horario'][0].horario);
+							$('#modal_nome_conta_saque_confirmacao').html(data['usuario'][0].nome);
+							$('#modal_valor_real_saque_confirmacao').text(data['valor_real_saque'][0].valor_real);
+							$('#modal_conta_bancaria_saque_confirmacao').html(data['dados_conta_bancaria'][0].conta_bancaria_usuario)
+							$('#confirmar_saque').modal();
+						}
+						LogSistema('GET',link);
+					},
+					error: function(xhr) {
+					},
+					complete: function() {
+						removerLoader();
+					}
+				});
+			
 			}else{
 				AddErrorTexto($('#valor_saque'),'Erro!');	
 			}
