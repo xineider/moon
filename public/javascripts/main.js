@@ -75,67 +75,37 @@ $(document).ready(function () {
 		}
 	});
 
+	$(document).on('click', '.ajax-submit-open-modal', function(e) {
+		e.preventDefault();
+		var form = $(this).parents('form');
+		var post = form.serializeArray();
+		var link = $(this).data('href');
+		var modal = $(this).data('modal');
+
+		if (VerificarForm(form) == true) {
+			console.log('ajax-submit-open-modal');
+			SubmitAjaxOpenModal(post, link, modal);
+		}
+	});
+
 	$(document).on('click', '.pedir-saque', function(e) {
 		e.preventDefault();
 		var form = $(this).parents('form');
 		var post = form.serializeArray();
 		var link = $(this).data('href');
+		var modal = $(this).data('modal');
 
 		if (VerificarForm(form) == true) {
 			var caixa_saque = $('#valor_saque').val();
 			var caixa_dot = caixa_saque.toString().replace(',','.');
-			console.log('caixa_dot:'+caixa_dot);
 			var caixa_saque = parseFloat(caixa_dot);
-			console.log('caixa_saque:'+caixa_saque);
 			var caixa_saque_total = parseFloat($('#valor_saque_total').val());
-			console.log('caixa_saque_total:'+caixa_saque_total);
-			console.log('o que está indo de fato para o submit ajax de cor');
+
 			if(caixa_saque > caixa_saque_total){
 				AddErrorTexto($('#valor_saque'),'Valor Maior do que tem para Sacar!!');	
 			}else if(caixa_saque_total >= caixa_saque){
 				console.log('cai aqui no saque total');
-
-				$.ajax({
-					method: 'POST',
-					async: true,
-					data: post,
-					url: link,
-					beforeSend: function(request) {
-						request.setRequestHeader("Authority-Moon-hash", $('input[name="hash_usuario_sessao"]').val());
-						request.setRequestHeader("Authority-Moon-id", $('input[name="id_usuario_sessao"]').val());
-						request.setRequestHeader("Authority-Moon-nivel", $('input[name="nivel_usuario_sessao"]').val());
-						adicionarLoader();
-					},
-					success: function(data) {
-						console.log('----------- DATA SUBMITAJAX ---------');
-						console.log(data);
-						console.log('-------------------------------------');
-
-						/*update tambem retorna objeto, então tenho que validar ele pelo error*/	
-						if (typeof data == 'object' && data['error'] != null){
-							console.log('cai no erro');
-							console.log(data['element']);
-							console.log(data['texto']);
-							AddErrorTexto($(data['element']),data['texto']);	
-						}else if(data != undefined){
-							console.log('estou sendo chamado por que deu certo !!!!');
-							console.log('dia:');
-							console.log(data['dia_horario'][0].horario);
-							$('#modal_dia_saque_confirmacao').html(data['dia_horario'][0].horario);
-							$('#modal_nome_conta_saque_confirmacao').html(data['usuario'][0].nome);
-							$('#modal_valor_real_saque_confirmacao').text(data['valor_real_saque'][0].valor_real);
-							$('#modal_conta_bancaria_saque_confirmacao').html(data['dados_conta_bancaria'][0].conta_bancaria_usuario)
-							$('#confirmar_saque').modal();
-						}
-						LogSistema('GET',link);
-					},
-					error: function(xhr) {
-					},
-					complete: function() {
-						removerLoader();
-					}
-				});
-			
+				SubmitAjaxOpenModal(post, link,modal);
 			}else{
 				AddErrorTexto($('#valor_saque'),'Erro!');	
 			}
@@ -377,6 +347,53 @@ function SubmitAjax(post, link, back,sucessMessage,sucessClass) {
 		}
 	});
 }
+
+
+function SubmitAjaxOpenModal(post, link,modal) {
+	$.ajax({
+		method: 'POST',
+		async: true,
+		data: post,
+		url: link,
+		beforeSend: function(request) {
+			request.setRequestHeader("Authority-Moon-hash", $('input[name="hash_usuario_sessao"]').val());
+			request.setRequestHeader("Authority-Moon-id", $('input[name="id_usuario_sessao"]').val());
+			request.setRequestHeader("Authority-Moon-nivel", $('input[name="nivel_usuario_sessao"]').val());
+			adicionarLoader();
+		},
+		success: function(data) {
+			console.log('----------- DATA SUBMITAJAX ---------');
+			console.log(data);
+			console.log('-------------------------------------');
+
+			/*update tambem retorna objeto, então tenho que validar ele pelo error*/	
+			if (typeof data == 'object' && data['error'] != null){
+				console.log('cai no erro');
+				console.log(data['element']);
+				console.log(data['texto']);
+				AddErrorTexto($(data['element']),data['texto']);	
+			}else if(data != undefined){
+				console.log('estou sendo chamado por que deu certo !!!!');
+				$(modal).find('.modal-content').html(data);
+				$(modal).modal('show');
+
+				/*utilizo o attr para limpar a classe para que não tenha a classe de erro no cadastro que deveria ser o verde*/
+
+			}
+			LogSistema('POST',link);
+		},
+		error: function(xhr) { // if error occured
+		},
+		complete: function() {
+			removerLoader();
+		}
+	});
+}
+
+
+
+
+
 function Reestruturar(str) {
 	var i = 1;
 	$('.'+ str +' > div').each(function () {

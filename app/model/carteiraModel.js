@@ -285,10 +285,11 @@ class CarteiraModel {
 				END,".",\
 				YEAR(NOW())," - ",\
 				HOUR(NOW()),"H",\
-				MINUTE(NOW())) as horario', []).then(data => {
-				resolve(data);
+				MINUTE(NOW())) as horario,\
+				NOW() as dia', []).then(data => {
+					resolve(data);
+				});
 			});
-		});
 	}
 
 	GetContaBancariaUsuario(id) {
@@ -317,10 +318,11 @@ class CarteiraModel {
 
 	ConverterNumeroEmReal(numero) {
 		return new Promise(function(resolve, reject) {
-			helper.Query('SELECT REPLACE(REPLACE(REPLACE(FORMAT(?, 2), ".", "@"), ",", "."), "@", ",") as valor_real', [numero]).then(data => {
-				resolve(data);
+			helper.Query('SELECT REPLACE(REPLACE(REPLACE(FORMAT(?, 2), ".", "@"), ",", "."), "@", ",") as valor_real,\
+				? as valor', [numero,numero]).then(data => {
+					resolve(data);
+				});
 			});
-		});
 	}
 
 
@@ -328,9 +330,43 @@ class CarteiraModel {
 		return new Promise(function(resolve, reject) {
 			helper.Query('SELECT CONCAT(\
 				(SELECT SUBSTRING(b.banco,7) FROM bancos as b WHERE b.id = a.id_banco)," - ",\
-				a.agencia," - ",a.numero_conta) as conta_bancaria_usuario\
+				a.agencia," - ",a.numero_conta) as conta_bancaria_usuario,\
+				? as id_banco\
 				FROM conta_bancaria as a \
-				WHERE a.id = ? AND a.deletado = ?', [id,0]).then(data => {
+				WHERE a.id = ? AND a.deletado = ?', [id,id,0]).then(data => {
+					resolve(data);
+				});
+			});
+	}
+
+
+	GetUsuarioJaFezSaqueNessePlano(id_usuario,id_plano){
+		return new Promise(function(resolve, reject) {
+			helper.Query('SELECT * FROM caixa as a \
+				WHERE a.deletado = ? AND a.id_usuario = ? AND (a.tipo = ? OR a.tipo = ?) AND a.confirmado = ? AND a.id_plano = ?', 
+				[0,id_usuario,1,3,0,id_plano]).then(data => {
+					resolve(data);
+				});
+			});
+	}
+
+
+	CadastrarCaixa(POST) {	
+		return new Promise(function(resolve, reject) {
+			helper.Insert('caixa', POST).then(data => {
+				resolve(data);
+			});
+		});
+	}
+
+	DescobrirCaixaPorCaixaId(id_caixa){
+		return new Promise(function(resolve, reject) {
+			helper.Query('SELECT a.*, \
+				REPLACE(REPLACE(REPLACE(FORMAT(a.valor, 2), ".", "@"), ",", "."), "@", ",") as valor_real,\
+				DATE_FORMAT(a.data_cadastro, "%d/%m/%Y") as dia_cadastrado,DATE_FORMAT(a.data_cadastro,"%H:%i") as hora_cadastrado,\
+				(SELECT nome FROM planos as b WHERE a.id_plano = b.id AND b.deletado = ?) as nome_plano, \
+				(SELECT email FROM usuarios as c WHERE a.id_usuario = c.id AND c.deletado = ?) as email_usuario \
+				FROM caixa as a WHERE a.id = ? AND a.deletado = ?', [0,0,id_caixa,0]).then(data => {
 					resolve(data);
 				});
 			});

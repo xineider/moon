@@ -112,7 +112,7 @@
 		<%#if(data.hoje[0].dia < 6) {%>
 
 		<div class="margin-t-10">
-			<button data-href="/sistema/carteira/pedir-saque-confirmar-dados" class="btn primary pedir-saque margin-b-10">
+			<button data-href="/sistema/carteira/pedir-saque-confirmar-dados" class="btn primary pedir-saque margin-b-10" data-modal="#modalinfo">
 				Pedir Saque
 			</button>
 		</div>
@@ -123,38 +123,4 @@
 
 	</form>
 
-
-
-
-</div>
-
-
-
-<div class="modal fade" id="confirmar_saque" tabindex="-1" role="dialog" aria-hidden="true">
-	<div class="modal-dialog" role="document">
-		<div class="modal-content">
-			<div class="modal-header primary white-text">
-				<h5 class="modal-title uppercase">Confirmar Saque</h5>
-				<button type="button" class="close white-text" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-			</div>
-			<div class="modal-body text-center">
-				<div class="">
-					<i class="fas fa-hand-holding-usd red-text f-rem-5"></i>
-				</div>
-				<div class="margin-t-20 f-rem-15" id="modal_dia_saque_confirmacao"></div>
-				<div class="f-rem-2">RS <span id="modal_valor_real_saque_confirmacao"></span></div>
-
-				<div id="modal_nome_conta_saque_confirmacao" class="secondary-text"></div>
-				<div id="modal_conta_bancaria_saque_confirmacao"></div>
-
-			</div>
-			<div class="modal-footer">
-				<button data-href="/sistema/carteira/pedir-saque" data-action="<%= data.link_sistema%>/carteira/" class="btn primary pedir-saque margin-b-10" data-mensagem-sucesso="Saque Pedido com Sucesso!" data-toggle="modal" data-target="#confirm-submit">
-					Confirmar
-				</button>
-			</div>
-		</div>
-	</div>
 </div>

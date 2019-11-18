@@ -117,7 +117,6 @@ router.post('/pedir-saque-confirmar-dados/', function(req, res, next) {
 	POST.id_usuario = req.session.usuario.id;
 	POST.valor = POST.valor.replace(',','.');
 
-
 	if(parseFloat(POST.valor) > 0){
 		console.log('PPPPPPPPPPPPPPPP PEDIR SAQUE PPPPPPPPPPPPPPPPPPPPPPPP');
 		console.log(POST);
@@ -132,19 +131,41 @@ router.post('/pedir-saque-confirmar-dados/', function(req, res, next) {
 			console.log('UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU');
 
 			if (data_usuario.length > 0){
-				model.GetDiaEHorario().then(data_dia_e_horario =>{
-					data.dia_horario = data_dia_e_horario;
-					model.ConverterNumeroEmReal(POST.valor).then(data_valor_saque =>{
-						data.valor_real_saque = data_valor_saque;
-						model.GetContaBancariaById(POST.id_conta_bancaria).then(data_conta_bancaria =>{
-							data.dados_conta_bancaria = data_conta_bancaria;
-							console.log('############# modal confirmar saque #####################');
-							console.log(data);
-							console.log('#########################################################');
-							res.json(data);
+				model.GetSaldoRendimentoUsuario(req.session.usuario.id).then(data_rendimento =>{
+
+					console.log('qqqqqqqqqqqqq data_rendimento qqqqqqqqqqqqqq');
+					console.log(data_rendimento);
+					console.log('qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq');
+					if(data_rendimento[0].valor_saldo_number > parseFloat(POST.valor)){
+
+						model.GetUsuarioJaFezSaqueNessePlano(req.session.usuario.id,3).then(data_ja_fez_saque=>{
+							console.log('◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ data_ja_fez_saque ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ');
+							console.log(data_ja_fez_saque);
+							console.log(data_ja_fez_saque.length);
+							console.log('◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ');
+							if(data_ja_fez_saque.length <= 0){
+								model.GetDiaEHorario().then(data_dia_e_horario =>{
+									data.dia_horario = data_dia_e_horario;
+									model.ConverterNumeroEmReal(POST.valor).then(data_valor_saque =>{
+										data.valor_real_saque = data_valor_saque;
+										model.GetContaBancariaById(POST.id_conta_bancaria).then(data_conta_bancaria =>{
+											data.dados_conta_bancaria = data_conta_bancaria;
+											data.link_sistema = '/sistema';
+											console.log('############# modal confirmar saque #####################');
+											console.log(data);
+											console.log('#########################################################');
+											res.render(req.isAjaxRequest() == true ? 'api' : 'montador', {html: 'carteira/modal_saque', data: data, usuario: req.session.usuario});
+										});
+									});
+								});	
+							}else{
+								res.json({error:'ja_fez_saque',element:'input[name="valor"]',texto:'Já existe um saque em andamento!'});
+							}	
 						});
-					});
-				});				
+					}else{
+						res.json({error:'valor_maior_que_saldo',element:'input[name="valor"]',texto:'Valor Maior do que se Possui!'});
+					}		
+				});	
 			}else{
 				res.json({error:'senha_saque_diferente',element:'input[name="senha"]',texto:'Senha Não Confere!'});
 			}
@@ -158,9 +179,90 @@ router.post('/pedir-saque-confirmar-dados/', function(req, res, next) {
 
 
 
+router.post('/pedir-saque/', function(req, res, next) {
+	POST = req.body;
+
+	POST.valor = POST.valor.replace(',','.');
+	POST.id_plano = 3;
+	POST.tipo = 3;
+	POST.id_usuario = req.session.usuario.id;
+
+	if(parseFloat(POST.valor) > 0){
+		console.log('PPPPPPPPPPPPPPPP PEDIR SAQUE PPPPPPPPPPPPPPPPPPPPPPPP');
+		console.log(POST);
+		console.log('PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP');
+
+		model.GetSaldoRendimentoUsuario(req.session.usuario.id).then(data_rendimento =>{
+
+			console.log('qqqqqqqqqqqqq data_rendimento qqqqqqqqqqqqqq');
+			console.log(data_rendimento);
+			console.log('qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq');
+			if(data_rendimento[0].valor_saldo_number > parseFloat(POST.valor)){
+
+				model.GetUsuarioJaFezSaqueNessePlano(req.session.usuario.id,POST.id_plano).then(data_ja_fez_saque=>{
+					console.log('◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ data_ja_fez_saque ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ');
+					console.log(data_ja_fez_saque);
+					console.log(data_ja_fez_saque.length);
+					console.log('◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ');
+
+					if(data_ja_fez_saque.length <= 0){
+
+						model.GetDiaEHorario().then(data_dia_e_horario =>{
+							data.dia_horario = data_dia_e_horario;
+							POST.data = data_dia_e_horario[0].dia;
+							model.CadastrarCaixa(POST).then(id_pedido_saque => {
+								model.DescobrirCaixaPorCaixaId(id_pedido_saque).then(data_caixa_saque_cadastrada=>{
+									model.ConverterNumeroEmReal(POST.valor).then(data_valor_saque =>{
+										data.valor_real_saque = data_valor_saque;
+										model.GetContaBancariaById(POST.id_conta_bancaria).then(data_conta_bancaria =>{
+											data.dados_conta_bancaria = data_conta_bancaria;
+											data.link_sistema = '/sistema';
+											console.log('############# modal confirmar saque #####################');
+											console.log(data);
+											console.log('#########################################################');
+
+											console.log('↔↔↔↔↔↔↔↔↔ data_caixa_saque_cadastrada ↔↔↔↔↔↔↔↔↔');
+											console.log(data_caixa_saque_cadastrada);
+											console.log('↔↔↔↔↔↔↔↔↔↔↔↔↔↔↔↔↔↔↔↔↔↔↔↔↔↔↔↔↔↔↔↔↔↔↔↔↔↔↔↔↔↔↔↔↔↔↔↔');
+
+											var html = "Moon informa:"+
+											"<br>Você solicitou o saque no valor de <b>R$"+POST.valor+" </b> no plano <b>"+data_caixa_saque_cadastrada[0].nome_plano+"</b> no dia "+data_caixa_saque_cadastrada[0].dia_cadastrado+" às "+data_caixa_saque_cadastrada[0].hora_cadastrado+"."+
+											"<br>Se você <b>NÃO</b> fez essa solicitação ou algum dado não confere, por favor entrar em contato com o suporte."+
+											"<br><b>Por favor, não responda essa mensagem, pois ela é enviada automaticamente!</b>";
+
+											var text = "Moon informa:"+
+											"Você solicitou o saque no valor de  R$"+POST.valor+" no plano "+data_caixa_saque_cadastrada[0].nome_plano+" no dia "+data_caixa_saque_cadastrada[0].dia_cadastrado+" às "+data_caixa_saque_cadastrada[0].hora_cadastrado+"."+
+											"Se você NÃO fez essa solicitação ou algum dado não confere, por favor entrar em contato com o suporte."+
+											"Por favor, não responda essa mensagem, pois ela é enviada automaticamente!";
+
+											console.log('EEEEEEEEEEEE Data pedido Saque EEEEEEEEEEEEE');
+											console.log(id_pedido_saque);
+											console.log('EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE');
+											control.SendMail(data_caixa_saque_cadastrada[0].email_usuario, 'Pedido de saque realizado na Moon!', html,text);
+
+											res.render(req.isAjaxRequest() == true ? 'api' : 'montador', {html: 'carteira/modal_saque_confirmacao', data: data, usuario: req.session.usuario});
+										});
+									});
+								});
+							});	
+						});
+
+					}else{
+						res.json({error:'ja_fez_saque',element:'input[name="valor"]',texto:'Já existe um saque em andamento!'});
+					}
+				});
+
+			}else{
+				res.json({error:'valor_maior_que_disponivel',element:'input[name="valor"]',texto:'Valor não pode ser maior que o Disponível!'});
+			}
+		});
 
 
+	}else{
+		res.json({error:'valor_negativo_zero',element:'input[name="valor"]',texto:'Valor não pode ser 0 ou Negativo!'});
+	}
 
+});
 
 
 
