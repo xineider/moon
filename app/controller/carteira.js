@@ -88,15 +88,26 @@ router.get('/ver-carteira-mes/:mes', function(req, res, next) {
 						data.meses_com_caixa = data_meses_caixa;
 						model.GetNomeMes(parseInt(mes)).then(data_nome_mes=>{
 							data.nome_mes = data_nome_mes;
-							model.GetUltimoSaldoMesUsuario(req.session.usuario.id,mes).then(data_ultimo_saldo=>{
-								data.ultimo_saldo = data_ultimo_saldo;
-								model.GetCaixaMesUsuario(req.session.usuario.id,mes).then(data_caixa=>{
-									data.caixa = data_caixa;
-									data.mes_ativo = mes;
-									console.log('vVvVvVvVvVvVvVvVvVvVvVvVvVvV verCarteiraMes vVvVvVvVvVvVvVvVvVvVvVvVvVvV');
-									console.log(data);
-									console.log('vVvVvVvVvVvVvVvVvVvVvVvVvVvVvVvVvVvVvVvVvVvVvVvVvVvVvVvVvVvVvVvVvVvVvVvV');
-									res.render(req.isAjaxRequest() == true ? 'api' : 'montador', {html: 'carteira/carteira', data: data, usuario: req.session.usuario});
+							model.GetCaixaMesUsuario(req.session.usuario.id,mes).then(data_caixa=>{
+								data.caixa = data_caixa;
+								data.mes_ativo = mes;
+
+								model.GetMesAtual().then(data_mes_atual=>{
+									if(parseInt(mes) == data_mes_atual[0].mes){
+										model.GetSaldoUsuario(req.session.usuario.id).then(data_saldo=>{
+											data.ultimo_saldo = data_saldo;
+											res.render(req.isAjaxRequest() == true ? 'api' : 'montador', {html: 'carteira/carteira', data: data, usuario: req.session.usuario});
+										});
+									}else{
+										model.GetUltimoSaldoMesUsuario(req.session.usuario.id,mes).then(data_ultimo_saldo=>{
+											data.ultimo_saldo = data_ultimo_saldo;
+											console.log('vVvVvVvVvVvVvVvVvVvVvVvVvVvV verCarteiraMes vVvVvVvVvVvVvVvVvVvVvVvVvVvV');
+											console.log(data);
+											console.log('vVvVvVvVvVvVvVvVvVvVvVvVvVvVvVvVvVvVvVvVvVvVvVvVvVvVvVvVvVvVvVvVvVvVvVvV');
+											res.render(req.isAjaxRequest() == true ? 'api' : 'montador', {html: 'carteira/carteira', data: data, usuario: req.session.usuario});
+										});
+									}
+
 								});
 							});
 						});

@@ -51,7 +51,7 @@
 								<%
 								if (typeof data.usuario != 'undefined' && data.usuario.length > 0) {
 									for (var i = 0; i < data.usuario.length; i++) { %>
-									<option value="<%= data.usuario[i].id %>"><%= data.usuario[i].nome %></option>				
+									<option value="<%= data.usuario[i].id %>" <%= data.caixa[0].id_usuario == data.usuario[i].id ? 'selected' : '' %>><%= data.usuario[i].nome %></option>				
 									<% }
 								} %>
 							</select>

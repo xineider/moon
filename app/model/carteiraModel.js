@@ -258,6 +258,14 @@ class CarteiraModel {
 			});
 	}
 
+	GetMesAtual() {
+		return new Promise(function(resolve, reject) {
+			helper.Query('SELECT MONTH(NOW()) as mes', []).then(data => {
+				resolve(data);
+			});
+		});
+	}
+
 	GetDataHoje() {
 		return new Promise(function(resolve, reject) {
 			helper.Query('SELECT DAY(NOW()) as dia', []).then(data => {

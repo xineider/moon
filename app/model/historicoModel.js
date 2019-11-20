@@ -19,25 +19,6 @@ class IndexModel {
 			});
 	}
 
-	GetExtrato(id_usuario,dolar) {
-		return new Promise(function(resolve, reject) {
-			helper.Query('SELECT a.*,REPLACE(ROUND(a.valor,2),".",",") as valor,REPLACE(ROUND(a.qtd_stable,2),".",",") as qtd_stable,REPLACE(ROUND(a.qtd_stable * ?,2),".",",") as qtd_real_convertido,\
-				DATE_FORMAT(a.data_cadastro, "%d/%m/%Y") as data_cadastro,DATE_FORMAT(a.dia_convertido_stable, "%d/%m/%Y") as dia_convertido_stable,b.nome as nome_plano,\
-				CASE \
-				WHEN a.tipo = 0 THEN "Depósito em Conta"\
-				WHEN a.tipo = 1 THEN "Saque"\
-				WHEN a.tipo = 2 THEN "Rendimento"\
-				WHEN a.tipo = 3 THEN "Saque"\
-				ELSE 0 END as mensagem \
-				FROM caixa as a \
-				LEFT JOIN planos as b ON a.id_plano = b.id\
-				WHERE a.deletado = ? AND a.id_usuario = ? \
-				ORDER BY a.data_cadastro', [dolar,0,id_usuario]).then(data => {
-					resolve(data);
-				});
-			});
-	}
-
 	GetValorSaldoAtualizado(id_usuario) {
 		return new Promise(function(resolve, reject) {
 			helper.Query('SELECT COALESCE(\
@@ -71,7 +52,7 @@ class IndexModel {
 
 	GetPlanoUsuario(id_usuario) {
 		return new Promise(function(resolve, reject) {
-			helper.Query('SELECT b.nome, c.nome as plano, c.performance\
+			helper.Query('SELECT a.data_inicio, b.nome, c.nome as plano, c.performance\
 				FROM usuarios_planos as a\
 				LEFT JOIN usuarios as b ON b.id = a.id_usuario\
 				LEFT JOIN planos as c ON c.id = a.id_plano\
@@ -81,13 +62,94 @@ class IndexModel {
 			});
 	}
 
-	GetMesAtualAtivo(){
+	GetMesAtual(){
 		return new Promise(function(resolve, reject) {
-			helper.Query('SELECT MONTH(NOW()) as mes_atual_ativo', []).then(data => {
+			helper.Query('SELECT MONTH(NOW()) as mes, YEAR(NOW()) as ano', []).then(data => {
 				resolve(data);
 			});
 		});
 	}
+
+	VerificarSeTemAnteriorMesNoHistorico(mes,ano,data_inicio_plano){
+		return new Promise(function(resolve, reject) {
+			helper.Query('SELECT MONTH(a.mes) as anterior_mes,YEAR(a.mes) as ano_do_anterior\
+				FROM porcentagem_mes as a \
+				WHERE (MONTH(a.mes) < ? AND YEAR(a.mes) = ? OR YEAR(a.mes) < ?) AND a.mes > ? AND a.deletado = ?\
+				ORDER BY a.mes DESC LIMIT 1', [mes,ano,ano,data_inicio_plano,0]).then(data => {
+					resolve(data);
+				});
+			});
+	}
+
+
+	VerificarSeTemProximoMesNoHistorico(mes,ano,data_inicio_plano){
+		return new Promise(function(resolve, reject) {
+			helper.Query('SELECT MONTH(a.mes) as proximo_mes,YEAR(a.mes) as ano_do_proximo\
+				FROM porcentagem_mes as a \
+				WHERE (MONTH(a.mes) > ? AND YEAR(a.mes) = ? OR YEAR(a.mes) > ?) AND a.mes > ? AND a.deletado = ?\
+				ORDER BY a.mes ASC', [mes,ano,ano,data_inicio_plano,0]).then(data => {
+					resolve(data);
+				});
+			});
+	}
+
+
+	GetHistoricoMes(mes,data_inicio_plano){
+		return new Promise(function(resolve, reject) {
+			helper.Query('SELECT a.*, \
+				CASE \
+				WHEN MONTH(a.mes) = 1 THEN "Jan"\
+				WHEN MONTH(a.mes) = 2 THEN "Fev"\
+				WHEN MONTH(a.mes) = 3 THEN "Mar"\
+				WHEN MONTH(a.mes) = 4 THEN "Abr"\
+				WHEN MONTH(a.mes) = 5 THEN "Mai"\
+				WHEN MONTH(a.mes) = 6 THEN "Jun"\
+				WHEN MONTH(a.mes) = 7 THEN "Jul"\
+				WHEN MONTH(a.mes) = 8 THEN "Ago"\
+				WHEN MONTH(a.mes) = 9 THEN "Set"\
+				WHEN MONTH(a.mes) = 10 THEN "Out"\
+				WHEN MONTH(a.mes) = 11 THEN "Nov"\
+				WHEN MONTH(a.mes) = 12 THEN "Dez"\
+				END AS nome_mes\
+				FROM porcentagem_mes as a \
+				WHERE ? >= MONTH(a.mes) AND (MONTH(a.mes) >= MONTH(?) AND YEAR(a.mes) >= YEAR(?)) AND a.deletado = ?\
+				ORDER BY a.mes DESC \
+				LIMIT 2', [mes,data_inicio_plano,data_inicio_plano,0]).then(data => {
+					resolve(data);
+				});
+			});
+	}
+
+
+
+
+
+	GetRendimentoMesUsuario(mes,data_inicio_plano,id_usuario){
+		return new Promise(function(resolve, reject) {
+			helper.Query('SELECT a.*, \
+				REPLACE(REPLACE(REPLACE(FORMAT(a.valor, 2), ".", "@"), ",", "."), "@", ",") as valor_real\
+				FROM caixa as a \
+				WHERE ? >= MONTH(a.data) AND a.data > ? AND a.deletado = ? AND a.id_usuario = ? AND a.tipo = ?\
+				ORDER BY a.data DESC \
+				LIMIT 2', [mes,data_inicio_plano,0,id_usuario,2]).then(data => {
+					resolve(data);
+				});
+			});
+	}
+
+	GetReaporteMesUsuario(mes,data_inicio_plano,id_usuario){
+		return new Promise(function(resolve, reject) {
+			helper.Query('SELECT a.*, \
+				REPLACE(REPLACE(REPLACE(FORMAT(a.valor, 2), ".", "@"), ",", "."), "@", ",") as valor_real\
+				FROM caixa as a \
+				WHERE ? >= MONTH(a.data) AND a.data > ? AND a.deletado = ? AND a.id_usuario = ? AND a.tipo = ?\
+				ORDER BY a.data DESC \
+				LIMIT 2', [mes,data_inicio_plano,0,id_usuario,4]).then(data => {
+					resolve(data);
+				});
+			});
+	}
+	
 
 
 	GetCaixaMesesUsuario(id_usuario) {
@@ -114,19 +176,6 @@ class IndexModel {
 			});
 	}
 
-	CadastrarLog(POST) {
-		var cadastrarLog = [];
-		cadastrarLog.ip = POST[0];
-		cadastrarLog.method = POST[1];
-		cadastrarLog.rota = POST[2];
-		cadastrarLog.user_agent = POST[3];
-		cadastrarLog.id_usuario = POST[4];
 
-		return new Promise(function(resolve, reject) {
-			helper.Insert('log', cadastrarLog).then(data => {
-				resolve(data);
-			});
-		});
-	}
 }
 module.exports = IndexModel;

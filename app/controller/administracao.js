@@ -532,13 +532,13 @@ router.post('/usuarios/alterar-senha/', function(req, res, next) {
 			"<br>Os dados da sua conta são responsabilidade sua, não a entregue a pessoas sem permissão."+
 			"<br><b>Por favor, não responda essa mensagem, pois ela é enviada automaticamente!</b>";
 
-			var text = "Olá sua senha foi alterada pelo administrador do Sistema Eagle Finances. Segue abaixo as informações sobre sua conta."+
+			var text = "Olá sua senha foi alterada pelo administrador do Sistema Moon. Segue abaixo as informações sobre sua conta."+
 			"<br>Login: "+data_usuario[0].login+
 			"<br>Senha: "+senha+
 			"<br><br>Recomendamos que você altera sua senha ao acessar o seu perfil ao clicar na imagem no cabeçalho a direita."+
 			"<br>Os dados da sua conta são responsabilidade sua, não a entregue a pessoas sem permissão."+
 			"<br>Por favor, não responda essa mensagem, pois ela é enviada automaticamente!";
-			control.SendMail(data_usuario[0].email, 'Alterado Senha no Eagle Finances!', html, text);
+			control.SendMail(data_usuario[0].email, 'Alterado Senha no Moon!', html, text);
 			res.json(data);
 		});
 	});
