@@ -226,6 +226,9 @@ function GoTo(link, state) {
 		window.history.pushState('Sistema Quorp', 'Sistema Quorp', link);
 	}
 }
+
+
+
 function LoadTo(link, to) {
 	$.ajax({
 		method: "GET",

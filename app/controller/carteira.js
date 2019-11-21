@@ -53,7 +53,8 @@ router.get('/saque', function(req, res, next) {
 			data.hoje = data_hoje;
 			model.GetContaBancariaUsuario(req.session.usuario.id).then(data_conta_bancaria =>{
 				data.conta_bancaria = data_conta_bancaria;
-				data.link_sistema = '/sistema';	
+				data.link_sistema = '/sistema';
+				data.numero_menu = 2;
 				console.log('SSSSSSSSSSS FINANCEIRO SAQUE SSSSSSSSSSSSSSSSSSSSSSSSS');
 				console.log(data);
 				console.log('SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS');
@@ -91,11 +92,18 @@ router.get('/ver-carteira-mes/:mes', function(req, res, next) {
 							model.GetCaixaMesUsuario(req.session.usuario.id,mes).then(data_caixa=>{
 								data.caixa = data_caixa;
 								data.mes_ativo = mes;
+								data.link_sistema = '/sistema';
+								data.numero_menu = 2;
 
 								model.GetMesAtual().then(data_mes_atual=>{
+									console.log('dddddddddddddddddddd data_mes_atual dddddddddddddddddddddddddddd');
+									console.log(data_mes_atual);
+									console.log('dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd');
 									if(parseInt(mes) == data_mes_atual[0].mes){
 										model.GetSaldoUsuario(req.session.usuario.id).then(data_saldo=>{
 											data.ultimo_saldo = data_saldo;
+											console.log('entrei no if');
+											console.log('iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii');
 											res.render(req.isAjaxRequest() == true ? 'api' : 'montador', {html: 'carteira/carteira', data: data, usuario: req.session.usuario});
 										});
 									}else{

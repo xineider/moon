@@ -1,0 +1,132 @@
+<%- include('../includes/menu_header'); %>
+
+
+<div class="row">
+	<div class="col-sm-12 col-md-6 white-text">
+		<div class="margin-t-10 margin-b-10 white">
+			<canvas id="grafico_historico_porcentagem" width="400" height="400" data-canvas-labels="<%= data.historico_porcentagem_mes_label %>" data-canvas-valores="<%= data.historico_porcentagem_mes_valores %>"></canvas>
+		</div>
+	</div>
+	<div class="col-sm-12 col-md-6 white-text">
+		<div class="margin-t-10 margin-b-10 white">
+			<canvas id="grafico_lucro_rentabilidade" width="400" height="400" data-canvas-labels="<%= data.rendimento_mes_label %>" data-canvas-valores="<%= data.rendimento_mes_valores %>"></canvas>
+		</div>
+	</div>
+</div>
+
+
+
+
+<script>
+
+	var labels = $('#grafico_historico_porcentagem').data('canvas-labels');
+	var arrayLabels = labels.split(',');
+
+	var valores = $('#grafico_historico_porcentagem').data('canvas-valores');
+	var arrayValores = valores.split(',');
+
+	var ctx = document.getElementById('grafico_historico_porcentagem').getContext('2d');
+	var grafico_historico_porcentagem = new Chart(ctx, {
+		type: 'bar',
+		data: {
+			labels: arrayLabels,
+			datasets: [{
+				label: 'Rentabilidade do Mês',
+				data: arrayValores,
+				backgroundColor: [
+				'#90060c',
+				'#c10237',
+				'#ae0427',
+				'#c1341e',
+				'#c0540c',
+				],
+				borderWidth: 0
+			}]
+		},
+		options: {
+			plugins: {
+				datalabels: {
+					anchor:'end',
+					align : 'top',
+					formatter: function(value, context) {
+						return value + ' %';
+					}
+				}
+			},
+			scales: {
+				yAxes: [{
+					ticks: {
+						beginAtZero: true
+					}
+				}]
+			},
+
+			tooltips:{
+				callbacks:{
+					label:function(tooltipItem,data){
+						return tooltipItem.value + '%';
+					}
+				}
+			}
+		}
+	});
+
+
+
+	var labelsRen = $('#grafico_lucro_rentabilidade').data('canvas-labels');
+	var arrayLabelsRen = labelsRen.split(',');
+
+	var valoresRen = $('#grafico_lucro_rentabilidade').data('canvas-valores');
+	var arrayValoresRen = valoresRen.split(',');
+
+
+
+	var ctx2 = document.getElementById('grafico_lucro_rentabilidade').getContext('2d');
+	var grafico_rendimento = new Chart(ctx2, {
+		type: 'line',
+		data: {
+			labels: arrayLabelsRen,
+			datasets: [{
+				label: 'Rendimento do Mês',
+				data: arrayValoresRen,
+				backgroundColor: [
+				'#ec1550'
+				],
+				borderWidth: 0
+			}]
+		},
+		options: {
+			scaleLabel:{
+				display:true,
+				labelString:'oioi'
+			},
+			plugins: {
+				datalabels: {
+					anchor:'end',
+					align : 'top',
+					formatter: function(value, context) {
+						return 'R$' + value;
+					}
+				}
+			},
+			scales: {
+				yAxes: [{
+					ticks: {
+						beginAtZero: true
+					}
+				}]
+			},
+
+			tooltips:{
+				callbacks:{
+					label:function(tooltipItem,data){
+						return 'R$' + tooltipItem.value;
+					}
+				}
+			}
+		}
+	});
+
+
+
+</script>

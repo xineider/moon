@@ -18,6 +18,7 @@ var administracao = require('./app/controller/administracao');
 var carteira = require('./app/controller/carteira');
 var historico = require('./app/controller/historico');
 var meus_dados = require('./app/controller/meus_dados');
+var grafico = require('./app/controller/grafico');
 
 var VerificacaoModel = require('./app/model/verificacaoModel');
 var verificacao = new VerificacaoModel;
@@ -116,6 +117,7 @@ app.use('/sistema/administracao', administracao);
 app.use('/sistema/carteira', carteira);
 app.use('/sistema/historico', historico);
 app.use('/sistema/meus_dados', meus_dados);
+app.use('/sistema/grafico', grafico);
 
 
 // catch 404 and forward to error handler

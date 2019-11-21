@@ -1,85 +1,85 @@
+<div class="historico">
+	<%- include('../includes/menu_header'); %>
+	<div class="w50 mx-auto uppercase">
+		<div class="row">
+			<div class="col white-text align-self-center">
+				Mês
+			</div>
 
 
+			<% if (typeof data.anterior_mes != 'undefined' && data.anterior_mes.length > 0){%>
 
-<div class="w50 mx-auto uppercase">
-	<div class="row">
-		<div class="col white-text align-self-center">
-			Mês
+			<div class="f-rem-25">
+				<i class="fas fa-sort-down secondary-text fa-rotate-90 ajax-load-to pointer" href="<%= data.link_sistema%>/historico/ver-historico-mes/<%= data.anterior_mes[0].anterior_mes%>/<%= data.anterior_mes[0].ano_do_anterior%>" data-to="historico"></i>
+			</div>
+
+			<%}%>
+
+			<%
+			if (typeof data.historico_mes != 'undefined' && data.historico_mes.length > 0) {
+				for (var i = data.historico_mes.length - 1; i >= 0; i--) { %>
+				<div class="col secondary-text uppercase align-self-center text-center">
+					<%= data.historico_mes[i].nome_mes %>
+				</div>
+
+				<%}
+			}%>
+
+			<% if (typeof data.proximo_mes != 'undefined' && data.proximo_mes.length > 0){%>
+
+			<div class="f-rem-25">
+				<i class="fas fa-sort-up secondary-text fa-rotate-90 ajax-load-to pointer" href="<%= data.link_sistema%>/historico/ver-historico-mes/<%= data.proximo_mes[0].proximo_mes%>/<%= data.proximo_mes[0].ano_do_proximo%>" data-to="historico"></i>
+			</div>
+
+			<%}%>
 		</div>
 
+		<div class="primary_line w100"></div>
 
-		<% if (typeof data.anterior_mes != 'undefined' && data.anterior_mes.length > 0){%>
+		<div class="row padding-tb-10">
+			<div class="col white-text">Tx. Perf.</div>
+			<%
+			if (typeof data.historico_mes != 'undefined' && data.historico_mes.length > 0) {
+				for (var i = data.historico_mes.length - 1; i >= 0; i--) { %>
+				<div class="col white-text uppercase align-self-center text-center">
+					<%= data.historico_mes[i].porcentagem %>%
+				</div>
 
-		<div class="f-rem-25">
-			<i class="fas fa-sort-down secondary-text fa-rotate-90 ajax-load pointer" href="<%= data.link_sistema%>/historico/ver-historico-mes/<%= data.anterior_mes[0].anterior_mes%>/<%= data.anterior_mes[0].ano_do_anterior%>"></i>
+				<%}
+			}%>
 		</div>
 
-		<%}%>
+		<div class="primary_line w100"></div>
 
-		<%
-		if (typeof data.historico_mes != 'undefined' && data.historico_mes.length > 0) {
-			for (var i = data.historico_mes.length - 1; i >= 0; i--) { %>
-			<div class="col secondary-text uppercase align-self-center text-center">
-				<%= data.historico_mes[i].nome_mes %>
-			</div>
+		<div class="row padding-tb-10">
+			<div class="col white-text">Rend.</div>
+			<%
+			if (typeof data.rendimento_mes != 'undefined' && data.rendimento_mes.length > 0) {
+				for (var i = data.rendimento_mes.length - 1; i >= 0; i--) { %>
+				<div class="col white-text uppercase align-self-center text-center">
+					R$<%= data.rendimento_mes[i].valor_real %>
+				</div>
 
-			<%}
-		}%>
-
-		<% if (typeof data.proximo_mes != 'undefined' && data.proximo_mes.length > 0){%>
-
-		<div class="f-rem-25">
-			<i class="fas fa-sort-up secondary-text fa-rotate-90 ajax-load pointer" href="<%= data.link_sistema%>/historico/ver-historico-mes/<%= data.proximo_mes[0].proximo_mes%>/<%= data.proximo_mes[0].ano_do_proximo%>"></i>
+				<%}
+			}%>
 		</div>
 
-		<%}%>
+		<div class="primary_line w100"></div>
+
+		<div class="row padding-tb-10">
+			<div class="col white-text">Total Acumulado</div>
+			<%
+			if (typeof data.reaporte_mes != 'undefined' && data.reaporte_mes.length > 0) {
+				for (var i = data.reaporte_mes.length - 1; i >= 0; i--) { %>
+				<div class="col white-text uppercase align-self-center text-center">
+					R$<%= data.reaporte_mes[i].valor_real %>
+				</div>
+
+				<%}
+			}%>
+		</div>
+
 	</div>
 
-	<div class="primary_line w100"></div>
-
-	<div class="row padding-tb-10">
-		<div class="col white-text">Tx. Perf.</div>
-		<%
-		if (typeof data.historico_mes != 'undefined' && data.historico_mes.length > 0) {
-			for (var i = data.historico_mes.length - 1; i >= 0; i--) { %>
-			<div class="col white-text uppercase align-self-center text-center">
-				<%= data.historico_mes[i].porcentagem %>%
-			</div>
-
-			<%}
-		}%>
-	</div>
-
-	<div class="primary_line w100"></div>
-
-	<div class="row padding-tb-10">
-		<div class="col white-text">Rend.</div>
-		<%
-		if (typeof data.rendimento_mes != 'undefined' && data.rendimento_mes.length > 0) {
-			for (var i = data.rendimento_mes.length - 1; i >= 0; i--) { %>
-			<div class="col white-text uppercase align-self-center text-center">
-				R$<%= data.rendimento_mes[i].valor_real %>
-			</div>
-
-			<%}
-		}%>
-	</div>
-
-	<div class="primary_line w100"></div>
-
-	<div class="row padding-tb-10">
-		<div class="col white-text">Total Acumulado</div>
-		<%
-		if (typeof data.reaporte_mes != 'undefined' && data.reaporte_mes.length > 0) {
-			for (var i = data.reaporte_mes.length - 1; i >= 0; i--) { %>
-			<div class="col white-text uppercase align-self-center text-center">
-				R$<%= data.reaporte_mes[i].valor_real %>
-			</div>
-
-			<%}
-		}%>
-	</div>
 
 </div>
-
-
