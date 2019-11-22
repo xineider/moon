@@ -81,6 +81,20 @@ class AdministracaoModel {
 			});
 	}
 
+	GetPlanoTodosUsuarios() {
+		return new Promise(function(resolve, reject) {
+			helper.Query('SELECT b.nome, c.nome as plano, c.performance,\
+				DATE_FORMAT(a.data_inicio, "%d/%m/%Y") as data_inicio,\
+				DATE_FORMAT(a.data_fim, "%d/%m/%Y") as data_fim\
+				FROM usuarios_planos as a\
+				LEFT JOIN usuarios as b ON b.id = a.id_usuario\
+				LEFT JOIN planos as c ON c.id = a.id_plano\
+				WHERE a.deletado = ?', [0]).then(data => {
+					resolve(data);
+				});
+			});
+	}
+
 	GetMesAtualAtivo(){
 		return new Promise(function(resolve, reject) {
 			helper.Query('SELECT MONTH(NOW()) as mes_atual_ativo', []).then(data => {

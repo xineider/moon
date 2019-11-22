@@ -106,9 +106,8 @@ router.get('/planos', function(req, res, next) {
 
 
 router.get('/planos_usuarios', function(req, res, next) {
-	var dolar = req.app.get('dolar');
-	model.GetValoresPlanosUsuarios(dolar).then(data_planos_usuarios=>{
-		data.planos = data_planos_usuarios;		
+	model.GetPlanoTodosUsuarios().then(data_planos_todos_usuarios=>{
+		data.planos_usuarios = data_planos_todos_usuarios;		
 		data.link_sistema = '/sistema';
 		console.log('­‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗ Planos Usuarios ‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗');
 		console.log(data);

@@ -71,7 +71,7 @@ class IndexModel {
 
 	GetPlanoUsuario(id_usuario) {
 		return new Promise(function(resolve, reject) {
-			helper.Query('SELECT b.nome, c.nome as plano, c.performance\
+			helper.Query('SELECT a.data_inicio, b.nome, c.nome as plano, c.performance\
 				FROM usuarios_planos as a\
 				LEFT JOIN usuarios as b ON b.id = a.id_usuario\
 				LEFT JOIN planos as c ON c.id = a.id_plano\
@@ -128,5 +128,62 @@ class IndexModel {
 			});
 		});
 	}
+
+
+		GetHistorico(data_inicio_plano){
+		return new Promise(function(resolve, reject) {
+			helper.Query('SELECT a.porcentagem,\
+				CASE \
+				WHEN MONTH(a.mes) = 1 THEN "Jan"\
+				WHEN MONTH(a.mes) = 2 THEN "Fev"\
+				WHEN MONTH(a.mes) = 3 THEN "Mar"\
+				WHEN MONTH(a.mes) = 4 THEN "Abr"\
+				WHEN MONTH(a.mes) = 5 THEN "Mai"\
+				WHEN MONTH(a.mes) = 6 THEN "Jun"\
+				WHEN MONTH(a.mes) = 7 THEN "Jul"\
+				WHEN MONTH(a.mes) = 8 THEN "Ago"\
+				WHEN MONTH(a.mes) = 9 THEN "Set"\
+				WHEN MONTH(a.mes) = 10 THEN "Out"\
+				WHEN MONTH(a.mes) = 11 THEN "Nov"\
+				WHEN MONTH(a.mes) = 12 THEN "Dez"\
+				END AS nome_mes\
+				FROM porcentagem_mes as a \
+				WHERE (MONTH(a.mes) >= MONTH(?) AND YEAR(a.mes) >= YEAR(?)) AND a.deletado = ?\
+				ORDER BY a.mes ASC', [data_inicio_plano,data_inicio_plano,0]).then(data => {
+					resolve(data);
+				});
+			});
+	}
+
+
+	GetRendimentoMesesUsuario(data_inicio_plano,id_usuario){
+		return new Promise(function(resolve, reject) {
+			helper.Query('SELECT 				\
+				CASE \
+				WHEN MONTH(a.data) = 1 THEN "Jan"\
+				WHEN MONTH(a.data) = 2 THEN "Fev"\
+				WHEN MONTH(a.data) = 3 THEN "Mar"\
+				WHEN MONTH(a.data) = 4 THEN "Abr"\
+				WHEN MONTH(a.data) = 5 THEN "Mai"\
+				WHEN MONTH(a.data) = 6 THEN "Jun"\
+				WHEN MONTH(a.data) = 7 THEN "Jul"\
+				WHEN MONTH(a.data) = 8 THEN "Ago"\
+				WHEN MONTH(a.data) = 9 THEN "Set"\
+				WHEN MONTH(a.data) = 10 THEN "Out"\
+				WHEN MONTH(a.data) = 11 THEN "Nov"\
+				WHEN MONTH(a.data) = 12 THEN "Dez"\
+				END AS nome_mes,\
+				a.valor,\
+				REPLACE(REPLACE(REPLACE(FORMAT(a.valor, 2), ".", "@"), ",", "."), "@", ",") as valor_real\
+				FROM caixa as a \
+				WHERE a.data > ? AND a.deletado = ? AND a.id_usuario = ? AND a.tipo = ?\
+				ORDER BY a.data ASC', [data_inicio_plano,0,id_usuario,2]).then(data => {
+					resolve(data);
+				});
+			});
+	}
+
+
+	
 }
 module.exports = IndexModel;
