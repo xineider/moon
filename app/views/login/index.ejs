@@ -8,6 +8,7 @@
 	<link rel='stylesheet' href="/public/stylesheets/login.css"/>
 	<link rel='stylesheet' href='/public/stylesheets/fontawesome.min.css' />
 	<script src="/public/javascripts/jquery.min.js"></script>
+	<script src="/public/javascripts/bootstrap/bootstrap.min.js"></script>
 	<meta name="viewport" content="width=device-width, user-scalable=no">
 </head>
 <div id='stars'></div>
@@ -55,11 +56,32 @@
 
 						<div class="login-options">
 							<a class="uppercase white-text left margin-t-20" href="#">Não tenho cadastro</a>
-							<a class="uppercase white-text right margin-t-20" href="">Esqueci minha senha</a>
+							<a class="uppercase white-text right margin-t-20 pointer" data-toggle="modal" data-target="#modalExemplo">Esqueci minha senha</a>
 						</div>
 
 					</div>
 				</form>
+			</div>
+
+			<!-- Modal -->
+			<div class="modal fade" id="modalExemplo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="exampleModalLabel">Título do modal</h5>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body">
+							...
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+							<button type="button" class="btn btn-primary">Salvar mudanças</button>
+						</div>
+					</div>
+				</div>
 			</div>
 		</section>
 	</main>
