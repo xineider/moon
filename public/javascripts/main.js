@@ -336,7 +336,7 @@ function SubmitAjax(post, link, back,sucessMessage,sucessClass) {
 				console.log('estou sendo chamado por que deu certo !!!!');
 				$('.toast-body').html('<div class="text-center">'+sucessMessage+'</div>');
 				/*utilizo o attr para limpar a classe para que não tenha a classe de erro no cadastro que deveria ser o verde*/
-				$('.toast').attr('class','toast').addClass(sucessClass).toast({delay:3000}).toast('show')
+				$('.toast').attr('class','toast').addClass(sucessClass).toast({delay:3000}).toast('show');
 				if(back != ''){
 					GoTo(back, true);
 				}

@@ -485,11 +485,11 @@ router.post('/usuarios/cadastrar/', function(req, res, next) {
 				"<br>Os dados da sua conta são responsabilidade sua, não a entregue a pessoas sem permissão."+
 				"<br><b>Por favor, não responda essa mensagem, pois ela é enviada automaticamente!</b>";
 
-				var text = "Bem vindo ao Eagle Finances. Segue abaixo as informações sobre sua conta."+
-				"<br>Login: "+POST.login+
+				var text = "Bem vindo ao Moon Austronauta!. Segue abaixo as informações sobre sua conta."+
+				"<br>Login: "+POST.email+
 				"<br>Senha: "+senha+
-				"<br><br>Recomendamos que você altera sua senha ao acessar o seu perfil ao clicar no menu e ir no item 'Perfil'."+
-				"<br>Acesse via o aplicativo Eagle Finance"+
+				"<br><br><br>Recomendamos que você altera sua senha ao acessar o botão meus dados no menu."+
+				"<br>Acesse via o site : http://moon.com.br"+
 				"<br>Os dados da sua conta são responsabilidade sua, não a entregue a pessoas sem permissão."+
 				"<br>Por favor, não responda essa mensagem, pois ela é enviada automaticamente!";
 
@@ -629,7 +629,7 @@ router.post('/pedido-saque/aprovar/', function(req, res, next) {
 					"Qualquer dúvida por favor contatar o suporte."+ 
 					"Por favor, não responda essa mensagem, pois ela é enviada automaticamente!";
 
-					control.SendMail(data_usuario[0].email, 'Pedido de aporte Aprovado na Eagle!', text,html);
+					control.SendMail(data_usuario[0].email, 'Pedido de Aporte Aprovado no Moon!', text,html);
 					console.log('usuario uuuuu')
 					console.log(data_usuario);
 					console.log('uuuuuuuuuuuuu');
@@ -696,7 +696,7 @@ router.post('/pedido-aporte/aprovar/', function(req, res, next) {
 					"Qualquer dúvida por favor contatar o suporte."+ 
 					"Por favor, não responda essa mensagem, pois ela é enviada automaticamente!";
 
-					control.SendMail(data_usuario[0].email, 'Pedido de aporte Aprovado na Eagle!', text,html);
+					control.SendMail(data_usuario[0].email, 'Pedido de Aporte Aprovado no Moon!', text,html);
 					console.log('usuario uuuuu')
 					console.log(data_usuario);
 					console.log('uuuuuuuuuuuuu');
@@ -736,7 +736,7 @@ router.post('/pedido-aporte/negar/', function(req, res, next) {
 					"Qualquer dúvida por favor contatar o suporte."+ 
 					"Por favor, não responda essa mensagem, pois ela é enviada automaticamente!";
 
-					control.SendMail(data_usuario[0].email, 'Pedido de aporte Negado na Eagle!', text,html);
+					control.SendMail(data_usuario[0].email, 'Pedido de Aporte Negado no Moon!', text,html);
 					console.log('id_negar_aporte:'+id_negar_aporte);
 					console.log('usuario uuuuu')
 					console.log(data_usuario);

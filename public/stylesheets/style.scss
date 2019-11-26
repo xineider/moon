@@ -293,6 +293,10 @@ select.form-control{
 	background:$secondary-color;
 }
 
+button:focus{
+	outline: none;
+}
+
 /**/
 
 .error{
