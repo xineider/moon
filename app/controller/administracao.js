@@ -562,6 +562,24 @@ router.post('/plano/cadastrar/', function(req, res, next) {
 	});
 });
 
+
+router.post('/rendimento_mes/confirmar_cadastro', function(req, res, next) {
+	POST = req.body;
+	console.log(POST);
+
+
+	console.log('CCCCCCCC CONFIRMAR CADASTRO CCCCCCCCCCCC');
+	console.log(POST);
+	console.log('CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC');
+	res.render(req.isAjaxRequest() == true ? 'api' : 'montador', {html: 'administracao/rendimento-mes/modal_confirmar_rendimento', data: data, usuario: req.session.usuario});
+
+});
+
+
+
+
+
+
 router.post('/usuarios/alterar-senha/', function(req, res, next) {
 	POST = req.body;
 	var senha = Math.random().toString(36).substr(2, 8);
