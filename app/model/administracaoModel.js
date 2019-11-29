@@ -233,6 +233,18 @@ class AdministracaoModel {
 			});
 	}
 
+	GetPlanosComPerformance() {
+		return new Promise(function(resolve, reject) {
+			helper.Query('SELECT a.*,\
+				CONCAT(a.nome," - ",a.performance,"%") as nome_com_performance,\
+				DATE_FORMAT(a.data_cadastro, "%d/%m/%Y") as data_cadastro,\
+				DATE_FORMAT(a.data_cadastro, "%Y%m%d %H:%i") as data_table_filtro\
+				FROM planos as a WHERE a.deletado = ?', [0]).then(data => {
+					resolve(data);
+				});
+			});
+	}
+
 	GetUsuarios() {
 		return new Promise(function(resolve, reject) {
 			helper.Query('SELECT * FROM usuarios WHERE deletado = ?	ORDER BY nome ', [0]).then(data => {

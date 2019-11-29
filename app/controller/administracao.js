@@ -24,6 +24,7 @@ router.get('/', function(req, res, next) {
 						data.meses_com_caixa = data_meses_caixa;
 						model.GetMesAtualAtivo().then(data_mes_atual_ativo=>{
 							data.mes_atual_ativo = data_mes_atual_ativo;
+							data.link_sistema = '/sistema';
 							data.numero_menu = 4;
 							console.log('kokokokokokoko usuario requisição kokokokokokokokoko')
 							console.log(data);
@@ -254,10 +255,12 @@ router.get('/caixa/criar', function(req, res, next) {
 
 
 router.get('/caixa/criar-aporte', function(req, res, next) {
+	data.numero_menu = 4;
 	res.render(req.isAjaxRequest() == true ? 'api' : 'montador', {html: 'administracao/caixa/cadastrar_caixa_aporte', data: data, usuario: req.session.usuario});
 });
 
 router.get('/caixa/criar-saque', function(req, res, next) {
+	data.numero_menu = 4;
 	res.render(req.isAjaxRequest() == true ? 'api' : 'montador', {html: 'administracao/caixa/cadastrar_caixa_saque', data: data, usuario: req.session.usuario});
 });
 
@@ -267,7 +270,18 @@ router.get('/caixa/criar-rendimento', function(req, res, next) {
 
 router.get('/plano/criar', function(req, res, next) {
 	data.link_sistema = '/sistema';
+	data.numero_menu = 4;
 	res.render(req.isAjaxRequest() == true ? 'api' : 'montador', {html: 'administracao/planos/cadastrar_plano', data: data, usuario: req.session.usuario});
+});
+
+
+router.get('/rendimento_mes/criar', function(req, res, next) {
+	data.link_sistema = '/sistema';
+	data.numero_menu = 4;
+	model.GetPlanosComPerformance().then(data_plano=>{
+		data.plano = data_plano;
+		res.render(req.isAjaxRequest() == true ? 'api' : 'montador', {html: 'administracao/rendimento-mes/cadastrar_rendimento', data: data, usuario: req.session.usuario});
+	});
 });
 
 

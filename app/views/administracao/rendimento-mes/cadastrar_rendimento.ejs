@@ -6,26 +6,16 @@
 <%if(usuario.nivel == 1){ %>
 <div class="container-fluid">
 	<div class="w100 text-center">
-		<div class="bold f25 text-center white-text margin-b-10">Adicionar Caixa</div>
+		<div class="bold f25 text-center white-text margin-b-10">Adicionar Rendimento</div>
+
+		
+
+		<div class="white-text margin-b-10">Não calcule a Performance, a performance já é calculada pelo sistema!É possível ver a Performance com a % pelo plano abaixo!</div>
 
 		<form method="POST" action="" enctype="multipart/form-data">
 
 			<div class="row">
-				<div class="form-group col-md-6">
-					<div class="row">
-						<label class="white-text col-sm-2" for="tipo">Tipo</label>
-						<div class="col-sm-10">
-							<select name="tipo" class="form-control tipo_caixa_select">
-								<option value="0">Aporte</option>
-								<option value="1">Saque</option>
-								<option value="2" selected>Rendimento</option>
-								<option value="3">Saque rendimento</option>
-								<option value="4">Reaporte</option>
-							</select>
-						</div>
-					</div>
-				</div>
-				<div class="form-group col-md-6">
+				<div class="form-group col-md-12">
 					<div class="row">
 						<label class="white-text col-sm-2" for="id_plano">Plano</label>
 						<div class="col-sm-10">
@@ -33,36 +23,10 @@
 								<%
 								if (typeof data.plano != 'undefined' && data.plano.length > 0) {
 									for (var i = 0; i < data.plano.length; i++) { %>
-									<option value=" <%= data.plano[i].id %>"><%= data.plano[i].nome %></option>				
+									<option value=" <%= data.plano[i].id %>"><%= data.plano[i].nome_com_performance %></option>				
 									<% }
 								} %>
 							</select>
-						</div>
-					</div>
-				</div>
-			</div>
-
-			<div class="row">
-				<div class="form-group col-md-6">
-					<div class="row">
-						<label class="white-text col-sm-2" for="id_usuario">Usuário</label>
-						<div class="col-sm-10">
-							<select name="id_usuario" class="form-control">
-								<%
-								if (typeof data.usuario != 'undefined' && data.usuario.length > 0) {
-									for (var i = 0; i < data.usuario.length; i++) { %>
-									<option value="<%= data.usuario[i].id %>"><%= data.usuario[i].nome %></option>				
-									<% }
-								} %>
-							</select>
-						</div>
-					</div>
-				</div>
-				<div class="form-group col-md-6">
-					<div class="row">
-						<label class="white-text col-sm-2" for="valor">Valor em Reais</label>
-						<div class="col-sm-10">
-							<input required="true" class="validate form-control " type="number" name="valor">
 						</div>
 					</div>
 				</div>
@@ -72,16 +36,29 @@
 
 				<div class="form-group col-md-12">
 					<div class="row">
-						<label class="white-text col-sm-1" for="data">Data</label>
-						<div class="col-sm-11">
-							<input required="true" class="validate form-control datepicker data-sem-hora" type="text" name="data">
+						<label class="white-text col-sm-2" for="mes">Porcentagem</label>
+						<div class="col-sm-10">
+							<input required="true" class="validate form-control" type="number" name="porcentagem">
 						</div>
 					</div>
 				</div>
 			</div>
 
 
-			<button data-href="/sistema/administracao/caixa/cadastrar" data-action="<%= data.link_sistema%>/administracao/caixa/" class="btn primary ajax-submit margin-b-10" data-mensagem-sucesso="Caixa Cadastrado com Sucesso!" >
+			<div class="row">
+
+				<div class="form-group col-md-12">
+					<div class="row">
+						<label class="white-text col-sm-2" for="mes">Mês</label>
+						<div class="col-sm-10">
+							<input required="true" class="validate form-control datepicker data-sem-hora" type="text" name="mes">
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+			<button data-href="/sistema/administracao/rendimento_mes/cadastrar" data-action="<%= data.link_sistema%>/administracao/rendimento_mes/" class="btn primary ajax-submit margin-b-10" data-mensagem-sucesso="Rendimento do Mês Cadastrado com Sucesso!" >
 				Salvar <i class="far fa-save-o" aria-hidden="true"></i>
 			</button>
 
