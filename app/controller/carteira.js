@@ -69,6 +69,26 @@ router.get('/saque', function(req, res, next) {
 
 
 
+router.get('/reaporte', function(req, res, next) {
+	model.GetValorReaporteUsuario(req.session.usuario.id).then(data_reaporte=>{
+		data.reaporte = data_reaporte;
+		model.GetDataHoje().then(data_hoje=>{
+			data.hoje = data_hoje;
+			data.link_sistema = '/sistema';
+			data.numero_menu = 2;
+			console.log('SSSSSSSSSSS FINANCEIRO SAQUE SSSSSSSSSSSSSSSSSSSSSSSSS');
+			console.log(data);
+			console.log('SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS');
+			console.log('¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬ ID ¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬');
+			console.log(req.session.usuario.id);
+			console.log('¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬');
+			res.render(req.isAjaxRequest() == true ? 'api' : 'montador', {html: 'carteira/reaporte', data: data, usuario: req.session.usuario});
+		});
+	});
+});
+
+
+
 
 
 router.get('/ver-carteira-mes/:mes', function(req, res, next) {
@@ -195,6 +215,73 @@ router.post('/pedir-saque-confirmar-dados/', function(req, res, next) {
 	}
 
 });
+
+// router.post('/pedir-reaporte-confirmar-dados/', function(req, res, next) {
+// 	POST = req.body;
+// 	console.log(POST);
+// 	POST.senha = control.Encrypt(POST.senha);
+// 	POST.id_usuario = req.session.usuario.id;
+// 	POST.valor = POST.valor.replace(',','.');
+
+// 	if(parseFloat(POST.valor) > 0){
+// 		console.log('PPPPPPPPPPPPPPPP PEDIR SAQUE PPPPPPPPPPPPPPPPPPPPPPPP');
+// 		console.log(POST);
+// 		console.log('PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP');
+
+// 		model.ConfirmarSenhaUsuario(req.session.usuario.id,POST.senha).then(data_usuario =>{
+// 			delete POST.senha;
+// 			data.usuario = data_usuario;
+
+// 			console.log('UUUUUUUUUUUUUUUU DATA USUARIO UUUUUUUUUUUUUUUUU');
+// 			console.log(data_usuario);
+// 			console.log('UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU');
+
+// 			if (data_usuario.length > 0){
+// 				model.GetSaldoRendimentoUsuario(req.session.usuario.id).then(data_rendimento =>{
+
+// 					console.log('qqqqqqqqqqqqq data_rendimento qqqqqqqqqqqqqq');
+// 					console.log(data_rendimento);
+// 					console.log('qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq');
+// 					if(data_rendimento[0].valor_saldo_number > parseFloat(POST.valor)){
+
+// 						model.GetUsuarioJaFezSaqueNessePlano(req.session.usuario.id,3).then(data_ja_fez_saque=>{
+// 							console.log('◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ data_ja_fez_saque ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ');
+// 							console.log(data_ja_fez_saque);
+// 							console.log(data_ja_fez_saque.length);
+// 							console.log('◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ◙ ');
+// 							if(data_ja_fez_saque.length <= 0){
+// 								model.GetDiaEHorario().then(data_dia_e_horario =>{
+// 									data.dia_horario = data_dia_e_horario;
+// 									model.ConverterNumeroEmReal(POST.valor).then(data_valor_saque =>{
+// 										data.valor_real_saque = data_valor_saque;
+// 										model.GetContaBancariaById(POST.id_conta_bancaria).then(data_conta_bancaria =>{
+// 											data.dados_conta_bancaria = data_conta_bancaria;
+// 											data.link_sistema = '/sistema';
+// 											console.log('############# modal confirmar saque #####################');
+// 											console.log(data);
+// 											console.log('#########################################################');
+// 											res.render(req.isAjaxRequest() == true ? 'api' : 'montador', {html: 'carteira/modal_saque', data: data, usuario: req.session.usuario});
+// 										});
+// 									});
+// 								});	
+// 							}else{
+// 								res.json({error:'ja_fez_saque',element:'input[name="valor"]',texto:'Já existe um saque em andamento!'});
+// 							}	
+// 						});
+// 					}else{
+// 						res.json({error:'valor_maior_que_saldo',element:'input[name="valor"]',texto:'Valor Maior do que se Possui!'});
+// 					}		
+// 				});	
+// 			}else{
+// 				res.json({error:'senha_saque_diferente',element:'input[name="senha"]',texto:'Senha Não Confere!'});
+// 			}
+// 		});
+
+// 	}else{
+// 		res.json({error:'valor_negativo_zero',element:'input[name="valor"]',texto:'Valor não pode ser 0 ou Negativo!'});
+// 	}
+
+// });
 
 
 

@@ -48,6 +48,7 @@ router.get('/usuarios', function(req, res, next) {
 				model.GetUsuariosMenosProprio(req.session.usuario.id).then(data_usuarios=>{
 					data.usuarios_admin = data_usuarios;
 					data.link_sistema = '/sistema';
+					data.numero_menu = 4;
 					console.log('===================== ADMINISTRACAO USUARIO ===-================');
 					console.log(data);
 					console.log('=======================================================');
@@ -63,6 +64,7 @@ router.get('/pedidos-saques', function(req, res, next) {
 	model.GetPedidosSaques().then(data_pedido_saque=>{
 		data.pedido_saque = data_pedido_saque;
 		data.link_sistema = '/sistema';
+		data.numero_menu = 4;
 		console.log('ADQADQADQADQADQADQADQADQADQADQ ADMINISTRAÇÃO PEDIDO SAQUE ADQADQADQADQADQ');
 		console.log(data.pedido_saque);
 		console.log('ADQADQADQADQADQADQADQADQADQADQADQADQADQADQADQADQADQADQADQADQADQADQADQADQA');
@@ -74,6 +76,7 @@ router.get('/pedidos-aportes', function(req, res, next) {
 	model.GetPedidosAportes().then(data_pedido_aporte=>{
 		data.pedido_aporte = data_pedido_aporte;
 		data.link_sistema = '/sistema';
+		data.numero_menu = 4;
 		console.log('ADTADTADTADT ADMINISTRAÇÃO PEDIDO APORTE ADTADTADTADTADTADTADTADT');
 		console.log(data);
 		console.log('ADTADTADTADTADTADTADTADTADTADTADTADTADTADTADTADTADTADTADTADTADTAD');
@@ -85,8 +88,9 @@ router.get('/caixa', function(req, res, next) {
 	model.GetCaixa().then(data_caixa=>{
 		data.caixa = data_caixa;
 		data.link_sistema = '/sistema';
+		data.numero_menu = 4;
 		console.log('CAIXACAIXACAIXACAIXACAIXA ADMINISTRAÇÃO CAIXA CAIXACAIXACAIXA');
-		console.log(data.caixa);
+		console.log(data);
 		console.log('CAIXACAIXACAIXACAIXACAIXACAIXACAIXACAIXACAIXACAIXACAIXACAIXA');
 		res.render(req.isAjaxRequest() == true ? 'api' : 'montador', {html: 'administracao/caixa/caixa', data: data, usuario: req.session.usuario});
 	});
@@ -97,6 +101,7 @@ router.get('/planos', function(req, res, next) {
 	model.GetPlanos().then(data_planos=>{
 		data.planos = data_planos;		
 		data.link_sistema = '/sistema';
+		data.numero_menu = 4;
 		console.log('===================== ADMINISTRACAO USUARIO ===-================');
 		console.log(data);
 		console.log('=======================================================');
@@ -109,12 +114,28 @@ router.get('/planos_usuarios', function(req, res, next) {
 	model.GetPlanoTodosUsuarios().then(data_planos_todos_usuarios=>{
 		data.planos_usuarios = data_planos_todos_usuarios;		
 		data.link_sistema = '/sistema';
+		data.numero_menu = 4;
 		console.log('­‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗ Planos Usuarios ‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗');
 		console.log(data);
 		console.log('‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗');
 		res.render(req.isAjaxRequest() == true ? 'api' : 'montador', {html: 'administracao/planos-usuarios/planos_usuarios', data: data, usuario: req.session.usuario});
 	});
 });
+
+
+router.get('/rendimentos_mes', function(req, res, next) {
+	model.GetRendimentosMes().then(data_rendimento_mes=>{
+		data.rendimento_mes = data_rendimento_mes;		
+		data.link_sistema = '/sistema';
+		data.numero_menu = 4;
+		console.log('­ææææææææææææææææ Rendimento Mes æææææææææææææææææææææææ');
+		console.log(data);
+		console.log('æææææææææææææææææææææææææææææææææææææææææææææææææææææææ');
+		res.render(req.isAjaxRequest() == true ? 'api' : 'montador', {html: 'administracao/rendimento-mes/rendimento_mes', data: data, usuario: req.session.usuario});
+	});
+});
+
+
 
 
 router.get('/alterar-senha-usuario/:id', function(req, res, next) {
@@ -154,6 +175,8 @@ router.get('/upload-csv', function(req, res, next) {
 						data.meses_com_caixa = data_meses_caixa;
 						model.GetMesAtualAtivo().then(data_mes_atual_ativo=>{
 							data.mes_atual_ativo = data_mes_atual_ativo;
+							data.link_sistema = '/sistema';
+							data.numero_menu = 4;
 							console.log('kokokokokokoko usuario requisição kokokokokokokokoko')
 							console.log(data);
 							console.log('kokokokokokokokokokokokokokokokokokokokokokokokokoko');
@@ -209,6 +232,7 @@ router.get('/usuarios/criar', function(req, res, next) {
 				model.GetConectores().then(data_conectores=>{
 					data.conector = data_conectores;
 					data.link_sistema = '/sistema';
+					data.numero_menu = 4;
 					res.render(req.isAjaxRequest() == true ? 'api' : 'montador', {html: 'administracao/usuarios/cadastrar_usuario', data: data, usuario: req.session.usuario});
 				});
 			});
@@ -222,6 +246,7 @@ router.get('/caixa/criar', function(req, res, next) {
 		model.GetPlanos().then(data_plano=>{
 			data.plano = data_plano;
 			data.link_sistema = '/sistema';
+			data.numero_menu = 4;
 			res.render(req.isAjaxRequest() == true ? 'api' : 'montador', {html: 'administracao/caixa/cadastrar_caixa', data: data, usuario: req.session.usuario});
 		});
 	});
@@ -268,6 +293,7 @@ router.get('/usuarios/editar/:id', function(req, res, next) {
 					model.SelecionarUsuario(id).then(data_usuario_sel => {
 						data.usuario_admin = data_usuario_sel;
 						data.link_sistema = '/sistema';
+						data.numero_menu = 4;
 						console.log(data);
 						res.render(req.isAjaxRequest() == true ? 'api' : 'montador', {html: 'administracao/usuarios/editar_usuario', data: data, usuario: req.session.usuario});
 					});
@@ -286,6 +312,7 @@ router.get('/pedido-saque/editar/:id', function(req, res, next) {
 	model.SelecionarPedidoSaque(id).then(data_pedido_saque => {
 		data.pedido_saque = data_pedido_saque;
 		data.link_sistema = '/sistema';
+		data.numero_menu = 4;
 		console.log('QQQQQQQQQQQQQQ PEDIDO SAQUE EDITAR QQQQQQQQQQQQQQQQQQQ');
 		console.log(data);	
 		console.log('QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ');
@@ -301,6 +328,7 @@ router.get('/pedido-saque/aprovacao_saque_data_hora/:id', function(req, res, nex
 	model.SelecionarPedidoSaque(id).then(data_pedido_saque_a => {
 		data.pedido_saque_a = data_pedido_saque_a;
 		data.link_sistema = '/sistema';
+		data.numero_menu = 4;
 		console.log('================= APROVACAO SAQUE =========================');
 		console.log(data);	
 		console.log('===========================================================');
@@ -317,6 +345,7 @@ router.get('/pedido-saque/negacao_saque_motivo/:id', function(req, res, next) {
 	model.SelecionarPedidoSaque(id).then(data_pedido_saque_n => {
 		data.pedido_saque_n = data_pedido_saque_n;
 		data.link_sistema = '/sistema';
+		data.numero_menu = 4;
 		console.log('oooOOOOooOOoOOO NEGAR SAQUE oooOOooOOOooOOooo');
 		console.log(data);	
 		console.log('ooooOOOooooOOOoooOOOooOoooOOooOooOoooooOOOoOO');
@@ -333,6 +362,7 @@ router.get('/pedido-aporte/editar/:id', function(req, res, next) {
 	model.SelecionarPedidoAporte(id).then(data_pedido_aporte => {
 		data.pedido_aporte = data_pedido_aporte;
 		data.link_sistema = '/sistema';
+		data.numero_menu = 4;
 		console.log('TTTTTTTTTTTTTTTTTT PEDIDO APORTE EDITAR TTTTTTTTTTTTTTTTTTTT');
 		console.log(data);	
 		console.log('TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT');
@@ -349,6 +379,7 @@ router.get('/pedido-aporte/aprovacao_aporte_data_hora/:id', function(req, res, n
 	model.SelecionarPedidoAporte(id).then(data_pedido_aporte_a => {
 		data.pedido_aporte_a = data_pedido_aporte_a;
 		data.link_sistema = '/sistema';
+		data.numero_menu = 4;
 		console.log('TTTTTTTTTTTTTTTTTT PEDIDO APORTE EDITAR TTTTTTTTTTTTTTTTTTTT');
 		console.log(data);	
 		console.log('TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT');
@@ -365,6 +396,7 @@ router.get('/pedido-aporte/negacao_aporte_motivo/:id', function(req, res, next) 
 	model.SelecionarPedidoAporte(id).then(data_pedido_aporte_n => {
 		data.pedido_aporte_n = data_pedido_aporte_n;
 		data.link_sistema = '/sistema';
+		data.numero_menu = 4;
 		console.log('TTTTTTTTTTTTTTTTTT PEDIDO APORTE EDITAR TTTTTTTTTTTTTTTTTTTT');
 		console.log(data);	
 		console.log('TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT');
@@ -385,6 +417,7 @@ router.get('/caixa/editar/:id', function(req, res, next) {
 			model.GetPlanos().then(data_plano=>{
 				data.plano = data_plano;
 				data.link_sistema = '/sistema';
+				data.numero_menu = 4;
 				console.log('$$$$$$$$$$$$$$$$$$ CAIXA EDITAR $$$$$$$$$$$$$$$$$');
 				console.log(data);	
 				console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$');
@@ -404,6 +437,7 @@ router.get('/plano/editar/:id', function(req, res, next) {
 	model.SelecionarPlano(id).then(data_plano_editar => {
 		data.plano = data_plano_editar;
 		data.link_sistema = '/sistema';
+		data.numero_menu = 4;
 		console.log('@@@@@@@@@@@@@ PLANO EDITAR @@@@@@@@@@@@@@@@@@@@');
 		console.log(data);	
 		console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
@@ -421,6 +455,7 @@ router.get('/plano/ativar/:id', function(req, res, next) {
 	model.SelecionarPlano(id).then(data_plano_ativar => {
 		data.plano = data_plano_ativar;
 		data.link_sistema = '/sistema';
+		data.numero_menu = 4;
 		console.log('←←←←←←←←←←←← PLANO ATIVAR ←←←←←←←←←←←←←←←←←←←←←');
 		console.log(data);	
 		console.log('←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←');

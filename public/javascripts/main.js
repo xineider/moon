@@ -105,7 +105,7 @@ $(document).ready(function () {
 				AddErrorTexto($('#valor_saque'),'Valor Maior do que tem para Sacar!!');	
 			}else if(caixa_saque_total >= caixa_saque){
 				console.log('cai aqui no saque total');
-				SubmitAjaxOpenModal(post, link,modal);
+				SubmitAjaxOpenModal(post,link,modal);
 			}else{
 				AddErrorTexto($('#valor_saque'),'Erro!');	
 			}

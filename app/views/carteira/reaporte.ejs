@@ -1,0 +1,73 @@
+<%- include('../includes/menu_header'); %>
+<div class="saque_container text-center">
+	<div class="w100 text-center secondary-text f-rem-3 uppercase margin-t-10">Reaporte</div>
+	
+
+	<form method="POST" action="" enctype="multipart/form-data">
+
+		<div class="col s12 margin-t-10 justify margin-b-10">
+
+			<div class="grey-text text-center w50 mx-auto f-rem-08 margin-t-5">
+				Você pode reaportar o seu Rendimento, mas não se preocupe até o 05 dia do mês o valor do rendimento é reaportado automaticamente.
+				<br>
+				Caso você queira pode reaportar o valor previamente para que ele possa render mais rápido.
+			</div>
+
+			<div class="primary white-text text-center padding-b-10 margin-t-10">
+				<span class="f-rem-15">R$ </span><span class="f-rem-3">
+					<% if (data.reaporte[0].valor_reaporte != null){%>
+					<%= data.reaporte[0].valor_reaporte%>
+					<%}else{%>
+					0,00
+					<%}%>
+
+				</span>
+				<br>
+			</div>
+
+		</div>
+
+
+		<div class="form-group col-md-12">
+			
+			<div class="mx-auto margin-t-10 row saque_caixa_input">
+				<label class="secondary-text col-sm-2 col-form-label">R$</label>
+				<div class="col-sm-10">
+					<input required="true" class="validate form-control" type="number" name="valor" id="valor_saque">
+				</div>			
+			</div>
+
+		</div>
+
+		<input type="hidden" value="<%= data.reaporte[0].valor_reaporte_number %>" id="valor_saque_total">
+
+		
+
+
+		<div class="form-group col-md-12">
+
+			<div class="mx-auto margin-t-10 row saque_caixa_input">
+				<label class="secondary-text col-sm-2 col-form-label">Senha</label>
+				<div class="col-sm-10">
+					<input required="true" class="validate form-control" type="password" name="senha">
+				</div>			
+			</div>
+
+		</div>
+
+
+		<%#if(data.hoje[0].dia < 6) {%>
+
+		<div class="margin-t-10">
+			<button data-href="/sistema/carteira/pedir-reaporte-confirmar-dados" class="btn primary pedir-saque margin-b-10" data-modal="#modalinfo">
+				Reaportar
+			</button>
+		</div>
+
+
+		<%#}%>
+
+
+	</form>
+
+</div>

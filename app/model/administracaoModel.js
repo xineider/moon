@@ -95,6 +95,32 @@ class AdministracaoModel {
 			});
 	}
 
+	GetRendimentosMes() {
+		return new Promise(function(resolve, reject) {
+			helper.Query('SELECT REPLACE(a.porcentagem,".",",") as porcentagem_mes,\
+				a.porcentagem as porcentagem_number,\
+				DATE_FORMAT(a.mes, "%Y%m%d %H:%i") as mes_table_filtro,\
+				CASE \
+				WHEN MONTH(mes) = 1 THEN "Janeiro"\
+				WHEN MONTH(mes) = 2 THEN "Fevereiro"\
+				WHEN MONTH(mes) = 3 THEN "Março"\
+				WHEN MONTH(mes) = 4 THEN "Abril"\
+				WHEN MONTH(mes) = 5 THEN "Maio"\
+				WHEN MONTH(mes) = 6 THEN "Junho"\
+				WHEN MONTH(mes) = 7 THEN "Julho"\
+				WHEN MONTH(mes) = 8 THEN "Agosto"\
+				WHEN MONTH(mes) = 9 THEN "Setembro"\
+				WHEN MONTH(mes) = 10 THEN "Outubro"\
+				WHEN MONTH(mes) = 11 THEN "Novembro"\
+				WHEN MONTH(mes) = 12 THEN "Dezembro"\
+				END AS nome_mes\
+				FROM porcentagem_mes as a\
+				WHERE a.deletado = ?', [0]).then(data => {
+					resolve(data);
+				});
+			});
+	}
+
 	GetMesAtualAtivo(){
 		return new Promise(function(resolve, reject) {
 			helper.Query('SELECT MONTH(NOW()) as mes_atual_ativo', []).then(data => {
@@ -191,9 +217,6 @@ class AdministracaoModel {
 				ELSE "Indefinido"\
 				END AS tipo\
 				FROM caixa as a WHERE a.deletado = ? AND a.confirmado = ?', [0,1]).then(data => {
-					console.log('sssssssss sai assim do getCaixa() sssssssssssss');
-					console.log(data);
-					console.log('sssssssssssssssssssssssssssssssssssssssssssssss');
 					resolve(data);
 				});
 			});

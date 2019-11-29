@@ -258,6 +258,43 @@ class CarteiraModel {
 			});
 	}
 
+	GetValorReaporteUsuario(id_usuario) {
+
+		console.log('id_usuario:'+id_usuario);
+
+		return new Promise(function(resolve, reject) {
+			helper.Query('SELECT COALESCE(REPLACE(REPLACE(REPLACE(FORMAT(( \
+				(SUM(CASE WHEN (a.tipo = ? AND a.deletado = ? AND a.id_usuario = ? AND a.confirmado != ?) THEN a.valor ELSE 0 END)) + \
+				(SUM(CASE WHEN (a.tipo = ? AND a.deletado = ? AND a.id_usuario = ? AND a.confirmado != ?) THEN a.valor ELSE 0 END)) - \
+				(SUM(CASE WHEN (a.tipo = ? AND a.deletado = ? AND a.id_usuario = ? AND a.confirmado != ?) THEN a.valor ELSE 0 END)) - \
+				(SUM(CASE WHEN (a.tipo = ? AND a.deletado = ? AND a.id_usuario = ? AND a.confirmado != ?) THEN a.valor ELSE 0 END))\
+				), 2), ".", "@"), ",", "."), "@", ","),"0,00") as valor_reaporte,\
+				COALESCE(FORMAT(( \
+				(SUM(CASE WHEN (a.tipo = ? AND a.deletado = ? AND a.id_usuario = ? AND a.confirmado != ?) THEN a.valor ELSE 0 END)) + \
+				(SUM(CASE WHEN (a.tipo = ? AND a.deletado = ? AND a.id_usuario = ? AND a.confirmado != ?) THEN a.valor ELSE 0 END)) - \
+				(SUM(CASE WHEN (a.tipo = ? AND a.deletado = ? AND a.id_usuario = ? AND a.confirmado != ?) THEN a.valor ELSE 0 END)) - \
+				(SUM(CASE WHEN (a.tipo = ? AND a.deletado = ? AND a.id_usuario = ? AND a.confirmado != ?) THEN a.valor ELSE 0 END))\
+				), 2),0) as valor_reaporte_number\
+				FROM caixa as a \
+				WHERE a.id_usuario = ? AND a.deletado = ? AND a.id > \
+				(SELECT b.id FROM caixa as b WHERE b.tipo = ? AND b.deletado = ? AND b.id_usuario = ? ORDER BY b.id DESC LIMIT 1) \
+				ORDER BY a.data DESC\
+				',[
+				0,0,id_usuario,2,
+				2,0,id_usuario,2,
+				1,0,id_usuario,2,
+				3,0,id_usuario,2,
+				0,0,id_usuario,2,
+				2,0,id_usuario,2,
+				1,0,id_usuario,2,
+				3,0,id_usuario,2,
+				id_usuario,0,
+				4,0,id_usuario]).then(data => {
+					resolve(data);
+				});
+			});
+	}
+
 	GetMesAtual() {
 		return new Promise(function(resolve, reject) {
 			helper.Query('SELECT MONTH(NOW()) as mes', []).then(data => {
