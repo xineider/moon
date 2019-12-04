@@ -253,6 +253,27 @@ class AdministracaoModel {
 		});
 	}
 
+
+
+	GetUltimosAporteReaporteUsuariosPorData(data){
+
+		return new Promise(function(resolve, reject) {
+			helper.Query('SELECT ab.id as id_usuario, ab.id_caixa, cax.valor FROM \
+				(SELECT a.id, b.valor, MAX(b.id) as id_caixa FROM usuarios as a \
+				INNER JOIN caixa as b ON a.id = b.id_usuario \
+				WHERE b.deletado = ? AND (b.tipo = ? OR b.tipo = ?) AND \
+				b.data <= \
+				(SELECT c.data_fim FROM usuarios_planos as c \
+				WHERE c.id_usuario = b.id_usuario AND \
+				c.data_inicio <= ? AND c.data_fim >=  ? AND c.deletado = ?)\
+				GROUP BY a.id) as ab\
+				INNER JOIN caixa as cax ON ab.id_caixa = cax.id\
+				', [0,0,4,data,data,0]).then(data => {
+					resolve(data);
+				});
+			});
+	}
+
 	VerificarSeTemEmailDisponivel(email){
 		return new Promise(function(resolve, reject) {
 			helper.Query("SELECT email \
@@ -261,6 +282,52 @@ class AdministracaoModel {
 				});
 			});
 	}
+
+
+
+	VerificarSeMesTemRendimento(POST){
+		POST = helper.PrepareDates(POST, ['mes']);
+		console.log('ØØØØØØØØØØØØ POST DO VERIFICAR SE TEM MÊS ØØØØØØØØØØØØØØØØ');
+		console.log(POST);
+		console.log('ØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØ');
+
+		return new Promise(function(resolve, reject) {
+			helper.Query("SELECT * FROM porcentagem_mes as a \
+				WHERE a.deletado = ? AND MONTH(a.mes) = MONTH(?) AND YEAR(a.mes) = YEAR(?)", [0,POST.mes,POST.mes]).then(data => {
+					resolve(data);
+				});
+			});
+	}
+
+
+	IdentificarMes(data) {
+		console.log('õõõõõõõõõõõõõõõ data õõõõõõõõõõõõõõõõõõ');
+		console.log(data);
+		console.log('õõõõõõõõõõõõõõõõõõõõõõõõõõõõõõõõõõõõõõõ');
+		return new Promise(function(resolve, reject) {
+			helper.Query('SELECT \
+				CASE \
+				WHEN MONTH(?) = 1 THEN "Janeiro"\
+				WHEN MONTH(?) = 2 THEN "Fevereiro"\
+				WHEN MONTH(?) = 3 THEN "Março"\
+				WHEN MONTH(?) = 4 THEN "Abril"\
+				WHEN MONTH(?) = 5 THEN "Maio"\
+				WHEN MONTH(?) = 6 THEN "Junho"\
+				WHEN MONTH(?) = 7 THEN "Julho"\
+				WHEN MONTH(?) = 8 THEN "Agosto"\
+				WHEN MONTH(?) = 9 THEN "Setembro"\
+				WHEN MONTH(?) = 10 THEN "Outubro"\
+				WHEN MONTH(?) = 11 THEN "Novembro"\
+				WHEN MONTH(?) = 12 THEN "Dezembro"\
+				END as nome_mes,\
+				YEAR(?) as ano', 
+				[data,data,data,data,data,data,
+				data,data,data,data,data,data,data]).then(data => {
+					resolve(data);
+				});
+			});
+	}
+
 
 	VerificarSeTemMesmoEmail(POST){
 		return new Promise(function(resolve, reject) {
@@ -288,6 +355,16 @@ class AdministracaoModel {
 				REPLACE(REPLACE(REPLACE(FORMAT(a.valor, 2), ".", "@"), ",", "."), "@", ",") as valor_real,\
 				(SELECT nome FROM planos as b WHERE a.id_plano = b.id AND b.deletado = ?) as nome_plano \
 				FROM caixa as a WHERE id =  ? AND deletado = ?', [0,id_caixa,0]).then(data => {
+					resolve(data);
+				});
+			});
+	}
+
+
+	DescobrirPlanoPorId(id_plano) {
+		return new Promise(function(resolve, reject) {
+			helper.Query('SELECT a.*\
+				FROM planos as a WHERE a.id =  ? AND a.deletado = ?', [id_plano,0]).then(data => {
 					resolve(data);
 				});
 			});
@@ -383,12 +460,30 @@ class AdministracaoModel {
 		});
 	}
 
+
+	CadastrarPorcentagemMes(POST) {	
+		return new Promise(function(resolve, reject) {
+			helper.Insert('porcentagem_mes', POST).then(data => {
+				resolve(data);
+			});
+		});
+	}
+
 	CadastrarCaixa(POST) {
 
 		if(POST.data != null){
 			POST = helper.PrepareDates(POST, ['data']);
 		}
 
+		return new Promise(function(resolve, reject) {
+			helper.Insert('caixa', POST).then(data => {
+				resolve(data);
+			});
+		});
+	}
+
+
+	CadastrarRendimentoUsuario(POST) {
 		return new Promise(function(resolve, reject) {
 			helper.Insert('caixa', POST).then(data => {
 				resolve(data);

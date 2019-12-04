@@ -563,16 +563,83 @@ router.post('/plano/cadastrar/', function(req, res, next) {
 });
 
 
+router.post('/rendimento/cadastrar/', function(req, res, next) {
+	POST = req.body;
+	console.log('CCCCCCCCC CADASTRAR O RENDIMENTO PARA OS USUARIOS CCCCCCC');
+	console.log(POST);
+	console.log('CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC');
+	data_insert = {porcentagem:POST.porcentagem, mes:POST.mes};
+
+	model.GetUltimosAporteReaporteUsuariosPorData(POST.mes).then(data_ultimos_a_r=>{
+		console.log('ÀÀÀÀÀÀÀÀÀÀ data_ultimos_aportes e reaportes ÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀ');
+		console.log(data_ultimos_a_r);
+		console.log('ÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀ');
+		console.log('data_ultimos_a_r.length:'+data_ultimos_a_r.length);
+		console.log('data_ultimos_a_r[0].id_usuario:'+data_ultimos_a_r[0].id_usuario);
+		console.log('data_ultimos_a_r[1].id_usuario:'+data_ultimos_a_r[1].id_usuario);
+		console.log('data_ultimos_a_r[0].valor:'+data_ultimos_a_r[0].valor);
+		console.log('data_ultimos_a_r[1].valor:'+data_ultimos_a_r[1].valor);
+
+		var valor_rendimento;
+
+		for(i=0; i < data_ultimos_a_r.length ; i++){
+			console.log('i:'+i);
+
+			valor_rendimento = (data_ultimos_a_r[i].valor * POST.porcentagem)/100;
+
+
+
+			data_insert2 = {id_usuario:data_ultimos_a_r[i].id_usuario,id_plano:POST.id_plano,valor:valor_rendimento,data:POST.mes, tipo:2, confirmado:1};
+			console.log('││││││││││││││││ data_insert2 ││││││││││││││││││││');
+			console.log(data_insert2);
+			console.log('││││││││││││││││││││││││││││││││││││││││││││││││││');
+			model.CadastrarRendimentoUsuario(data_insert2).then();
+		}
+
+
+		model.CadastrarPorcentagemMes(data_insert).then(data_cad => {
+			res.json(data_cad);
+		});
+
+
+
+
+	});
+});
+
+
 router.post('/rendimento_mes/confirmar_cadastro', function(req, res, next) {
 	POST = req.body;
-	console.log(POST);
-
-
+	
 	console.log('CCCCCCCC CONFIRMAR CADASTRO CCCCCCCCCCCC');
 	console.log(POST);
 	console.log('CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC');
-	res.render(req.isAjaxRequest() == true ? 'api' : 'montador', {html: 'administracao/rendimento-mes/modal_confirmar_rendimento', data: data, usuario: req.session.usuario});
 
+	model.VerificarSeMesTemRendimento(POST).then(data_verificar_mes_rendimento =>{
+		console.log('╝╝╝╝╝╝╝╝╝╝╝╝ Verificar se Mês Tem Disponível ╝╝╝╝╝╝╝╝╝╝╝╝');
+		console.log(data_verificar_mes_rendimento);
+		console.log('╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝');
+		if(data_verificar_mes_rendimento.length <= 0){
+			data.rendimento = POST;
+			model.IdentificarMes(POST.mes).then(data_mes_rendimento=>{
+				data.mes_rendimento = data_mes_rendimento;
+				model.DescobrirPlanoPorId(POST.id_plano).then(data_plano=>{
+					data.plano = data_plano;
+					console.log('ÇÇÇÇÇÇÇÇÇÇÇÇÇÇ data_plano ÇÇÇÇÇÇÇÇÇÇÇ');
+					console.log(data_plano);
+					console.log(data_plano[0].performance);
+					console.log('ÇÇÇÇÇÇÇÇÇÇÇÇÇÇÇÇÇÇÇÇÇÇÇÇÇÇÇÇÇÇÇÇÇÇÇÇÇ');
+					data.rendimento_correto = (POST.porcentagem * data_plano[0].performance)/100;
+					console.log("eeeeeeeeeeee Teste eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
+					console.log(data);
+					console.log('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
+					res.render(req.isAjaxRequest() == true ? 'api' : 'montador', {html: 'administracao/rendimento-mes/modal_confirmar_rendimento', data: data, usuario: req.session.usuario});
+				});
+			});
+		}else{
+			res.json({error:'mes_ja_tem_rendimento',element:'input[name="mes"]',texto:'Este Mês já possui Rendimento!'});
+		}
+	});
 });
 
 
