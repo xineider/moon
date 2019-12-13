@@ -245,14 +245,16 @@ class CarteiraModel {
 				(SUM(CASE WHEN (a.tipo = ? AND a.deletado = ? AND a.id_usuario = ? AND a.confirmado != ?) THEN a.valor ELSE 0 END)) \
 				), 2) as valor_saldo_number\
 				FROM caixa as a \
-				WHERE a.id_usuario = ? AND a.deletado = ?\
+				WHERE a.id_usuario = ? AND a.deletado = ? AND a.id >\
+				(SELECT b.id FROM caixa as b WHERE (b.tipo = ? OR b.tipo = ?) AND b.deletado = ? AND b.id_usuario = ? ORDER BY b.id DESC LIMIT 1)\
 				ORDER BY a.data DESC\
 				',[
-				1,0,id_usuario,2,
+				2,0,id_usuario,2,
 				3,0,id_usuario,2,
-				1,0,id_usuario,2,
+				2,0,id_usuario,2,
 				3,0,id_usuario,2,
-				id_usuario,0]).then(data => {
+				id_usuario,0,
+				4,0,0,id_usuario]).then(data => {
 					resolve(data);
 				});
 			});

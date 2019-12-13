@@ -1,0 +1,34 @@
+
+<div class="modal-header primary white-text">
+	<h5 class="modal-title uppercase">Confirmar Reaporte</h5>
+	<button type="button" class="close white-text" data-dismiss="modal" aria-label="Close">
+		<span aria-hidden="true">&times;</span>
+	</button>
+</div>
+<div class="modal-body text-center">
+	<div>
+		<i class="fas fa-redo blue-text f-rem-5"></i>
+	</div>
+	<div class="margin-t-20 f-rem-15"><%= data.dia_horario[0].horario %></div>
+	<div class="f-rem-2">RS <span><%= data.valor_real_saque[0].valor_real %></span></div>
+
+
+
+</div>
+<div class="modal-footer">
+	<div class="row">
+		<div class="col col-sm-6">
+			<button type="button" class="btn grey white-text" data-dismiss="modal">Cancelar</button>
+		</div>
+		<div class="col col-sm-6">
+			<form method="POST" action="">
+				<input type="hidden" name="valor" value="<%= data.valor_real_saque[0].valor%>">
+				<input type="hidden" name="id_conta_bancaria" value="<%= data.dados_conta_bancaria[0].id_banco%>">
+
+				<button data-href="/sistema/carteira/pedir-saque" class="btn primary ajax-submit-open-modal margin-b-10" data-modal="#modalinfo">
+					Confirmar
+				</button>
+			</form>
+		</div>
+	</div>
+</div>
