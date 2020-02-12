@@ -138,6 +138,19 @@ router.get('/rendimentos_mes', function(req, res, next) {
 
 
 
+router.get('/reaporte_mes', function(req, res, next) {
+	model.GetReaportesMes().then(data_reaporte_mes=>{
+		data.reaporte_mes = data_reaporte_mes;		
+		data.link_sistema = '/sistema';
+		data.numero_menu = 4;
+		console.log('­ææææææææææææææææ Rendimento Mes æææææææææææææææææææææææ');
+		console.log(data);
+		console.log('æææææææææææææææææææææææææææææææææææææææææææææææææææææææ');
+		res.render(req.isAjaxRequest() == true ? 'api' : 'montador', {html: 'administracao/reaporte-mes/reaporte_mes', data: data, usuario: req.session.usuario});
+	});
+});
+
+
 
 router.get('/alterar-senha-usuario/:id', function(req, res, next) {
 	var id = req.params.id;
@@ -283,6 +296,14 @@ router.get('/rendimento_mes/criar', function(req, res, next) {
 		res.render(req.isAjaxRequest() == true ? 'api' : 'montador', {html: 'administracao/rendimento-mes/cadastrar_rendimento', data: data, usuario: req.session.usuario});
 	});
 });
+
+
+router.get('/reaporte_mes/criar', function(req, res, next) {
+	data.link_sistema = '/sistema';
+	data.numero_menu = 4;
+	res.render(req.isAjaxRequest() == true ? 'api' : 'montador', {html: 'administracao/reaporte-mes/cadastrar_reaporte', data: data, usuario: req.session.usuario});
+});
+
 
 
 /* Fim Criar GET Administração */
@@ -568,7 +589,7 @@ router.post('/rendimento/cadastrar/', function(req, res, next) {
 	console.log('CCCCCCCCC CADASTRAR O RENDIMENTO PARA OS USUARIOS CCCCCCC');
 	console.log(POST);
 	console.log('CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC');
-	data_insert = {porcentagem:POST.porcentagem, mes:POST.mes};
+	data_insert = {id_plano:POST.id_plano,porcentagem:POST.porcentagem, mes:POST.mes};
 
 	model.GetUltimosAporteReaporteUsuariosPorData(POST.mes).then(data_ultimos_a_r=>{
 		console.log('ÀÀÀÀÀÀÀÀÀÀ data_ultimos_aportes e reaportes ÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀ');
@@ -576,9 +597,7 @@ router.post('/rendimento/cadastrar/', function(req, res, next) {
 		console.log('ÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀ');
 		console.log('data_ultimos_a_r.length:'+data_ultimos_a_r.length);
 		console.log('data_ultimos_a_r[0].id_usuario:'+data_ultimos_a_r[0].id_usuario);
-		console.log('data_ultimos_a_r[1].id_usuario:'+data_ultimos_a_r[1].id_usuario);
 		console.log('data_ultimos_a_r[0].valor:'+data_ultimos_a_r[0].valor);
-		console.log('data_ultimos_a_r[1].valor:'+data_ultimos_a_r[1].valor);
 
 		var valor_rendimento;
 
@@ -639,6 +658,79 @@ router.post('/rendimento_mes/confirmar_cadastro', function(req, res, next) {
 		}else{
 			res.json({error:'mes_ja_tem_rendimento',element:'input[name="mes"]',texto:'Este Mês já possui Rendimento!'});
 		}
+	});
+});
+
+
+
+
+
+
+router.post('/reaporte_mes/confirmar_cadastro', function(req, res, next) {
+	POST = req.body;
+	
+	console.log('CCCCCCCC CONFIRMAR CADASTRO CCCCCCCCCCCC');
+	console.log(POST);
+	console.log('CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC');
+
+	model.VerificarSeMesTemReaporte(POST).then(data_verificar_mes_reaporte =>{
+		console.log('╝╝╝╝╝╝╝╝╝╝╝╝ Verificar se Mês Tem Disponível ╝╝╝╝╝╝╝╝╝╝╝╝');
+		console.log(data_verificar_mes_reaporte);
+		console.log('╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝');
+		data.reaporte = POST;
+		if(data_verificar_mes_reaporte.length <= 0){
+			model.IdentificarMes(POST.data).then(data_mes_reaporte=>{
+				data.mes_atual_reaporte = data_mes_reaporte;
+				res.render(req.isAjaxRequest() == true ? 'api' : 'montador', {html: 'administracao/reaporte-mes/modal_confirmar_reaporte', data: data, usuario: req.session.usuario});
+
+			});
+		}else{
+			res.json({error:'mes_ja_tem_reaporte',element:'input[name="data"]',texto:'Este Mês já possui Reaporte!'});
+		}
+	});
+});
+
+
+
+
+router.post('/reaporte_mes/cadastrar/', function(req, res, next) {
+	POST = req.body;
+	console.log('CCCCCCCCC CADASTRAR O Reaporte PARA OS USUARIOS CCCCCCC');
+	console.log(POST);
+	console.log('CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC');
+	//data_insert = {id_plano:POST.id_plano,porcentagem:POST.porcentagem, mes:POST.mes};
+
+	//função que pegará a "meiuca" entre os aportes e reaportes, somente os confirmados,
+	// mas é preciso seperar por usuário e "somar"(pois pode diminuir) se teve rendimento se teve saque, etc.
+	
+	model.GetTudoMenosReaportesDoMesDosUsuariosPorData(POST.mes).then(data_tudo_menos_r_a=>{
+		console.log('ÀÀÀÀÀÀÀÀÀÀ TUDO MENOS OS REAPORTES E APORTES DA DATA ÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀ');
+		console.log(data_tudo_menos_r_a);
+		console.log('ÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀÀ');
+
+		var valor_somar;
+
+		for(i=0; i < data_tudo_menos_r_a.length ; i++){
+			console.log('i:'+i);
+
+
+		}
+
+		// 	data_insert2 = {id_usuario:data_tudo_menos_r_a[i].id_usuario,id_plano:POST.id_plano,valor:valor_somar,data:POST.mes, tipo:2, confirmado:1};
+		// 	console.log('││││││││││││││││ data_insert2 ││││││││││││││││││││');
+		// 	console.log(data_insert2);
+		// 	console.log('││││││││││││││││││││││││││││││││││││││││││││││││││');
+		// 	//model.CadastrarRendimentoUsuario(data_insert2).then();
+		// }
+
+
+		// model.CadastrarPorcentagemMes(data_insert).then(data_cad => {
+		// 	res.json(data_cad);
+		// });
+
+
+
+
 	});
 });
 

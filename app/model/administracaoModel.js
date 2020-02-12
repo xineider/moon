@@ -121,6 +121,32 @@ class AdministracaoModel {
 			});
 	}
 
+	GetReaportesMes() {
+		return new Promise(function(resolve, reject) {
+			helper.Query('SELECT \
+				DATE_FORMAT(a.data, "%Y%m%d %H:%i") as mes_ano_table_filtro,\
+				CASE \
+				WHEN MONTH(a.data) = 1 THEN CONCAT("Janeiro - ",YEAR(a.data))\
+				WHEN MONTH(a.data) = 2 THEN CONCAT("Fevereiro - ",YEAR(a.data))\
+				WHEN MONTH(a.data) = 3 THEN CONCAT("Março - ",YEAR(a.data))\
+				WHEN MONTH(a.data) = 4 THEN CONCAT("Abril - ",YEAR(a.data))\
+				WHEN MONTH(a.data) = 5 THEN CONCAT("Maio - ",YEAR(a.data))\
+				WHEN MONTH(a.data) = 6 THEN CONCAT("Junho - ",YEAR(a.data))\
+				WHEN MONTH(a.data) = 7 THEN CONCAT("Julho - ",YEAR(a.data))\
+				WHEN MONTH(a.data) = 8 THEN CONCAT("Agosto - ",YEAR(a.data))\
+				WHEN MONTH(a.data) = 9 THEN CONCAT("Setembro - ",YEAR(a.data))\
+				WHEN MONTH(a.data) = 10 THEN CONCAT("Outubro - ",YEAR(a.data))\
+				WHEN MONTH(a.data) = 11 THEN CONCAT("Novembro - ",YEAR(a.data))\
+				WHEN MONTH(a.data) = 12 THEN CONCAT("Dezembro - ",YEAR(a.data))\
+				END AS nome_mes_e_ano\
+				FROM caixa as a\
+				WHERE a.deletado = ? AND a.tipo = ? \
+				GROUP BY MONTH(a.data)', [0,4]).then(data => {
+					resolve(data);
+				});
+			});
+	}
+
 	GetMesAtualAtivo(){
 		return new Promise(function(resolve, reject) {
 			helper.Query('SELECT MONTH(NOW()) as mes_atual_ativo', []).then(data => {
@@ -269,6 +295,28 @@ class AdministracaoModel {
 				GROUP BY a.id) as ab\
 				INNER JOIN caixa as cax ON ab.id_caixa = cax.id\
 				', [0,0,4,data,data,0]).then(data => {
+					console.log('@@@@@@@ data_dos ultimos aporte e reaportes por usuario @@@@@@@@');
+					console.log(data);
+					console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
+					resolve(data);
+				});
+			});
+	}
+
+
+
+	GetTudoMenosReaportesDoMesDosUsuariosPorData(data){
+
+		return new Promise(function(resolve, reject) {
+			helper.Query('SELECT a.* \
+				FROM caixa as a \
+				WHERE a.deletado = ? AND (a.tipo != ? OR a.tipo != ?) AND a.confirmado = ? AND\
+				a.data <= ? AND \
+				MONTH(a.data) = MONTH(?) AND YEAR(a.data) = YEAR(?)\
+				', [0,0,4,1,data,data,data]).then(data => {
+					console.log('_____________ tudo menos o aporte e reaporte ___________________________');
+					console.log(data);
+					console.log('________________________________________________________________________');
 					resolve(data);
 				});
 			});
@@ -294,6 +342,21 @@ class AdministracaoModel {
 		return new Promise(function(resolve, reject) {
 			helper.Query("SELECT * FROM porcentagem_mes as a \
 				WHERE a.deletado = ? AND MONTH(a.mes) = MONTH(?) AND YEAR(a.mes) = YEAR(?)", [0,POST.mes,POST.mes]).then(data => {
+					resolve(data);
+				});
+			});
+	}
+
+
+	VerificarSeMesTemReaporte(POST){
+		POST = helper.PrepareDates(POST, ['data']);
+		console.log('ØØØØØØØØØØØØ POST DO VERIFICAR SE TEM MÊS ØØØØØØØØØØØØØØØØ');
+		console.log(POST);
+		console.log('ØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØØ');
+
+		return new Promise(function(resolve, reject) {
+			helper.Query("SELECT * FROM caixa as a \
+				WHERE a.deletado = ? AND tipo = ? AND MONTH(a.data) = MONTH(?) AND YEAR(a.data) = YEAR(?)", [0,4,POST.data,POST.data]).then(data => {
 					resolve(data);
 				});
 			});

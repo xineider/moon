@@ -1,0 +1,63 @@
+<%- include('../../includes/menu_header'); %>
+<div>
+	<%- include('../submenu'); %>
+</div>
+
+
+<div class="w100 text-center">
+	<div class="bold f25 text-center white-text">
+		Administração do Reaporte Mês
+	</div>
+	
+	
+	<%if(usuario.nivel == 1){ %>
+
+
+	<div class="text-center margin-b-10 margin-t-10">
+		<a class="btn primary ajax-load white-text mx-auto" href="<%= data.link_sistema%>/administracao/reaporte_mes/criar">Cadastrar Reaporte do Mês</a>
+	</div>
+
+
+	<div class="col s12">
+
+		<table class="tabela_filtrada text-center white-text margin-center">
+			<thead class="primary-text">
+				<tr>
+					<th>Mês e Ano</th>
+				</tr>
+			</thead>
+			<tbody>
+
+				<%
+				if (typeof data.reaporte_mes != 'undefined' && data.reaporte_mes.length > 0) {
+					for (var i = data.reaporte_mes.length - 1; i >= 0; i--) { %>
+					<tr class="border-bottom-primary">
+						<td>
+							<a class="white-text">
+								<span class="d-none"><%= data.reaporte_mes[i].mes_ano_table_filtro %></span>							
+								<%= data.reaporte_mes[i].nome_mes_e_ano %> 
+							</a>
+						</td>
+
+					</tr>
+
+					<%}
+				}else{%>
+				<tr>
+					<td colspan="2" class="center">Não há reaportes de mês no momento</td>
+				</tr>
+				<%}%>
+			</tbody>
+
+		</table>
+	</div>
+
+
+
+
+
+	<%}else{%>
+	<div class="white-text text-center f25">Você não possui permissão para acessar esse conteúdo!</div>
+	<%}%>
+
+</div>

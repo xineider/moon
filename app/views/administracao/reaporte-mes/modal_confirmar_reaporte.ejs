@@ -1,0 +1,35 @@
+
+<div class="modal-header primary white-text">
+	<h5 class="modal-title uppercase">Confirmar Reaporte</h5>
+	<button type="button" class="close white-text" data-dismiss="modal" aria-label="Close">
+		<span aria-hidden="true">&times;</span>
+	</button>
+</div>
+<div class="modal-body text-center">
+	<p>
+		Você tem certeza que deseja fazer o reaporte para o mês de <b class="uppercase"><%= data.mes_atual_reaporte[0].nome_mes %></b> do ano <b><%= data.mes_atual_reaporte[0].ano%></b> para todos os usuários ?
+	</p>
+
+	<p>
+		<span class="f20">Saiba que essa alteração não pode ser desfeita e <b>TODOS</b> os usuários serão afetados pelo reaporte.</span>
+	</p>
+
+
+</div>
+<div class="modal-footer">
+	<div class="row">
+		<div class="col col-sm-6">
+			<button type="button" class="btn grey white-text" data-dismiss="modal">Cancelar</button>
+		</div>
+		<div class="col col-sm-6">
+			<form method="POST" action="">
+
+				<input type="hidden" name="mes" value="<%= data.reaporte.data%>">
+
+				<button data-href="/sistema/administracao/reaporte_mes/cadastrar" data-action="<%= data.link_sistema%>/administracao/reaporte/" class="btn primary ajax-submit margin-b-10" data-mensagem-sucesso="Reaporte Cadastrado com Sucesso!" data-dismiss="modal">
+					Sim, quero cadastrar o Reaporte!
+				</button>
+			</form>
+		</div>
+	</div>
+</div>
